@@ -35,8 +35,7 @@
   @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
   .hero { min-height: calc(100vh - 96px); display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
-  .hero::before { content: 'Rub'; position: absolute; right: -0.05em; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: 28vw; font-weight: 700; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.04); pointer-events: none; user-select: none; line-height: 1; z-index: 0; }
-  
+  .hero::before { content: 'Rub'; position: absolute; right: -0.05em; bottom: -0.12em; font-family: var(--mono); font-size: 28vw; font-weight: 700; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.04); pointer-events: none; user-select: none; line-height: 1; z-index: 0; }
   .hero-left { display: flex; flex-direction: column; justify-content: center; padding: 5rem 3rem 5rem 5rem; position: relative; z-index: 1; }
   .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rb); border: 1px solid var(--rb); padding: 0.3rem 0.8rem; border-radius: 2px; margin-bottom: 2rem; width: fit-content; }
   .hero-badge::before { content: ''; width: 7px; height: 7px; background: var(--rb); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
@@ -180,7 +179,6 @@
     <li><a href="#features">Features</a></li>
     <li><a href="#syntax">Syntax</a></li>
     <li><a href="#xeon">Xeon</a></li>
-    <li><a href="learn.html">Learn</a></li>
     <li><a href="#install">Install</a></li>
   </ul>
   <a href="https://github.com/TomDexterYoutube/Rubidium" target="_blank" class="nav-cta">GitHub &uarr;</a>
@@ -507,6 +505,7 @@ items(<span class="num">0</span>).<span class="fn">set</span>(<span class="num">
 
 <footer>
   <div class="footer-logo">Rub</div>
+  <div>Built by <a href="https://github.com/TomDexterYoutube" target="_blank">TomDexter</a> &middot; Open Source</div>
   <div>Built by <a href="https://github.com/TomDexterYoutube" target="_blank">TomDexterYoutube</a> &middot; Open Source</div>
   <div class="footer-links">
     <a href="https://github.com/TomDexterYoutube/Rubidium" target="_blank">Compiler</a>
