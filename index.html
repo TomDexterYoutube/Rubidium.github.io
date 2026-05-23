@@ -1,51 +1,524 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rubidium Projects</title>
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rubidium — High-Performance Compiled Language</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --rb: #FF6B47; --rb-dim: #D14B2F;
+    --rb-glow: rgba(255,107,71,0.15); --rb-faint: rgba(255,107,71,0.07);
+    --ink: #F0EBE3; --ink2: #111111;
+    --paper: #0E0E0E; --paper2: #161616;
+    --muted: #7A7470; --border: rgba(255,255,255,0.09);
+    --mono: 'Space Mono', monospace; --sans: 'Syne', sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--sans); background: var(--paper); color: var(--ink); overflow-x: hidden; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 3rem; background: rgba(14,14,14,0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav-logo { font-family: var(--mono); font-weight: 700; font-size: 1.1rem; color: var(--rb); }
+  .nav-logo span { color: var(--ink); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; color: var(--muted); transition: color 0.2s; }
+  .nav-links a:hover { color: var(--rb); }
+  .nav-cta { font-family: var(--mono); font-size: 0.8rem; font-weight: 700; padding: 0.5rem 1.2rem; background: var(--rb); color: #fff; text-decoration: none; border-radius: 2px; letter-spacing: 0.04em; transition: background 0.2s, transform 0.15s; }
+  .nav-cta:hover { background: var(--rb-dim); transform: translateY(-1px); }
+
+  .ticker { margin-top: 64px; background: var(--rb); overflow: hidden; padding: 0.55rem 0; white-space: nowrap; }
+  .ticker-inner { display: inline-block; animation: ticker 30s linear infinite; }
+  .ticker-inner span { font-family: var(--mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; padding: 0 2.5rem; }
+  .ticker-inner span::after { content: '·'; padding-left: 2.5rem; opacity: 0.5; }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  .hero { min-height: calc(100vh - 96px); display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
+  .hero::before { content: 'Rub'; position: absolute; right: -0.05em; bottom: -0.12em; font-family: var(--mono); font-size: 28vw; font-weight: 700; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.04); pointer-events: none; user-select: none; line-height: 1; z-index: 0; }
+  .hero-left { display: flex; flex-direction: column; justify-content: center; padding: 5rem 3rem 5rem 5rem; position: relative; z-index: 1; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rb); border: 1px solid var(--rb); padding: 0.3rem 0.8rem; border-radius: 2px; margin-bottom: 2rem; width: fit-content; }
+  .hero-badge::before { content: ''; width: 7px; height: 7px; background: var(--rb); border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.7); } }
+  h1 { font-size: clamp(3.5rem, 6vw, 5.5rem); font-weight: 800; line-height: 0.95; letter-spacing: -0.04em; margin-bottom: 1.5rem; }
+  h1 em { font-style: normal; color: var(--rb); }
+  .hero-desc { font-size: 1.05rem; line-height: 1.7; color: var(--muted); max-width: 480px; margin-bottom: 2.5rem; }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary { font-family: var(--mono); font-size: 0.85rem; font-weight: 700; padding: 0.85rem 1.8rem; background: var(--rb); color: #fff; text-decoration: none; border-radius: 2px; letter-spacing: 0.04em; transition: background 0.2s, transform 0.15s; display: flex; align-items: center; gap: 0.6rem; }
+  .btn-primary:hover { background: var(--rb-dim); transform: translateY(-2px); }
+  .btn-secondary { font-family: var(--mono); font-size: 0.85rem; font-weight: 700; padding: 0.85rem 1.8rem; background: transparent; color: var(--ink); border: 1px solid var(--border); text-decoration: none; border-radius: 2px; letter-spacing: 0.04em; transition: border-color 0.2s, color 0.2s, transform 0.15s; display: flex; align-items: center; gap: 0.6rem; }
+  .btn-secondary:hover { border-color: var(--rb); color: var(--rb); transform: translateY(-2px); }
+  .hero-stats { display: flex; gap: 2.5rem; margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+  .stat-num { font-family: var(--mono); font-size: 1.6rem; font-weight: 700; color: var(--ink); display: block; }
+  .stat-lbl { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+  .hero-right { display: flex; align-items: center; justify-content: center; padding: 5rem 4rem 5rem 2rem; position: relative; z-index: 1; }
+  .code-window { width: 100%; max-width: 520px; background: var(--ink2); border-radius: 8px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05); animation: float 5s ease-in-out infinite; }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  .code-bar { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.1rem; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot-r { background: #FF5F57; } .dot-y { background: #FFBD2E; } .dot-g { background: #28CA41; }
+  .code-fname { font-family: var(--mono); font-size: 0.72rem; color: rgba(255,255,255,0.3); margin-left: 0.6rem; }
+  pre { padding: 1.5rem 1.75rem; font-family: var(--mono); font-size: 0.82rem; line-height: 1.8; overflow-x: auto; color: #C8C0B0; }
+  .kw { color: #FF6B47; } .ty { color: #7EC8C0; } .str { color: #A8D08D; }
+  .cm { color: rgba(200,192,176,0.35); } .fn { color: #E8C86E; } .num { color: #C8A0FF; }
+
+  .tagline-strip { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .tagline-item { padding: 2.5rem 3rem; border-right: 1px solid var(--border); display: flex; align-items: flex-start; gap: 1rem; }
+  .tagline-item:last-child { border-right: none; }
+  .tagline-icon { font-size: 1.4rem; margin-top: 0.1rem; flex-shrink: 0; }
+  .tagline-item h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.35rem; }
+  .tagline-item p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+  section { padding: 7rem 5rem; }
+  section + section { border-top: 1px solid var(--border); }
+  .section-label { font-family: var(--mono); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rb); margin-bottom: 1rem; }
+  .section-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 1.25rem; }
+  .section-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 520px; }
+
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5px; margin-top: 4rem; border: 1.5px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--border); }
+  .feat { background: var(--paper); padding: 2.5rem 2rem; transition: background 0.2s; }
+  .feat:hover { background: var(--rb-faint); }
+  .feat-icon { font-family: var(--mono); font-size: 1.5rem; font-weight: 700; color: var(--rb); margin-bottom: 1.2rem; display: block; }
+  .feat h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.6rem; }
+  .feat p { font-size: 0.88rem; line-height: 1.65; color: var(--muted); }
+
+  .syntax-section { background: #111; }
+  .tab-bar { display: flex; border-bottom: 1px solid var(--border); margin-top: 3rem; }
+  .tab-btn { font-family: var(--mono); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.75rem 1.5rem; background: none; border: none; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.2s, border-color 0.2s; }
+  .tab-btn.active { color: var(--rb); border-bottom-color: var(--rb); }
+  .tab-btn:hover:not(.active) { color: var(--ink); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .syntax-window { background: #0A0A0A; border-radius: 6px; border: 1px solid var(--border); margin-top: 1.5rem; overflow: hidden; }
+  .syntax-window pre { padding: 2rem; font-size: 0.85rem; line-height: 1.9; }
+
+  .speed-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-top: 4rem; }
+  .speed-card { padding: 2.5rem; border-radius: 6px; border: 1px solid var(--border); background: var(--paper2); }
+  .speed-card--rubidium { background: #1A0D08; border-color: rgba(255,107,71,0.25); }
+  .speed-card-label { font-family: var(--mono); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rb); margin-bottom: 1.25rem; }
+  .speed-bar-wrap { height: 10px; background: rgba(255,255,255,0.08); border-radius: 99px; overflow: hidden; margin-bottom: 1.25rem; }
+  .speed-bar--full { height: 100%; width: 0; background: var(--rb); border-radius: 99px; animation: fillBar 1.2s cubic-bezier(0.22,1,0.36,1) 0.3s forwards; }
+  @keyframes fillBar { to { width: 97%; } }
+  .speed-note { font-size: 0.85rem; color: rgba(240,235,227,0.45); line-height: 1.6; font-family: var(--mono); }
+  .speed-others { padding: 0.5rem 0; }
+  .speed-others-intro { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; }
+  .lang-row { display: grid; grid-template-columns: 110px 1fr 100px; align-items: center; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+  .lang-row:last-of-type { border-bottom: none; }
+  .lang-name { display: flex; align-items: center; gap: 0.6rem; font-size: 0.88rem; font-weight: 600; }
+  .lang-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+  .lang-bar-wrap { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .lang-bar { height: 100%; background: var(--muted); border-radius: 99px; opacity: 0.5; }
+  .lang-tag { font-family: var(--mono); font-size: 0.68rem; font-weight: 700; color: var(--muted); text-align: right; }
+  .speed-disclaimer { margin-top: 1.5rem; font-size: 0.82rem; color: var(--muted); line-height: 1.6; border-left: 2px solid var(--rb); padding-left: 0.85rem; }
+
+  .xeon-section { background: #161616; }
+  .xeon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-top: 4rem; }
+  .cmd-list { display: flex; flex-direction: column; gap: 1rem; }
+  .cmd-item { display: flex; align-items: flex-start; gap: 1.25rem; padding: 1.25rem 1.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 4px; transition: border-color 0.2s, background 0.2s; }
+  .cmd-item:hover { background: var(--rb-faint); border-color: rgba(255,107,71,0.3); }
+  .cmd-tag { font-family: var(--mono); font-size: 0.8rem; font-weight: 700; color: var(--rb); white-space: nowrap; padding-top: 0.1rem; }
+  .cmd-info h4 { font-size: 0.9rem; font-weight: 700; color: var(--ink); margin-bottom: 0.25rem; }
+  .cmd-info p { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+  .terminal { background: #0A0A0A; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+  .terminal-bar { padding: 0.7rem 1rem; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.06); font-family: var(--mono); font-size: 0.7rem; color: rgba(255,255,255,0.25); }
+  .terminal pre { padding: 1.5rem; font-size: 0.8rem; line-height: 1.9; color: rgba(200,200,200,0.8); }
+  .t-prompt { color: var(--rb); } .t-cmd { color: #F0EBE3; } .t-out { color: rgba(200,200,200,0.4); }
+
+  .install-section { background: #111; }
+  .install-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 4rem; align-items: start; }
+  .install-step { display: flex; gap: 1.25rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+  .install-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .step-num { font-family: var(--mono); font-size: 0.7rem; font-weight: 700; color: var(--rb); width: 28px; height: 28px; border: 1px solid var(--rb); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.1rem; }
+  .step-body h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .step-body p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+  .code-inline { font-family: var(--mono); font-size: 0.8rem; background: rgba(255,255,255,0.08); color: var(--rb); padding: 0.15rem 0.5rem; border-radius: 3px; }
+  .install-ctas { display: flex; flex-direction: column; gap: 1rem; padding: 2rem; background: #0A0A0A; border-radius: 6px; border: 1px solid var(--border); }
+  .install-ctas p { font-size: 0.82rem; color: var(--muted); font-family: var(--mono); margin-bottom: 0.5rem; }
+  .install-ctas a { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.2rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; text-decoration: none; color: var(--ink); font-family: var(--mono); font-size: 0.82rem; font-weight: 700; transition: border-color 0.2s, background 0.2s; }
+  .install-ctas a:hover { border-color: var(--rb); background: var(--rb-faint); color: var(--rb); }
+  .install-ctas a span { color: var(--muted); font-weight: 400; }
+
+  .gh-banner { padding: 5rem; background: #1A0D08; border-top: 1px solid rgba(255,107,71,0.15); display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+  .gh-banner-text h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .gh-banner-text p { color: var(--muted); font-size: 0.95rem; }
+  .gh-banner-text h2 em { font-style: normal; color: var(--rb); }
+  .gh-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .gh-btn-main { font-family: var(--mono); font-size: 0.88rem; font-weight: 700; padding: 1rem 2rem; background: var(--rb); color: #fff; text-decoration: none; border-radius: 2px; transition: background 0.2s, transform 0.15s; }
+  .gh-btn-main:hover { background: var(--rb-dim); transform: translateY(-2px); }
+  .gh-btn-sec { font-family: var(--mono); font-size: 0.88rem; font-weight: 700; padding: 1rem 2rem; background: transparent; color: var(--ink); border: 1px solid rgba(255,107,71,0.3); text-decoration: none; border-radius: 2px; transition: border-color 0.2s, color 0.2s; }
+  .gh-btn-sec:hover { border-color: var(--rb); color: var(--rb); }
+
+  footer { padding: 3rem 5rem; background: #080808; color: var(--muted); display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; font-family: var(--mono); border-top: 1px solid var(--border); }
+  .footer-logo { font-weight: 700; font-size: 1rem; color: var(--rb); }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--rb); }
+  .footer-links { display: flex; gap: 1.5rem; }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; } .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 3rem 1.5rem 2rem; }
+    .hero-right { padding: 1.5rem 1.5rem 3rem; }
+    .hero::before { font-size: 70vw; }
+    .tagline-strip { grid-template-columns: 1fr; }
+    .tagline-item { border-right: none; border-bottom: 1px solid var(--border); }
+    .tagline-item:last-child { border-bottom: none; }
+    section { padding: 4rem 1.5rem; }
+    .xeon-grid, .install-grid, .speed-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .gh-banner { padding: 3rem 1.5rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem 1.5rem; }
+  }
+</style>
 </head>
 <body>
-  <div class="page-container">
-    <header class="site-header">
-      <h1>Rubidium Projects</h1>
-      <p>A GitHub Pages website for Rubidium language and Xeon manager projects.</p>
-    </header>
 
-    <section class="intro-card">
-      <h2>Welcome</h2>
-      <p>This website showcases the Rubidium programming language and Xeon project manager. Use it as a starting point for your GitHub Pages site.</p>
-    </section>
+<nav>
+  <div class="nav-logo">Rub<span> Rubidium</span></div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#syntax">Syntax</a></li>
+    <li><a href="#xeon">Xeon</a></li>
+    <li><a href="#install">Install</a></li>
+  </ul>
+  <a href="https://github.com/TomDexterYoutube/Rubidium" target="_blank" class="nav-cta">GitHub &uarr;</a>
+</nav>
 
-    <section class="project-card">
-      <h2>Rubidium Language</h2>
-      <p>Rubidium is your custom programming language project. Share language features, examples, and documentation here.</p>
-      <ul>
-        <li>Syntax highlights</li>
-        <li>Compiler tools</li>
-        <li>Language reference</li>
-      </ul>
-    </section>
-
-    <section class="project-card">
-      <h2>Xeon Manager</h2>
-      <p>Xeon is the manager for your Rubidium projects. Display its capabilities, installation steps, and how it helps organize your code.</p>
-      <ul>
-        <li>Project management</li>
-        <li>Build automation</li>
-        <li>Deployment support</li>
-      </ul>
-    </section>
-
-    <section class="callout-card">
-      <h2>Make it yours</h2>
-      <p>Edit this page to add your own project links, documentation, examples, and repository information. Then enable GitHub Pages from the repository settings.</p>
-    </section>
-
-    <footer>
-      <p>GitHub Pages ready: place this file at the repository root and publish from the `main` branch.</p>
-    </footer>
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>Static Typing</span><span>LLVM Native Code</span><span>Manual Memory</span><span>POSIX Threads</span><span>Python Simplicity</span><span>Rust Safety</span><span>Xeon Build Manager</span><span>Cross Platform</span><span>Zero Runtime Overhead</span><span>C-Level Speed</span>
+    <span>Static Typing</span><span>LLVM Native Code</span><span>Manual Memory</span><span>POSIX Threads</span><span>Python Simplicity</span><span>Rust Safety</span><span>Xeon Build Manager</span><span>Cross Platform</span><span>Zero Runtime Overhead</span><span>C-Level Speed</span>
   </div>
+</div>
+
+<section class="hero" style="padding:0;border:none;">
+  <div class="hero-left">
+    <div class="hero-badge">Active Development</div>
+    <h1>Code at the<br><em>speed of rust.</em><br>Read like python.</h1>
+    <p class="hero-desc">Rubidium is as easy to pick up as an interpreted language &mdash; but lightning fast. Write clean, readable code without sacrificing raw performance. Compiles to native machine code via LLVM.</p>
+    <div class="hero-actions">
+      <a href="#install" class="btn-primary">Get Started &rarr;</a>
+      <a href="https://github.com/TomDexterYoutube/Rubidium" target="_blank" class="btn-secondary">View Source &nearr;</a>
+    </div>
+    <div class="hero-stats">
+      <div><span class="stat-num">LLVM</span><span class="stat-lbl">Backend</span></div>
+      <div><span class="stat-num">3</span><span class="stat-lbl">Platforms</span></div>
+      <div><span class="stat-num">v1.0.3</span><span class="stat-lbl">Latest</span></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="code-window">
+      <div class="code-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="code-fname">main.rub</span>
+      </div>
+      <pre><span class="cm"># Rubidium &mdash; parallel task example</span>
+
+<span class="kw">use</span> thread
+
+<span class="kw">let</span> name <span class="ty">str</span> = <span class="str">"Rubidium"</span>
+<span class="kw">let mut</span> count <span class="ty">i32</span> = <span class="num">0</span>
+
+<span class="kw">fn</span> <span class="fn">worker</span>() {
+    count = count + <span class="num">1</span>
+    <span class="fn">print</span>(<span class="str">"Task done: "</span>, count)
+}
+
+<span class="kw">fn</span> <span class="fn">main</span>() {
+    <span class="fn">thread</span>(worker(), <span class="num">1</span>)
+    <span class="fn">thread</span>(worker(), <span class="num">2</span>)
+    thread.<span class="fn">wait</span>(<span class="num">1</span>)
+    thread.<span class="fn">wait</span>(<span class="num">2</span>)
+    name.<span class="fn">drop</span>()  <span class="cm"># explicit memory free</span>
+}</pre>
+    </div>
+  </div>
+</section>
+
+<div class="tagline-strip">
+  <div class="tagline-item">
+    <span class="tagline-icon">&#9889;</span>
+    <div>
+      <h3>Lightning fast execution</h3>
+      <p>Compiles directly to native machine code. No interpreter, no VM, no overhead.</p>
+    </div>
+  </div>
+  <div class="tagline-item">
+    <span class="tagline-icon">&#9997;</span>
+    <div>
+      <h3>Simple as a scripting language</h3>
+      <p>Clean, minimal syntax means you spend time solving problems, not fighting the language.</p>
+    </div>
+  </div>
+  <div class="tagline-item">
+    <span class="tagline-icon">&#128737;</span>
+    <div>
+      <h3>Safe by design</h3>
+      <p>Static typing and explicit memory control catch bugs at compile time, not in production.</p>
+    </div>
+  </div>
+</div>
+
+<section id="features">
+  <div class="section-label">Core Language</div>
+  <h2 class="section-title">Built for performance,<br>designed for clarity.</h2>
+  <p class="section-sub">Every design decision in Rubidium balances raw execution speed with developer ergonomics.</p>
+  <div class="features-grid">
+    <div class="feat">
+      <span class="feat-icon">{ }</span>
+      <h3>Static Typing</h3>
+      <p>Rigorous compile-time type checking catches mismatches before your code ever runs. No runtime type surprises.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">&#8960;</span>
+      <h3>Manual Memory Control</h3>
+      <p>Use <code style="font-family:var(--mono);font-size:0.8em;color:var(--rb)">.drop()</code> to explicitly free memory at exactly the right moment. Granular control over your resource lifecycle.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">&#10227;</span>
+      <h3>Hardware Concurrency</h3>
+      <p>Real POSIX hardware threads for true parallel execution. Use <code style="font-family:var(--mono);font-size:0.8em;color:var(--rb)">thread.wait()</code> for synchronization.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">[ ]</span>
+      <h3>Dynamic Collections</h3>
+      <p>Built-in <code style="font-family:var(--mono);font-size:0.8em;color:var(--rb)">list</code>, <code style="font-family:var(--mono);font-size:0.8em;color:var(--rb)">index</code>, and <code style="font-family:var(--mono);font-size:0.8em;color:var(--rb)">dict</code> types with automatic memory boxing handled by the compiler.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">&#9650;</span>
+      <h3>LLVM Backend</h3>
+      <p>Compiles directly to highly optimized native machine code. Execution speeds comparable to C or Rust.</p>
+    </div>
+    <div class="feat">
+      <span class="feat-icon">&#11041;</span>
+      <h3>Modular Architecture</h3>
+      <p>Clear separation between internal directives (<code style="font-family:var(--mono);font-size:0.8em;color:var(--rb)">use</code>) and external file imports (<code style="font-family:var(--mono);font-size:0.8em;color:var(--rb)">import</code>).</p>
+    </div>
+  </div>
+</section>
+
+<section id="syntax" class="syntax-section">
+  <div class="section-label">Syntax Showcase</div>
+  <h2 class="section-title">Familiar. Clean.<br><em style="color:var(--rb)">Powerful.</em></h2>
+  <p class="section-sub">If you have written Python or any C-like language, Rubidium will feel immediately at home.</p>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab(this,'tab-vars')">Variables</button>
+    <button class="tab-btn" onclick="switchTab(this,'tab-fns')">Functions</button>
+    <button class="tab-btn" onclick="switchTab(this,'tab-collections')">Collections</button>
+    <button class="tab-btn" onclick="switchTab(this,'tab-threads')">Threading</button>
+  </div>
+  <div id="tab-vars" class="tab-panel active">
+    <div class="syntax-window"><pre><span class="cm"># Variables &mdash; clean, explicit, typed</span>
+
+<span class="kw">let</span> name    <span class="ty">str</span>  = <span class="str">"Rubidium"</span>
+<span class="kw">let</span> version <span class="ty">f32</span>  = <span class="num">1.0</span>
+<span class="kw">let</span> active  <span class="ty">bool</span> = <span class="num">True</span>
+
+<span class="cm"># Mutable variables need mut keyword</span>
+<span class="kw">let mut</span> count <span class="ty">i32</span> = <span class="num">0</span>
+count = count + <span class="num">1</span>
+
+<span class="cm"># Explicit memory reclamation &mdash; you are in control</span>
+name.<span class="fn">drop</span>()</pre></div>
+  </div>
+  <div id="tab-fns" class="tab-panel">
+    <div class="syntax-window"><pre><span class="cm"># Functions &mdash; clear signatures, explicit return types</span>
+
+<span class="kw">fn</span> <span class="fn">add</span>(a: <span class="ty">i32</span>, b: <span class="ty">i32</span>) -> <span class="ty">i32</span> {
+    <span class="kw">return</span> a + b
+}
+
+<span class="kw">fn</span> <span class="fn">greet</span>(name: <span class="ty">str</span>) -> <span class="ty">str</span> {
+    <span class="kw">return</span> <span class="str">"Hello, "</span> + name
+}
+
+<span class="kw">fn</span> <span class="fn">main</span>() {
+    <span class="kw">let</span> result <span class="ty">i32</span> = <span class="fn">add</span>(<span class="num">10</span>, <span class="num">32</span>)
+    <span class="fn">print</span>(<span class="fn">greet</span>(<span class="str">"world"</span>), result)
+}</pre></div>
+  </div>
+  <div id="tab-collections" class="tab-panel">
+    <div class="syntax-window"><pre><span class="cm"># Collections &mdash; mixed types, dynamic, compiler-managed</span>
+
+<span class="kw">let</span> items <span class="ty">list</span> = [<span class="num">1</span>, <span class="str">"two"</span>, <span class="num">3.14</span>, <span class="num">True</span>]
+
+<span class="cm"># Mutation via index</span>
+items(<span class="num">0</span>).<span class="fn">set</span>(<span class="num">99</span>)
+<span class="fn">print</span>(items(<span class="num">0</span>))  <span class="cm"># 99</span>
+
+<span class="cm"># Dict type for key-value data</span>
+<span class="kw">let</span> config <span class="ty">dict</span> = {
+    <span class="str">"threads"</span>: <span class="num">4</span>,
+    <span class="str">"debug"</span>:   <span class="num">False</span>
+}</pre></div>
+  </div>
+  <div id="tab-threads" class="tab-panel">
+    <div class="syntax-window"><pre><span class="cm"># Threading &mdash; real POSIX hardware threads</span>
+
+<span class="kw">use</span> thread
+
+<span class="kw">fn</span> <span class="fn">compute</span>(id: <span class="ty">i32</span>) {
+    <span class="fn">print</span>(<span class="str">"Worker "</span>, id, <span class="str">" running"</span>)
+    <span class="cm"># ... heavy computation here</span>
+}
+
+<span class="kw">fn</span> <span class="fn">main</span>() {
+    <span class="fn">thread</span>(compute(<span class="num">1</span>), <span class="num">1</span>)
+    <span class="fn">thread</span>(compute(<span class="num">2</span>), <span class="num">2</span>)
+    thread.<span class="fn">wait</span>(<span class="num">1</span>)
+    thread.<span class="fn">wait</span>(<span class="num">2</span>)
+}</pre></div>
+  </div>
+</section>
+
+<section id="speed">
+  <div class="section-label">Performance</div>
+  <h2 class="section-title">Easy as interpreted.<br><em style="color:var(--rb)">Faster than most.</em></h2>
+  <p class="section-sub">Rubidium gives you the gentle learning curve of an interpreted language &mdash; simple syntax, no boilerplate, just write and run. The difference? Under the hood it compiles to native machine code, so you never pay the performance price.</p>
+  <div class="speed-grid">
+    <div class="speed-card speed-card--rubidium">
+      <div class="speed-card-label">Rubidium</div>
+      <div class="speed-bar-wrap"><div class="speed-bar speed-bar--full"></div></div>
+      <div class="speed-note">Compiled to native via LLVM. C-level execution speed.</div>
+    </div>
+    <div class="speed-others">
+      <p class="speed-others-intro">As easy to write as these &mdash; but faster:</p>
+      <div class="lang-row">
+        <div class="lang-name"><span class="lang-dot"></span> Python</div>
+        <div class="lang-bar-wrap"><div class="lang-bar" style="width:22%"></div></div>
+        <div class="lang-tag">Interpreted</div>
+      </div>
+      <div class="lang-row">
+        <div class="lang-name"><span class="lang-dot"></span> Ruby</div>
+        <div class="lang-bar-wrap"><div class="lang-bar" style="width:18%"></div></div>
+        <div class="lang-tag">Interpreted</div>
+      </div>
+      <div class="lang-row">
+        <div class="lang-name"><span class="lang-dot"></span> JavaScript</div>
+        <div class="lang-bar-wrap"><div class="lang-bar" style="width:30%"></div></div>
+        <div class="lang-tag">JIT compiled</div>
+      </div>
+      <div class="lang-row">
+        <div class="lang-name"><span class="lang-dot"></span> PHP</div>
+        <div class="lang-bar-wrap"><div class="lang-bar" style="width:15%"></div></div>
+        <div class="lang-tag">Interpreted</div>
+      </div>
+      <p class="speed-disclaimer">Rubidium outperforms all of the above while remaining just as approachable to write.</p>
+    </div>
+  </div>
+</section>
+
+<section id="xeon" class="xeon-section" style="padding:7rem 5rem;">
+  <div class="section-label">Xeon Build Manager</div>
+  <h2 class="section-title">One tool.<br>Every workflow.</h2>
+  <p class="section-sub" style="color:var(--muted);">Xeon is the official project and build manager for Rubidium &mdash; cross-platform, zero-config, and works natively across Windows, Linux, and macOS.</p>
+  <div class="xeon-grid">
+    <div class="cmd-list">
+      <div class="cmd-item">
+        <span class="cmd-tag">xeon init</span>
+        <div class="cmd-info">
+          <h4>Initialize project</h4>
+          <p>Creates a <code style="font-family:var(--mono);font-size:0.8em;color:var(--rb)">src/</code> directory and boilerplate <code style="font-family:var(--mono);font-size:0.8em;color:var(--rb)">main.rub</code> entry point.</p>
+        </div>
+      </div>
+      <div class="cmd-item">
+        <span class="cmd-tag">xeon build</span>
+        <div class="cmd-info">
+          <h4>Compile to binary</h4>
+          <p>Compiles from <code style="font-family:var(--mono);font-size:0.8em;color:var(--rb)">src/main.rub</code>. Output binary lands in <code style="font-family:var(--mono);font-size:0.8em;color:var(--rb)">build/</code>.</p>
+        </div>
+      </div>
+      <div class="cmd-item">
+        <span class="cmd-tag">xeon run</span>
+        <div class="cmd-info">
+          <h4>Build + execute</h4>
+          <p>Compiles and immediately runs your project in one continuous step. Fastest feedback loop.</p>
+        </div>
+      </div>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">terminal</div>
+      <pre><span class="t-prompt">$</span> <span class="t-cmd">mkdir my_app &amp;&amp; cd my_app</span>
+
+<span class="t-prompt">$</span> <span class="t-cmd">xeon init</span>
+<span class="t-out">&rarr; Created src/main.rub</span>
+<span class="t-out">&rarr; Project initialized.</span>
+
+<span class="t-prompt">$</span> <span class="t-cmd">xeon run</span>
+<span class="t-out">&rarr; Compiling src/main.rub...</span>
+<span class="t-out">&rarr; Build complete (0.34s)</span>
+<span class="t-out">&rarr; Running build/my_app</span>
+
+<span style="color:#A8D08D;">Hello from Rubidium!</span></pre>
+    </div>
+  </div>
+</section>
+
+<section id="install" class="install-section">
+  <div class="section-label">Installation</div>
+  <h2 class="section-title">Up and running<br>in minutes.</h2>
+  <p class="section-sub">Xeon automatically detects and installs required dependencies like Python 3 and Clang.</p>
+  <div class="install-grid">
+    <div>
+      <div class="install-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Download the compiler</h4>
+          <p>Grab the latest Rubidium compiler from the <a href="https://github.com/TomDexterYoutube/Rubidium" target="_blank" style="color:var(--rb)">official repo</a>.</p>
+        </div>
+      </div>
+      <div class="install-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Prepare the directory</h4>
+          <p>Place extracted files into the <span class="code-inline">rubidium/</span> folder inside your Xeon directory. On Windows, rename the folder to exactly <span class="code-inline">Rubidium</span>.</p>
+        </div>
+      </div>
+      <div class="install-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Run the installer</h4>
+          <p><strong>Windows:</strong> run <span class="code-inline">install.bat</span><br><strong>Linux / macOS:</strong> run <span class="code-inline">bash install.sh</span></p>
+          <p style="margin-top:0.6rem;">Xeon is added globally to your system path automatically.</p>
+        </div>
+      </div>
+    </div>
+    <div class="install-ctas">
+      <p>// download from github</p>
+      <a href="https://github.com/TomDexterYoutube/Rubidium" target="_blank">Rubidium compiler <span>github.com &rarr;</span></a>
+      <a href="https://github.com/TomDexterYoutube/Xeon-Rubidium/releases" target="_blank">Xeon v1.0.3 (latest) <span>latest release &rarr;</span></a>
+      <a href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">Xeon source + install scripts <span>github.com &rarr;</span></a>
+    </div>
+  </div>
+</section>
+
+<div class="gh-banner">
+  <div class="gh-banner-text">
+    <h2>Open source.<br><em>Built in the open.</em></h2>
+    <p>Star the repos, open issues, and help shape what Rubidium becomes.</p>
+  </div>
+  <div class="gh-actions">
+    <a href="https://github.com/TomDexterYoutube/Rubidium" target="_blank" class="gh-btn-main">Rubidium on GitHub &nearr;</a>
+    <a href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank" class="gh-btn-sec">Xeon on GitHub &nearr;</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">Rub</div>
+  <div>Built by <a href="https://github.com/TomDexterYoutube" target="_blank">TomDexter</a> &middot; Open Source</div>
+  <div class="footer-links">
+    <a href="https://github.com/TomDexterYoutube/Rubidium" target="_blank">Compiler</a>
+    <a href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">Xeon</a>
+  </div>
+</footer>
+
+<script>
+function switchTab(btn, id) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+</script>
 </body>
 </html>
