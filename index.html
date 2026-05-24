@@ -1,1 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rubidium — A Modern Systems Language</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  :root {
+    --py-blue: #3776AB;
+    --py-blue-light: #5BA8D4;
+    --py-blue-dark: #1a4f7a;
+    --py-gold: #FFD43B;
+    --rust-red: #CE412B;
+    --rust-red-light: #E8654D;
+    --rust-red-dark: #8a2217;
+    --blend: #8B3D6B;
+    --bg: #0d1117;
+    --bg2: #161b22;
+    --bg3: #1c2330;
+    --surface: #21262d;
+    --border: rgba(255,255,255,0.08);
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --text-dim: #484f58;
+    --mono: 'Space Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+    --display: 'Bebas Neue', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 10% 20%, rgba(55,118,171,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 90% 80%, rgba(206,65,43,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 50% 50%, rgba(139,61,107,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 0 3rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(13,17,23,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+  }
+
+  .nav-logo span.rb { color: var(--py-blue-light); }
+  .nav-logo span.num { color: var(--py-gold); font-size: 0.8em; }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    align-items: center;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-family: var(--mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--py-blue-light); }
+
+  .nav-links .gh-link {
+    border: 1px solid rgba(55,118,171,0.4);
+    padding: 0.3rem 0.9rem;
+    border-radius: 2px;
+    color: var(--py-blue-light);
+  }
+
+  .nav-links .gh-link:hover {
+    background: rgba(55,118,171,0.1);
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--py-blue-light);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s ease forwards;
+  }
+
+  .hero-title {
+    font-family: var(--display);
+    font-size: clamp(5rem, 15vw, 11rem);
+    letter-spacing: 0.04em;
+    line-height: 0.9;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--py-blue-light) 0%, #a3c8e8 30%, var(--blend) 55%, var(--rust-red-light) 80%, #f5a090 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s ease forwards;
+  }
+
+  .hero-sub {
+    font-family: var(--display);
+    font-size: clamp(1rem, 3vw, 1.6rem);
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s ease forwards;
+  }
+
+  .hero-desc {
+    max-width: 560px;
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s ease forwards;
+  }
+
+  .hero-badges {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 3.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s ease forwards;
+  }
+
+  .badge {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.9rem;
+    border-radius: 2px;
+    border: 1px solid;
+  }
+
+  .badge-blue { border-color: rgba(55,118,171,0.5); color: var(--py-blue-light); background: rgba(55,118,171,0.08); }
+  .badge-red  { border-color: rgba(206,65,43,0.5);  color: var(--rust-red-light);  background: rgba(206,65,43,0.08);  }
+  .badge-gold { border-color: rgba(255,212,59,0.4); color: var(--py-gold);          background: rgba(255,212,59,0.06); }
+
+  .hero-pills {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.2s ease forwards;
+  }
+
+  .hero-code-pill {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.6rem 1.4rem;
+    color: var(--text-muted);
+  }
+
+  .hero-code-pill .ext { color: var(--py-gold); }
+  .hero-code-pill .ver { color: var(--rust-red-light); }
+
+  /* GRADIENT LINE */
+  .gradient-line {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--py-blue) 25%, var(--blend) 50%, var(--rust-red) 75%, transparent 100%);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* SECTIONS */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--py-blue-light);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-label.red { color: var(--rust-red-light); }
+  .section-label.gold { color: var(--py-gold); }
+
+  h2 {
+    font-family: var(--display);
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+  }
+
+  /* PILLARS */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 3rem;
+  }
+
+  .pillar {
+    background: var(--bg2);
+    padding: 2rem;
+    transition: background 0.2s;
+  }
+
+  .pillar:hover { background: var(--bg3); }
+
+  .pillar-icon {
+    width: 36px; height: 36px;
+    border-radius: 4px;
+    margin-bottom: 1.2rem;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .pillar-icon.blue  { background: rgba(55,118,171,0.15); color: var(--py-blue-light); border: 1px solid rgba(55,118,171,0.3); }
+  .pillar-icon.red   { background: rgba(206,65,43,0.15);  color: var(--rust-red-light);  border: 1px solid rgba(206,65,43,0.3);  }
+  .pillar-icon.gold  { background: rgba(255,212,59,0.1);  color: var(--py-gold);          border: 1px solid rgba(255,212,59,0.2); }
+  .pillar-icon.blend { background: rgba(139,61,107,0.15); color: #c890b8; border: 1px solid rgba(139,61,107,0.3); }
+
+  .pillar h3 {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+    color: var(--text);
+  }
+
+  .pillar p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* TYPES */
+  .types-section {
+    padding: 5rem 2rem;
+    position: relative;
+    z-index: 1;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .types-section > .inner { max-width: 1100px; margin: 0 auto; }
+
+  .type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 3rem;
+  }
+
+  .type-group h4 {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .type-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+  .chip {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    border: 1px solid;
+  }
+
+  .chip.int  { border-color: rgba(55,118,171,0.4); color: var(--py-blue-light); background: rgba(55,118,171,0.07); }
+  .chip.flt  { border-color: rgba(206,65,43,0.4);  color: var(--rust-red-light); background: rgba(206,65,43,0.07);  }
+  .chip.prim { border-color: rgba(255,212,59,0.35); color: var(--py-gold);        background: rgba(255,212,59,0.05); }
+  .chip.coll { border-color: rgba(139,61,107,0.4);  color: #c890b8;               background: rgba(139,61,107,0.07); }
+
+  /* CODE BLOCKS */
+  .code-showcase { margin-top: 3rem; }
+
+  .code-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.6rem 1.2rem;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    margin-bottom: -1px;
+  }
+
+  .tab-btn.active { color: var(--py-blue-light); border-bottom-color: var(--py-blue-light); }
+  .tab-btn:hover:not(.active) { color: var(--text-muted); }
+
+  .code-block {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    padding: 1.5rem;
+    display: none;
+    overflow-x: auto;
+  }
+
+  .code-block.active { display: block; }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    line-height: 1.8;
+    white-space: pre;
+    color: var(--text-muted);
+  }
+
+  .kw  { color: var(--py-blue-light); }
+  .fn  { color: var(--py-gold); }
+  .str { color: #a8d8a8; }
+  .typ { color: var(--rust-red-light); }
+  .cm  { color: var(--text-dim); font-style: italic; }
+  .num { color: #e8a56a; }
+  .op  { color: #c890b8; }
+
+  /* COLLECTIONS */
+  .coll-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 3rem;
+  }
+
+  .coll-card { background: var(--bg2); padding: 1.5rem; }
+
+  .coll-card h4 {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .coll-card h4.blue  { color: var(--py-blue-light); }
+  .coll-card h4.red   { color: var(--rust-red-light); }
+  .coll-card h4.blend { color: #c890b8; }
+
+  .coll-card p {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .coll-card code {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    background: var(--bg);
+    padding: 0.75rem;
+    border-radius: 2px;
+    line-height: 1.7;
+  }
+
+  /* MEMORY */
+  .memory-strip {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+  }
+
+  .memory-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .memory-inner h2 { font-size: clamp(2rem, 5vw, 3.5rem); }
+
+  .memory-inner p {
+    color: var(--text-muted);
+    font-weight: 300;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+
+  .drop-demo {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.9;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    color: var(--text-muted);
+  }
+
+  /* THREADING */
+  .thread-visual {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem;
+    margin-top: 3rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+  }
+
+  .thread-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .thread-label {
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    min-width: 80px;
+    font-size: 0.7rem;
+  }
+
+  .thread-bar {
+    height: 28px;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    padding: 0 0.75rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .bar-main { background: linear-gradient(90deg, var(--py-blue-dark), var(--py-blue)); width: 100%; }
+  .bar-t1   { background: linear-gradient(90deg, var(--py-blue), var(--blend)); width: 55%; }
+  .bar-t2   { background: linear-gradient(90deg, var(--blend), var(--rust-red)); width: 45%; }
+  .bar-wait { background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); width: 100%; }
+  .bar-cont { background: linear-gradient(90deg, var(--rust-red-dark), var(--rust-red)); width: 100%; }
+
+  /* ERROR */
+  .error-block {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--rust-red);
+    border-radius: 0 4px 4px 0;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.9;
+    color: var(--text-muted);
+  }
+
+  /* XEON SECTION */
+  .xeon-strip {
+    position: relative;
+    z-index: 1;
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .xeon-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+  }
+
+  .xeon-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 4rem;
+    align-items: start;
+    margin-top: 3rem;
+  }
+
+  .xeon-commands {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .xeon-cmd {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .xeon-cmd .cmd-name {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--py-gold);
+    min-width: 80px;
+    padding-top: 0.1rem;
+  }
+
+  .xeon-cmd .cmd-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .workflow-block {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .workflow-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .workflow-body {
+    padding: 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 2;
+    color: var(--text-muted);
+  }
+
+  .workflow-body .prompt { color: var(--py-blue-light); }
+  .workflow-body .cmd-text { color: var(--text); }
+  .workflow-body .out { color: var(--text-dim); font-style: italic; }
+
+  /* INSTALL */
+  .install-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 3rem;
+  }
+
+  .install-card { background: var(--bg2); padding: 1.75rem; }
+
+  .install-card .os {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .install-card .os.win  { color: var(--py-blue-light); }
+  .install-card .os.mac  { color: var(--rust-red-light); }
+  .install-card .os.lin  { color: var(--py-gold); }
+
+  .install-step {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.8rem;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    min-width: 18px;
+    padding-top: 0.15rem;
+  }
+
+  .step-text {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.5;
+  }
+
+  .step-text code {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--py-gold);
+    background: rgba(255,212,59,0.06);
+    padding: 0.1rem 0.35rem;
+    border-radius: 2px;
+  }
+
+  /* FEATURES */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+
+  .feature-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .feature-bullet {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-top: 0.55rem;
+    flex-shrink: 0;
+  }
+
+  .feature-bullet.blue { background: var(--py-blue-light); }
+  .feature-bullet.red  { background: var(--rust-red-light); }
+  .feature-bullet.gold { background: var(--py-gold); }
+
+  .feature-item h4 {
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+  }
+
+  .feature-item p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    padding: 3rem 2rem;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  footer .logo-large {
+    font-family: var(--display);
+    font-size: 3rem;
+    letter-spacing: 0.15em;
+    background: linear-gradient(135deg, var(--py-blue-light) 0%, var(--blend) 50%, var(--rust-red-light) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+
+  footer .footer-links {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+
+  footer .footer-links a {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  footer .footer-links a:hover { color: var(--py-blue-light); }
+
+  footer p {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--surface); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <span class="rb">Rb</span><span class="num">37</span>
+    &nbsp;RUBIDIUM
+  </div>
+  <ul class="nav-links">
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#types">Types</a></li>
+    <li><a href="#syntax">Syntax</a></li>
+    <li><a href="#memory">Memory</a></li>
+    <li><a href="#xeon">Xeon</a></li>
+    <li><a href="https://github.com/TomDexterYoutube/Rubidium" class="gh-link">GitHub</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-eyebrow">Element 37 · Systems Programming Language</p>
+  <h1 class="hero-title">RUBIDIUM</h1>
+  <p class="hero-sub">Python Clarity · Rust Discipline · LLVM Speed</p>
+  <p class="hero-desc">
+    A statically typed, memory-safe compiled language. Clean, readable syntax meets low-level control — compiled to native machine code via LLVM for performance comparable to C or Rust.
+  </p>
+  <div class="hero-badges">
+    <span class="badge badge-blue">Static Typing</span>
+    <span class="badge badge-red">LLVM Backend</span>
+    <span class="badge badge-gold">Compile-time Checks</span>
+    <span class="badge badge-blue">POSIX Threads</span>
+    <span class="badge badge-red">Manual Memory</span>
+    <span class="badge badge-gold">Cross-platform</span>
+  </div>
+  <div class="hero-pills">
+    <div class="hero-code-pill">source files: <span class="ext">.rub</span></div>
+    <div class="hero-code-pill">build tool: <span class="ver">xeon</span></div>
+    <div class="hero-code-pill">latest: <span class="ver">V1.0.3</span></div>
+  </div>
+</div>
+
+<div class="gradient-line"></div>
+
+<!-- PILLARS -->
+<section id="overview">
+  <p class="section-label">Core Philosophy</p>
+  <h2>Built on Four Pillars</h2>
+  <div class="pillars">
+    <div class="pillar">
+      <div class="pillar-icon blue">PY</div>
+      <h3>Python Readability</h3>
+      <p>No semicolons, brace-delimited blocks, and familiar control flow. Code reads like intention, not punctuation.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon red">RS</div>
+      <h3>Rust-Style Safety</h3>
+      <p>Mutable variables require explicit <code style="color:var(--rust-red-light);font-family:var(--mono);font-size:0.82em">mut</code>. Type mismatches are caught at compile time before code ever runs.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon gold">LLVM</div>
+      <h3>LLVM Performance</h3>
+      <p>Rubidium compiles directly to highly optimised native machine code via LLVM — execution speeds comparable to C or Rust.</p>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon blend">§</div>
+      <h3>Deep Memory Control</h3>
+      <p>Call <code style="color:#c890b8;font-family:var(--mono);font-size:0.82em">.drop()</code> to recursively free all nested allocations in a single operation, eliminating leak paths.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TYPES -->
+<div class="types-section" id="types">
+  <div class="inner">
+    <p class="section-label">Type System</p>
+    <h2>Every Bit Accounted For</h2>
+    <p style="color:var(--text-muted);font-weight:300;max-width:600px;margin-top:0.5rem">Fine-grained numeric types from 8-bit to 256-bit, with full compile-time enforcement. The compiler rejects any assignment that would mismatch a declared type. Type casting uses the <code style="font-family:var(--mono);color:#c890b8;font-size:0.85em">as</code> keyword.</p>
+
+    <div class="type-grid">
+      <div class="type-group">
+        <h4>Integer Types</h4>
+        <div class="type-chips">
+          <span class="chip int">i8</span>
+          <span class="chip int">i16</span>
+          <span class="chip int">i32</span>
+          <span class="chip int">i64</span>
+          <span class="chip int">i128</span>
+          <span class="chip int">i256</span>
+        </div>
+      </div>
+      <div class="type-group">
+        <h4>Float Types</h4>
+        <div class="type-chips">
+          <span class="chip flt">f4</span>
+          <span class="chip flt">f8</span>
+          <span class="chip flt">f16</span>
+          <span class="chip flt">f32</span>
+          <span class="chip flt">f64</span>
+          <span class="chip flt">f128</span>
+          <span class="chip flt">f256</span>
+        </div>
+      </div>
+      <div class="type-group">
+        <h4>Primitive Types</h4>
+        <div class="type-chips">
+          <span class="chip prim">str</span>
+          <span class="chip prim">bool</span>
+        </div>
+      </div>
+      <div class="type-group">
+        <h4>Collection Types</h4>
+        <div class="type-chips">
+          <span class="chip coll">list</span>
+          <span class="chip coll">index</span>
+          <span class="chip coll">dict</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:2.5rem;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1.5rem;font-family:var(--mono);font-size:0.8rem;line-height:2">
+      <span class="cm"># Booleans use capitalised literals</span><br>
+      <span class="kw">let</span> active: <span class="typ">bool</span> = <span class="num">True</span><br>
+      <br>
+      <span class="cm"># Type casting with `as`</span><br>
+      <span class="kw">let</span> big: <span class="typ">i64</span> = some_i32 <span class="op">as</span> <span class="typ">i64</span><br>
+      <span class="kw">let</span> precise: <span class="typ">f64</span> = <span class="num">100</span> <span class="op">as</span> <span class="typ">f64</span><br>
+      <br>
+      <span class="cm"># Type mismatch → compile-time error</span><br>
+      <span class="cm"># let val: i32 = "hello"   ← rejected</span>
+    </div>
+  </div>
+</div>
+
+<!-- SYNTAX CODE SHOWCASE -->
+<section id="syntax">
+  <p class="section-label">Syntax</p>
+  <h2>Familiar, Not Fragile</h2>
+
+  <div class="code-showcase">
+    <div class="code-tabs">
+      <button class="tab-btn active" onclick="showTab('variables', this)">Variables</button>
+      <button class="tab-btn" onclick="showTab('functions', this)">Functions</button>
+      <button class="tab-btn" onclick="showTab('classes', this)">Classes</button>
+      <button class="tab-btn" onclick="showTab('loops', this)">Loops</button>
+      <button class="tab-btn" onclick="showTab('strings', this)">Strings</button>
+    </div>
+
+    <div id="tab-variables" class="code-block active"><pre>
+<span class="cm"># Immutable by default — type inferred</span>
+<span class="kw">let</span> x = <span class="num">10</span>
+
+<span class="cm"># Mutable requires `mut` keyword</span>
+<span class="kw">let</span> <span class="kw">mut</span> y: <span class="typ">i32</span> = <span class="num">5</span>
+y = <span class="num">15</span>
+
+<span class="cm"># Explicit types</span>
+<span class="kw">let</span> name: <span class="typ">str</span>  = <span class="str">"Rubidium"</span>
+<span class="kw">let</span> ratio: <span class="typ">f64</span> = <span class="num">3.14</span>
+<span class="kw">let</span> flag: <span class="typ">bool</span>  = <span class="num">True</span>
+
+<span class="cm"># Variables are global except across</span>
+<span class="cm"># files and within class scope</span></pre></div>
+
+    <div id="tab-functions" class="code-block"><pre>
+<span class="cm"># Parameters typed, return type after `->`</span>
+<span class="kw">fn</span> <span class="fn">add</span>(a: <span class="typ">i32</span>, b: <span class="typ">i32</span>) <span class="op">-></span> <span class="typ">i32</span> {
+    <span class="kw">let</span> result = a + b
+    <span class="kw">return</span> result
+}
+
+<span class="kw">let</span> total = <span class="fn">add</span>(<span class="num">2</span>, <span class="num">3</span>)
+
+<span class="cm"># Compiler requires main() as entry point</span>
+<span class="kw">fn</span> <span class="fn">main</span>() {
+    <span class="fn">print</span>(<span class="str">"Welcome to Rubidium!"</span>)
+}</pre></div>
+
+    <div id="tab-classes" class="code-block"><pre>
+<span class="cm"># Classes are self-contained units</span>
+<span class="cm"># No `self` — variables referenced directly</span>
+<span class="kw">class</span> <span class="fn">Counter</span>() {
+    <span class="kw">let</span> <span class="kw">mut</span> value: <span class="typ">i32</span> = <span class="num">0</span>
+
+    <span class="kw">fn</span> <span class="fn">increment</span>() {
+        value = value + <span class="num">1</span>
+    }
+
+    <span class="kw">fn</span> <span class="fn">get</span>() <span class="op">-></span> <span class="typ">i32</span> {
+        <span class="kw">return</span> value
+    }
+}
+
+<span class="kw">fn</span> <span class="fn">main</span>() {
+    <span class="kw">let</span> <span class="kw">mut</span> c = <span class="fn">Counter</span>()
+    c.<span class="fn">increment</span>()
+    <span class="fn">print</span>(c.value)
+}</pre></div>
+
+    <div id="tab-loops" class="code-block"><pre>
+<span class="cm"># While loop</span>
+<span class="kw">let</span> <span class="kw">mut</span> count = <span class="num">0</span>
+<span class="kw">while</span> count < <span class="num">5</span> {
+    <span class="fn">print</span>(count)
+    count = count + <span class="num">1</span>
+}
+
+<span class="cm"># Numeric range — 1-indexed collections</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">10</span>) {
+    <span class="kw">if</span> i == <span class="num">5</span> { <span class="kw">break</span> }
+    <span class="fn">print</span>(i)
+}
+
+<span class="cm"># Iterate a list</span>
+<span class="kw">let</span> items: <span class="typ">list</span> = [<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>]
+<span class="kw">for</span> item <span class="kw">in</span> items {
+    <span class="fn">print</span>(item)
+}</pre></div>
+
+    <div id="tab-strings" class="code-block"><pre>
+<span class="kw">let</span> a: <span class="typ">str</span> = <span class="str">"Hello, "</span>
+<span class="kw">let</span> b: <span class="typ">str</span> = <span class="str">"World!"</span>
+
+<span class="cm"># Two equivalent concatenation forms</span>
+<span class="kw">let</span> full = a.<span class="fn">combine</span>(b)
+<span class="kw">let</span> also = a + b
+
+<span class="cm"># Built-in string methods</span>
+<span class="kw">let</span> len: <span class="typ">i64</span>    = full.<span class="fn">len</span>()
+<span class="kw">let</span> found: <span class="typ">bool</span> = full.<span class="fn">has</span>(<span class="str">"World"</span>)
+
+<span class="cm"># Convert string to number</span>
+<span class="kw">let</span> n: <span class="typ">i64</span> = <span class="str">"404"</span>.<span class="fn">to</span>(<span class="typ">i32</span>)</pre></div>
+  </div>
+</section>
+
+<!-- COLLECTIONS -->
+<section>
+  <p class="section-label">Collections</p>
+  <h2>Three Dynamic Containers</h2>
+  <p style="color:var(--text-muted);font-weight:300;max-width:620px">All collections are heap-managed with boxed memory handled automatically by the compiler. Indexing starts at 1. Mutation is explicit via <code style="font-family:var(--mono);color:#c890b8;font-size:0.85em">.set()</code>.</p>
+
+  <div class="coll-cards">
+    <div class="coll-card">
+      <h4 class="blue">list</h4>
+      <p>Ordered, mixed-type array. Accessed and mutated by numeric position.</p>
+      <code><span class="kw">let</span> items: <span class="typ">list</span> = [<span class="str">"a"</span>, <span class="num">2</span>, <span class="num">3.0</span>]
+<span class="fn">print</span>(items(<span class="num">1</span>))
+items(<span class="num">2</span>).<span class="fn">set</span>(<span class="num">99</span>)</code>
+    </div>
+    <div class="coll-card">
+      <h4 class="red">index</h4>
+      <p>Key–value store with mixed key types — strings, integers, or floats as keys.</p>
+      <code><span class="kw">let</span> ix: <span class="typ">index</span> = [<span class="str">"k"</span>: <span class="str">"v"</span>, <span class="num">2</span>: <span class="str">"x"</span>]
+<span class="fn">print</span>(ix(<span class="str">"k"</span>))
+ix(<span class="str">"k"</span>).<span class="fn">set</span>(<span class="str">"new"</span>)</code>
+    </div>
+    <div class="coll-card">
+      <h4 class="blend">dict</h4>
+      <p>Named nested collections. Multi-argument access reaches deep into structure.</p>
+      <code><span class="kw">let</span> d: <span class="typ">dict</span> = {<span class="str">"a"</span> = [<span class="num">1</span>, <span class="str">"hi"</span>]}
+<span class="fn">print</span>(d(<span class="str">"a"</span>, <span class="num">2</span>))
+d(<span class="str">"a"</span>, <span class="num">1</span>).<span class="fn">set</span>(<span class="num">99</span>)</code>
+    </div>
+  </div>
+</section>
+
+<!-- MEMORY -->
+<div class="memory-strip" id="memory">
+  <div class="memory-inner">
+    <div>
+      <p class="section-label">Memory Management</p>
+      <h2>Drop Deeply, Drop Cleanly</h2>
+      <p>Rubidium uses explicit memory management through the <code style="font-family:var(--mono);color:var(--py-gold);font-size:0.85em">.drop()</code> method. Calling drop on a variable frees it completely — the identifier ceases to exist.</p>
+      <p>For collections and strings, <code style="font-family:var(--mono);color:var(--py-gold);font-size:0.85em">.drop()</code> is recursive: every nested box, array key, and allocated value is freed in a single call, eliminating leak paths.</p>
+    </div>
+    <div>
+      <div class="drop-demo">
+<span class="cm"># Scalar drop</span>
+<span class="kw">let</span> x: <span class="typ">i32</span> = <span class="num">42</span>
+x.<span class="fn">drop</span>()   <span class="cm"># x no longer exists</span>
+
+<span class="cm"># Deep collection drop</span>
+<span class="kw">let</span> data: <span class="typ">dict</span> = {
+    <span class="str">"items"</span> = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>],
+    <span class="str">"meta"</span>  = [<span class="str">"ok"</span>, <span class="num">99</span>]
+}
+data.<span class="fn">drop</span>()
+<span class="cm"># frees: dict + both lists</span>
+<span class="cm"># + every value inside them</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ERROR HANDLING -->
+<section>
+  <p class="section-label red">Error Handling</p>
+  <h2>Try. Handle. Continue.</h2>
+  <p style="color:var(--text-muted);font-weight:300;max-width:580px">Unsafe operations go inside a <code style="font-family:var(--mono);color:var(--py-blue-light);font-size:0.85em">try</code> block. When an error occurs, the <code style="font-family:var(--mono);color:var(--rust-red-light);font-size:0.85em">error</code> block captures it as a string — accessible directly as <code style="font-family:var(--mono);color:var(--py-gold);font-size:0.85em">error</code>.</p>
+  <div class="error-block">
+<span class="kw">try</span> {
+    <span class="kw">let</span> result: <span class="typ">i32</span> = <span class="num">10</span> / <span class="num">0</span>   <span class="cm"># raises division by zero</span>
+} <span class="kw">error</span> {
+    <span class="fn">print</span>(<span class="str">"Caught: "</span> + error)     <span class="cm"># error is a str</span>
+}
+  </div>
+</section>
+
+<!-- CONCURRENCY -->
+<section id="concurrency">
+  <p class="section-label">Concurrency</p>
+  <h2>Real Hardware Threads</h2>
+  <p style="color:var(--text-muted);font-weight:300;max-width:600px;margin-bottom:0.5rem">Rubidium uses actual POSIX threads via the <code style="font-family:var(--mono);color:var(--py-blue-light);font-size:0.85em">thread</code> module. Functions are dispatched by numeric ID and awaited with <code style="font-family:var(--mono);color:var(--py-gold);font-size:0.85em">thread.wait()</code> before execution continues.</p>
+
+  <div class="thread-visual">
+    <div class="thread-row">
+      <span class="thread-label">MAIN</span>
+      <div class="thread-bar bar-main">fn main() — dispatch threads</div>
+    </div>
+    <div class="thread-row">
+      <span class="thread-label">THREAD 1</span>
+      <div class="thread-bar bar-t1">task1() — id: 1</div>
+    </div>
+    <div class="thread-row">
+      <span class="thread-label">THREAD 2</span>
+      <div class="thread-bar bar-t2">task2() — id: 2</div>
+    </div>
+    <div class="thread-row">
+      <span class="thread-label">WAIT</span>
+      <div class="thread-bar bar-wait">thread.wait(1, 2) — blocks until both return</div>
+    </div>
+    <div class="thread-row" style="margin-bottom:0">
+      <span class="thread-label">CONTINUE</span>
+      <div class="thread-bar bar-cont">execution resumes</div>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem;background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:1.5rem;font-family:var(--mono);font-size:0.8rem;line-height:1.9">
+<span class="kw">use</span> thread
+
+<span class="kw">fn</span> <span class="fn">task1</span>() { <span class="fn">print</span>(<span class="str">"Task 1 Finished"</span>) }
+<span class="kw">fn</span> <span class="fn">task2</span>() { <span class="fn">print</span>(<span class="str">"Task 2 Finished"</span>) }
+
+<span class="kw">fn</span> <span class="fn">run_threads</span>() {
+    <span class="fn">thread</span>(<span class="fn">task1</span>(), <span class="num">1</span>)
+    <span class="fn">thread</span>(<span class="fn">task2</span>(), <span class="num">2</span>)
+    thread.<span class="fn">wait</span>(<span class="num">1</span>, <span class="num">2</span>)
+}
+  </div>
+</section>
+
+<!-- XEON BUILD MANAGER -->
+<div class="xeon-strip" id="xeon">
+  <div class="xeon-inner">
+    <p class="section-label gold">Xeon Build Manager</p>
+    <h2>One Tool. Every Platform.</h2>
+    <p style="color:var(--text-muted);font-weight:300;max-width:620px">Xeon is the official build manager for Rubidium. It initialises projects, compiles source files starting from <code style="font-family:var(--mono);color:var(--py-gold);font-size:0.85em">src/main.rub</code>, and outputs runnable binaries to a <code style="font-family:var(--mono);color:var(--py-gold);font-size:0.85em">build/</code> directory. Works seamlessly on Windows, Linux, and macOS.</p>
+
+    <div class="xeon-grid">
+      <div class="xeon-commands">
+        <div class="xeon-cmd">
+          <span class="cmd-name">xeon init</span>
+          <span class="cmd-desc">Creates a new project in the current directory — generates a <code style="font-family:var(--mono);font-size:0.85em;color:var(--py-gold)">src/</code> folder and a boilerplate <code style="font-family:var(--mono);font-size:0.85em;color:var(--py-gold)">main.rub</code> entry point.</span>
+        </div>
+        <div class="xeon-cmd">
+          <span class="cmd-name">xeon build</span>
+          <span class="cmd-desc">Compiles your project starting from <code style="font-family:var(--mono);font-size:0.85em;color:var(--py-gold)">src/main.rub</code>. Places the resulting binary inside the <code style="font-family:var(--mono);font-size:0.85em;color:var(--py-gold)">build/</code> directory.</span>
+        </div>
+        <div class="xeon-cmd">
+          <span class="cmd-name">xeon run</span>
+          <span class="cmd-desc">Builds the project and immediately executes the resulting binary in one continuous step.</span>
+        </div>
+      </div>
+
+      <div class="workflow-block">
+        <div class="workflow-header">Example Workflow — Terminal</div>
+        <div class="workflow-body">
+          <span class="prompt">$</span> <span class="cmd-text">mkdir my_app && cd my_app</span><br>
+          <span class="prompt">$</span> <span class="cmd-text">xeon init</span><br>
+          <span class="out">  → created src/main.rub</span><br>
+          <span class="out">  → project ready</span><br>
+          <br>
+          <span class="cm"># edit src/main.rub</span><br>
+          <br>
+          <span class="prompt">$</span> <span class="cmd-text">xeon build</span><br>
+          <span class="out">  → compiled to build/</span><br>
+          <br>
+          <span class="prompt">$</span> <span class="cmd-text">xeon run</span><br>
+          <span class="out">  → build + execute</span><br>
+          <span class="out">  Welcome to Rubidium!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INSTALLATION -->
+<section id="install">
+  <p class="section-label">Installation</p>
+  <h2>Get Started in Three Steps</h2>
+  <p style="color:var(--text-muted);font-weight:300;max-width:640px">The installer automatically detects and installs required dependencies including Python 3 and Clang. The <code style="font-family:var(--mono);color:var(--py-gold);font-size:0.85em">xeon</code> command is added to your system path automatically.</p>
+
+  <div class="install-grid">
+    <div class="install-card">
+      <div class="os win">Windows</div>
+      <div class="install-step">
+        <span class="step-num">01</span>
+        <span class="step-text">Download Rubidium from the GitHub repo and rename the extracted folder to exactly <code>Rubidium</code></span>
+      </div>
+      <div class="install-step">
+        <span class="step-num">02</span>
+        <span class="step-text">Place the folder inside the downloaded Xeon directory at <code>rubidium/</code></span>
+      </div>
+      <div class="install-step">
+        <span class="step-num">03</span>
+        <span class="step-text">Run <code>install.bat</code> to install globally</span>
+      </div>
+    </div>
+    <div class="install-card">
+      <div class="os mac">macOS</div>
+      <div class="install-step">
+        <span class="step-num">01</span>
+        <span class="step-text">Download Rubidium and Xeon from GitHub</span>
+      </div>
+      <div class="install-step">
+        <span class="step-num">02</span>
+        <span class="step-text">Place compiler files inside the Xeon <code>rubidium/</code> folder</span>
+      </div>
+      <div class="install-step">
+        <span class="step-num">03</span>
+        <span class="step-text">Run <code>bash install.sh</code> — configures <code>~/.xeon</code> and adds <code>xeon</code> to your path</span>
+      </div>
+    </div>
+    <div class="install-card">
+      <div class="os lin">Linux</div>
+      <div class="install-step">
+        <span class="step-num">01</span>
+        <span class="step-text">Download Rubidium and Xeon from GitHub</span>
+      </div>
+      <div class="install-step">
+        <span class="step-num">02</span>
+        <span class="step-text">Place compiler files inside the Xeon <code>rubidium/</code> folder</span>
+      </div>
+      <div class="install-step">
+        <span class="step-num">03</span>
+        <span class="step-text">Run <code>bash install.sh</code> — auto-installs dependencies and sets up path</span>
+      </div>
+    </div>
+  </div>
+
+  <p style="margin-top:1.5rem;font-size:0.83rem;color:var(--text-dim);font-family:var(--mono)">
+    To update the compiler, replace the files inside <code style="color:var(--py-gold)">~/.xeon</code> with the newer version.
+  </p>
+</section>
+
+<!-- QUICK REFERENCE -->
+<section style="padding-top:0">
+  <p class="section-label">Quick Reference</p>
+  <h2>Language at a Glance</h2>
+  <div class="features-grid">
+    <div class="feature-item">
+      <div class="feature-bullet blue"></div>
+      <div>
+        <h4>No Semicolons</h4>
+        <p>Statements are newline-terminated. Clean, prose-like code structure throughout.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-bullet red"></div>
+      <div>
+        <h4>Compile-Time Type Checking</h4>
+        <p>Type mismatches are caught before execution. Assigning a string to an i32 is a compiler error.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-bullet gold"></div>
+      <div>
+        <h4>1-Based Collection Indexing</h4>
+        <p>All lists and dicts start at index 1, not 0.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-bullet blue"></div>
+      <div>
+        <h4>println() Overwrites</h4>
+        <p><code style="font-family:var(--mono);font-size:0.85em">println()</code> replaces the current line on each call rather than appending — ideal for live output updates.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-bullet red"></div>
+      <div>
+        <h4>use vs import</h4>
+        <p><code style="font-family:var(--mono);font-size:0.85em">use</code> loads built-in compiler modules. <code style="font-family:var(--mono);font-size:0.85em">import</code> loads your own external <code style="font-family:var(--mono);font-size:0.85em">.rub</code> files.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-bullet gold"></div>
+      <div>
+        <h4>File I/O Built In</h4>
+        <p><code style="font-family:var(--mono);font-size:0.85em">file_write()</code> and <code style="font-family:var(--mono);font-size:0.85em">file_read()</code> are first-class operations — no import required.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-bullet blue"></div>
+      <div>
+        <h4>No Self in Classes</h4>
+        <p>Inside a class, variables and functions are referenced directly by name — no <code style="font-family:var(--mono);font-size:0.85em">self</code> or <code style="font-family:var(--mono);font-size:0.85em">this</code>.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-bullet red"></div>
+      <div>
+        <h4>Strict Entry Point</h4>
+        <p>The compiler strictly requires <code style="font-family:var(--mono);font-size:0.85em">fn main()</code> as the program's execution entry point.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gradient-line"></div>
+
+<footer>
+  <div class="logo-large">RUBIDIUM</div>
+  <div class="footer-links">
+    <a href="https://github.com/TomDexterYoutube/Rubidium">Compiler Repo</a>
+    <a href="https://github.com/TomDexterYoutube/Xeon-Rubidium">Xeon Repo</a>
+    <a href="https://github.com/TomDexterYoutube/Xeon-Rubidium/releases/tag/V1.0.3">Latest Release</a>
+  </div>
+  <p>.rub &nbsp;·&nbsp; LLVM Backend &nbsp;·&nbsp; Windows / Linux / macOS</p>
+</footer>
+
+<script>
+  function showTab(id, btn) {
+    document.querySelectorAll('.code-block').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
