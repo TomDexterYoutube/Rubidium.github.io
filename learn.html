@@ -12,9 +12,9 @@
   --bg2:      #111114;
   --bg3:      #18181c;
   --border:   #2a2a30;
-  --rb:       #6B5B95;
-  --rb-hi:    #8B7AB8;
-  --rb-dim:   rgba(107, 91, 149, 0.08);
+  --rb:       #3776ab;
+  --rb-hi:    #2563aa;
+  --rb-dim:   rgba(55, 118, 171, 0.08);
   --text:     #e0e0e4;
   --muted:    #7a7a88;
   --dim:      #4a4a55;
@@ -24,17 +24,8 @@
   --sidebar-w: 280px;
   --top-h:    56px;
   
-  /* Color gradient stops: Python blue (#3776ab) to Rust red (#ce422b) */
-  --color-0:   #3776ab;
-  --color-1:   #4a6fa3;
-  --color-2:   #5d689b;
-  --color-3:   #706193;
-  --color-4:   #835a8b;
-  --color-5:   #965383;
-  --color-6:   #a94c7b;
-  --color-7:   #bc4573;
-  --color-8:   #cf3e6b;
-  --color-9:   #ce422b;
+  --blue:     #3776ab;
+  --red:      #ce422b;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -53,8 +44,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--prose); fon
 }
 .topbar-left { display: flex; align-items: center; gap: 0; width: var(--sidebar-w); border-right: 1px solid var(--border); height: 100%; padding: 0 1.5rem; }
 .topbar-logo { font-family: var(--head); font-weight: 800; font-size: 1rem; text-decoration: none; }
-.topbar-logo .r { background: linear-gradient(135deg, var(--color-0), var(--color-9)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.topbar-logo .b { color: var(--text); }
+.topbar-logo .r { color: var(--blue); }
+.topbar-logo .b { color: var(--red); }
 .topbar-title { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
 .topbar-right { display: flex; align-items: center; gap: 1.5rem; }
 .topbar-link { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.2s; }
@@ -62,10 +53,10 @@ body { background: var(--bg); color: var(--text); font-family: var(--prose); fon
 .topbar-gh {
   font-family: var(--mono); font-size: 0.75rem; font-weight: 600;
   letter-spacing: 0.06em; text-transform: uppercase;
-  padding: 0.35rem 0.9rem; background: linear-gradient(135deg, var(--color-0), var(--color-9)); color: #fff;
-  text-decoration: none; transition: opacity 0.2s;
+  padding: 0.35rem 0.9rem; background: var(--blue); color: #fff;
+  text-decoration: none; transition: background 0.2s;
 }
-.topbar-gh:hover { opacity: 0.8; }
+.topbar-gh:hover { background: var(--rb-hi); }
 
 /* ── LAYOUT ── */
 .layout { display: flex; padding-top: var(--top-h); min-height: 100vh; }
@@ -112,9 +103,9 @@ body { background: var(--bg); color: var(--text); font-family: var(--prose); fon
   user-select: none;
 }
 .sidebar-item:hover { color: var(--text); background: var(--bg2); }
-.sidebar-item.active { background: linear-gradient(90deg, rgba(107, 91, 149, 0.15), transparent); border-left-color: var(--color-5); color: var(--color-5); }
+.sidebar-item.active { background: linear-gradient(90deg, rgba(55, 118, 171, 0.15), transparent); border-left-color: var(--blue); color: var(--blue); }
 .sidebar-item .ch-num { color: var(--dim); font-size: 0.68rem; min-width: 1.4rem; }
-.sidebar-item.active .ch-num { color: var(--color-5); opacity: 0.6; }
+.sidebar-item.active .ch-num { color: var(--blue); opacity: 0.6; }
 
 /* ── MAIN CONTENT ── */
 .main {
@@ -135,10 +126,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--prose); fon
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  background: linear-gradient(90deg, var(--color-0), var(--color-9));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--blue);
   margin-bottom: 0.6rem;
 }
 .ch-title {
@@ -155,8 +143,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--prose); fon
   color: #aaa;
   line-height: 1.8;
   margin-bottom: 2.5rem;
-  border-left: 2px solid;
-  border-image: linear-gradient(180deg, var(--color-0), var(--color-9)) 1;
+  border-left: 2px solid var(--blue);
   padding-left: 1.2rem;
   font-style: italic;
 }
@@ -175,10 +162,7 @@ h3 {
   font-family: var(--mono);
   font-size: 0.85rem;
   font-weight: 600;
-  background: linear-gradient(90deg, var(--color-2), var(--color-7));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--blue);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   margin: 2rem 0 0.7rem;
@@ -197,8 +181,7 @@ code {
   font-size: 0.82em;
   background: var(--bg3);
   border: 1px solid var(--border);
-  background: linear-gradient(135deg, rgba(55, 118, 171, 0.1), rgba(206, 66, 43, 0.1));
-  color: var(--color-5);
+  color: var(--blue);
   padding: 0.1em 0.35em;
   border-radius: 2px;
 }
@@ -219,9 +202,9 @@ code {
 .code-block-filename { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); }
 .code-block-lang {
   font-family: var(--mono); font-size: 0.65rem;
-  background: linear-gradient(135deg, rgba(55, 118, 171, 0.15), rgba(206, 66, 43, 0.15));
-  color: var(--color-5);
-  border: 1px solid rgba(107, 91, 149, 0.3);
+  background: rgba(206, 66, 43, 0.08);
+  color: var(--red);
+  border: 1px solid rgba(206, 66, 43, 0.3);
   padding: 0.1rem 0.45rem; letter-spacing: 0.08em; text-transform: uppercase;
 }
 .code-block pre {
@@ -234,12 +217,12 @@ code {
 }
 
 /* SYNTAX */
-.kw  { color: var(--color-0); }
-.ty  { color: var(--color-3); }
-.fn  { color: var(--color-1); }
-.str { color: var(--color-8); }
+.kw  { color: var(--blue); }
+.ty  { color: #8b5a7d; }
+.fn  { color: #6bceff; }
+.str { color: #7ec88a; }
 .cm  { color: #555560; font-style: italic; }
-.nb  { color: var(--color-5); }
+.nb  { color: #c678dd; }
 .op  { color: var(--muted); }
 
 /* ── CALLOUTS ── */
@@ -252,9 +235,9 @@ code {
   font-size: 0.82rem;
   line-height: 1.7;
 }
-.callout-note    { background: linear-gradient(135deg, rgba(55, 118, 171, 0.06), rgba(107, 91, 149, 0.06)); border: 1px solid rgba(107, 91, 149, 0.2); }
-.callout-warn    { background: linear-gradient(135deg, rgba(107, 91, 149, 0.06), rgba(206, 66, 43, 0.06));  border: 1px solid rgba(206, 66, 43, 0.2); }
-.callout-danger  { background: linear-gradient(135deg, rgba(206, 66, 43, 0.07), rgba(206, 66, 43, 0.1));   border: 1px solid rgba(206, 66, 43, 0.3); }
+.callout-note    { background: rgba(55, 118, 171, 0.06); border: 1px solid rgba(55, 118, 171, 0.2); }
+.callout-warn    { background: rgba(206, 66, 43, 0.06);  border: 1px solid rgba(206, 66, 43, 0.2); }
+.callout-danger  { background: rgba(206, 66, 43, 0.07);   border: 1px solid rgba(206, 66, 43, 0.3); }
 .callout-icon    { font-size: 1rem; flex-shrink: 0; line-height: 1.7; }
 .callout p       { margin: 0; font-family: var(--mono); font-size: 0.82rem; color: var(--muted); }
 .callout strong  { color: var(--text); }
@@ -270,7 +253,7 @@ code {
 .compare-table td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); color: var(--text); }
 .compare-table tr:last-child td { border-bottom: none; }
 .compare-table tr:hover td { background: var(--bg2); }
-.tag-rb { background: linear-gradient(90deg, var(--color-2), var(--color-7)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; }
+.tag-rb { color: var(--blue); font-weight: 600; }
 
 /* ── CHAPTER NAV ── */
 .ch-nav {
@@ -290,7 +273,7 @@ code {
   background: transparent;
   max-width: 48%;
 }
-.ch-nav-btn:hover { border-color: var(--color-5); background: linear-gradient(135deg, rgba(107, 91, 149, 0.1), rgba(107, 91, 149, 0.05)); }
+.ch-nav-btn:hover { border-color: var(--blue); background: rgba(55, 118, 171, 0.1); }
 .ch-nav-direction { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.2rem; }
 .ch-nav-title { font-size: 0.82rem; color: var(--text); }
 .ch-nav-btn.next { text-align: right; margin-left: auto; }
@@ -412,10 +395,10 @@ code {
     This book will teach you the Rubidium programming language from scratch —
     no prior systems programming experience required.
   </p>
-  <p class="lead">Rubidium is a high-performance, statically-typed compiled language designed to be approachable for beginners while scaling to real systems programming. It combines the clean, readabl[...]
+  <p class="lead">Rubidium is a high-performance, statically-typed compiled language designed to be approachable for beginners while scaling to real systems programming. It combines the clean, readable syntax of Python with the performance and safety guarantees of Rust.</p>
 
   <h2>Who this book is for</h2>
-  <p>This book assumes you can write basic programs in any language — loops, variables, functions. You don't need to know C, Rust, or anything low-level. If you've written Python, JavaScript, or sim[...]
+  <p>This book assumes you can write basic programs in any language — loops, variables, functions. You don't need to know C, Rust, or anything low-level. If you've written Python, JavaScript, or another high-level language, you're ready.</p>
 
   <h2>What you'll learn</h2>
   <ul>
@@ -429,7 +412,7 @@ code {
   </ul>
 
   <h2>How this book is structured</h2>
-  <p>Chapters build on each other. Read them in order if you're new to the language. If you already know the basics, feel free to jump to any chapter from the sidebar. Every chapter contains working c[...]
+  <p>Chapters build on each other. Read them in order if you're new to the language. If you already know the basics, feel free to jump to any chapter from the sidebar. Every chapter contains working code examples you can copy and run.</p>
 
   <div class="callout callout-note">
     <span class="callout-icon">💡</span>
@@ -452,7 +435,7 @@ code {
   <p class="ch-intro">Install Xeon, create your first project, and run your first Rubidium program.</p>
 
   <h2>Installing Xeon</h2>
-  <p>Xeon is the official build manager for Rubidium. You use it to initialise projects, compile code, and run programs. Install it by cloning the repository and running the install script for your pl[...]
+  <p>Xeon is the official build manager for Rubidium. You use it to initialise projects, compile code, and run programs. Install it by cloning the repository and running the install script for your operating system.</p>
 
   <div class="code-block">
     <div class="code-block-header"><span class="code-block-filename">Linux / macOS</span></div>
@@ -530,530 +513,26 @@ xeon init</pre>
   </div>
 </div>
 
-<!-- ═══ CH 02 — VARIABLES & TYPES ═══ -->
-<div class="chapter" id="ch-2">
-  <div class="ch-eyebrow">Chapter 02</div>
-  <h1 class="ch-title">Variables &amp; Types</h1>
-  <p class="ch-intro">How to declare variables, annotate types, and work with Rubidium's type system.</p>
-
-  <h2>Declaring variables</h2>
-  <p>Use <code>let</code> to declare a variable. The type annotation goes after the variable name, separated by a colon. Type annotations are optional — Rubidium can infer the type from the value.</[...]
-
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">variables.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="cm"># With type annotation (colon before the type)</span>
-<span class="kw">let</span> name<span class="op">:</span>  <span class="ty">str</span>  = <span class="str">"Rubidium"</span>
-<span class="kw">let</span> score<span class="op">:</span> <span class="ty">i32</span>  = <span class="nb">100</span>
-<span class="kw">let</span> pi<span class="op">:</span>    <span class="ty">f64</span>  = <span class="nb">3.14159</span>
-<span class="kw">let</span> alive<span class="op">:</span> <span class="ty">bool</span> = <span class="nb">True</span>
-
-<span class="cm"># Without annotation — type is inferred</span>
-<span class="kw">let</span> x = <span class="nb">42</span>         <span class="cm"># inferred as i32 (or i64 depending on context)</span>
-<span class="kw">let</span> msg = <span class="str">"hello"</span>  <span class="cm"># inferred as str</span></pre>
-  </div>
-
-  <h2>Mutable variables</h2>
-  <p>By default, variables cannot be reassigned. Add <code>mut</code> if you need to change the value later. Trying to reassign a non-mut variable is a <em>compile error</em>.</p>
-
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">mut.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let mut</span> count<span class="op">:</span> <span class="ty">i32</span> = <span class="nb">0</span>
-count = count + <span class="nb">1</span>    <span class="cm"># OK — count is mut</span>
-
-<span class="kw">let</span> name<span class="op">:</span> <span class="ty">str</span> = <span class="str">"Alice"</span>
-name = <span class="str">"Bob"</span>          <span class="cm"># ERROR: name is not mutable</span></pre>
-  </div>
-
-  <h2>All available types</h2>
-  <table class="compare-table">
-    <thead><tr><th>Type</th><th>Description</th><th>Example</th></tr></thead>
-    <tbody>
-      <tr><td class="tag-rb">i32</td><td>32-bit signed integer</td><td><code>let x: i32 = 100</code></td></tr>
-      <tr><td class="tag-rb">i64</td><td>64-bit signed integer</td><td><code>let x: i64 = 100</code></td></tr>
-      <tr><td class="tag-rb">i128 … i2048</td><td>Large signed integers</td><td><code>let x: i128 = 100</code></td></tr>
-      <tr><td class="tag-rb">f32</td><td>32-bit float</td><td><code>let x: f32 = 3.14</code></td></tr>
-      <tr><td class="tag-rb">f64</td><td>64-bit float</td><td><code>let x: f64 = 3.14</code></td></tr>
-      <tr><td class="tag-rb">f128 … f2048</td><td>Large floats</td><td><code>let x: f128 = 3.14</code></td></tr>
-      <tr><td class="tag-rb">str</td><td>Text string</td><td><code>let s: str = "hi"</code></td></tr>
-      <tr><td class="tag-rb">bool</td><td>True or False</td><td><code>let b: bool = True</code></td></tr>
-      <tr><td class="tag-rb">Null</td><td>Valid for any type — empty</td><td><code>let x: i32 = Null</code></td></tr>
-    </tbody>
-  </table>
-
-  <h2>Null</h2>
-  <p><code>Null</code> is a valid value for every type. It means the variable exists but currently holds no data.</p>
-
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">null.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let</span> x<span class="op">:</span>    <span class="ty">i32</span>  = <span class="nb">Null</span>
-<span class="kw">let</span> name<span class="op">:</span> <span class="ty">str</span>  = <span class="nb">Null</span>
-<span class="kw">let</span> flag<span class="op">:</span> <span class="ty">bool</span> = <span class="nb">Null</span></pre>
-  </div>
-
-  <h2>Type casting</h2>
-  <p>Use the <code>as</code> keyword to cast between types.</p>
-
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">casting.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let</span> y<span class="op">:</span>     <span class="ty">i32</span> = <span class="nb">5</span>
-<span class="kw">let</span> large<span class="op">:</span> <span class="ty">i64</span> = y <span class="kw">as</span> <span class="ty">i64</span>
-<span class="kw">let</span> f<span class="op">:</span>     <span class="ty">f64</span> = <span class="nb">100</span> <span class="kw">as</span> <span class="ty">f64</span></pre>
-  </div>
-
-  <h2>Mathematics</h2>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">math.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let</span> a = <span class="nb">10</span> + <span class="nb">5</span>    <span class="cm"># 15  — addition</span>
-<span class="kw">let</span> b = <span class="nb">10</span> - <span class="nb">5</span>    <span class="cm"># 5   — subtraction</span>
-<span class="kw">let</span> c = <span class="nb">10</span> * <span class="nb">5</span>    <span class="cm"># 50  — multiplication</span>
-<span class="kw">let</span> d = <span class="nb">10</span> / <span class="nb">5</span>    <span class="cm"># 2   — division</span>
-<span class="kw">let</span> e = <span class="nb">2</span> ** <span class="nb">3</span>   <span class="cm"># 8   — power</span>
-<span class="kw">let</span> f = */<span class="nb">16</span>      <span class="cm"># 4   — square root (prefix operator)</span>
-
-<span class="cm"># Standard BODMAS precedence applies</span>
-<span class="kw">let</span> g = <span class="nb">1</span> + <span class="nb">2</span> * <span class="nb">3</span>    <span class="cm"># 7</span>
-<span class="kw">let</span> h = (<span class="nb">1</span> + <span class="nb">2</span>) * <span class="nb">3</span>  <span class="cm"># 9</span></pre>
-  </div>
-
-  <h2>Comparison &amp; logic</h2>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">logic.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="cm"># Comparison — returns bool</span>
-<span class="kw">let</span> check<span class="op">:</span> <span class="ty">bool</span> = <span class="nb">10</span> > <span class="nb">5</span>    <span class="cm"># True</span>
-<span class="cm"># == != > < >= <=</span>
-
-<span class="cm"># Logic — and, or, not</span>
-<span class="kw">let</span> result<span class="op">:</span> <span class="ty">bool</span> = <span class="nb">True</span> <span class="kw">and</span> <span class="kw">not</span> <span class="nb">False</span></pre>
-  </div>
-
-  <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(1)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Getting Started</span></div>
-    <div class="ch-nav-btn next" onclick="show(3)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Strings</span></div>
-  </div>
-</div>
-
-<!-- ═══ CH 03 — STRINGS ═══ -->
-<div class="chapter" id="ch-3">
-  <div class="ch-eyebrow">Chapter 03</div>
-  <h1 class="ch-title">Strings</h1>
-  <p class="ch-intro">Working with text in Rubidium — concatenation, interpolation, and string methods.</p>
-
-  <h2>Basic strings</h2>
-  <p>Strings are declared with double quotes and the <code>str</code> type.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">strings.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let</span> a<span class="op">:</span> <span class="ty">str</span> = <span class="str">"Hello"</span>
-<span class="kw">let</span> b<span class="op">:</span> <span class="ty">str</span> = <span class="str">"World"</span>
-
-<span class="cm"># Concatenation with + or .combine()</span>
-<span class="kw">let</span> c = a + <span class="str">" "</span> + b       <span class="cm"># "Hello World"</span>
-<span class="kw">let</span> d = a<span class="op">.</span><span class="fn">combine</span>(b)      <span class="cm"># "HelloWorld"</span></pre>
-  </div>
-
-  <h2>String interpolation</h2>
-  <p>Use <code>i""</code> (an interpolated string) to embed variable values directly inside text. Wrap the variable in <code>{}</code>.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">interpolation.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let</span> name<span class="op">:</span>  <span class="ty">str</span> = <span class="str">"Alice"</span>
-<span class="kw">let</span> score<span class="op">:</span> <span class="ty">i32</span> = <span class="nb">42</span>
-
-<span class="fn">print</span>(<span class="str">i"Hello, {name}!"</span>)           <span class="cm"># Hello, Alice!</span>
-<span class="fn">print</span>(<span class="str">i"Score: {score} points"</span>)    <span class="cm"># Score: 42 points</span></pre>
-  </div>
-
-  <h2>String methods</h2>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">string-methods.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let</span> a<span class="op">:</span> <span class="ty">str</span> = <span class="str">"Hello"</span>
-
-<span class="cm"># Length — returns i64</span>
-<span class="kw">let</span> length<span class="op">:</span> <span class="ty">i64</span>  = a<span class="op">.</span><span class="fn">len</span>()
-<span class="cm"># Contains — returns bool</span>
-<span class="kw">let</span> found<span class="op">:</span>  <span class="ty">bool</span> = a<span class="op">.</span><span class="fn">has</span>(<span class="str">"ell"</span>)   <span class="cm"># True</span></pre>
-  </div>
-
-  <h2>Type conversion</h2>
-  <p>Convert between strings and numbers with <code>.to()</code>.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">conversion.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="cm"># String → number</span>
-<span class="kw">let</span> num_str<span class="op">:</span> <span class="ty">str</span> = <span class="str">"123"</span>
-<span class="kw">let</span> i<span class="op">:</span> <span class="ty">i32</span> = num_str<span class="op">.</span><span class="fn">to</span>(<span class="ty">i32</span>)
-<span class="kw">let</span> f<span class="op">:</span> <span class="ty">f64</span> = num_str<span class="op">.</span><span class="fn">to</span>(<span class="ty">f64</span>)
-
-<span class="cm"># Number → string</span>
-<span class="kw">let</span> n<span class="op">:</span> <span class="ty">i32</span> = <span class="nb">42</span>
-<span class="kw">let</span> s<span class="op">:</span> <span class="ty">str</span> = n<span class="op">.</span><span class="fn">to</span>(<span class="ty">str</span>)</pre>
-  </div>
-
-  <h2>User input</h2>
-  <p><code>input()</code> reads a line of text from the user and returns it as a <code>str</code>.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">input.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let</span> user<span class="op">:</span> <span class="ty">str</span> = <span class="fn">input</span>(<span class="str">"Enter your name: "</span>)
-<span class="fn">print</span>(<span class="str">i"Hello, {user}!"</span>)</pre>
-  </div>
-
-  <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(2)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Variables &amp; Types</span></div>
-    <div class="ch-nav-btn next" onclick="show(4)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Collections — List</span></div>
-  </div>
-</div>
-
-<!-- ═══ CH 04 — LIST ═══ -->
-<div class="chapter" id="ch-4">
-  <div class="ch-eyebrow">Chapter 04</div>
-  <h1 class="ch-title">Collections — List</h1>
-  <p class="ch-intro">An ordered, zero-indexed sequence that can hold mixed types.</p>
-
-  <h2>Creating a list</h2>
-  <p>Use square brackets. Lists require <code>mut</code> to be modified.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">list.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let mut</span> items<span class="op">:</span> <span class="ty">list</span> = [<span class="str">"hello"</span>, <span class="nb">2.5</span>, <span class="nb">True</span>]</pre>
-  </div>
-
-  <h2>Accessing items</h2>
-  <p>Access by index using parentheses (zero-indexed).</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">list-access.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="fn">print</span>(items(<span class="nb">0</span>))   <span class="cm"># hello</span>
-<span class="fn">print</span>(items(<span class="nb">1</span>))   <span class="cm"># 2.5</span>
-<span class="fn">print</span>(items(<span class="nb">2</span>))   <span class="cm"># True</span></pre>
-  </div>
-
-  <h2>Mutating items</h2>
-  <p>Use <code>.set()</code> to change an item in place.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">list-mutate.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre>items(<span class="nb">0</span>)<span class="op">.</span><span class="fn">set</span>(<span class="str">"changed"</span>)
-<span class="fn">print</span>(items(<span class="nb">0</span>))   <span class="cm"># changed</span></pre>
-  </div>
-
-  <h2>Appending items</h2>
-  <p>Use <code>.add()</code> on the list itself (empty parentheses) to append a new item.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">list-add.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre>items()<span class="op">.</span><span class="fn">add</span>(<span class="str">"new item"</span>)</pre>
-  </div>
-
-  <h2>Deep copy rule</h2>
-  <p>Assigning a list to a new variable creates a <strong>full deep copy</strong>. Modifying the copy does not affect the original.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">deep-copy.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let mut</span> a<span class="op">:</span> <span class="ty">list</span> = [<span class="nb">1</span>, <span class="nb">2</span>, <span class="nb">3</span>]
-<span class="kw">let mut</span> b = a
-
-b(<span class="nb">0</span>)<span class="op">.</span><span class="fn">set</span>(<span class="nb">999</span>)
-
-<span class="fn">print</span>(a)   <span class="cm"># [1, 2, 3]  — unchanged</span>
-<span class="fn">print</span>(b)   <span class="cm"># [999, 2, 3]</span></pre>
-  </div>
-
-  <h2>Iterating over a list</h2>
-  <p>Use a <code>for</code> loop. The loop variable is automatically freed when the loop ends.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">list-iter.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let mut</span> nums<span class="op">:</span> <span class="ty">list</span> = [<span class="nb">10</span>, <span class="nb">20</span>, <span class="nb">30</span>]
-
-<span class="kw">for</span> item <span class="kw">in</span> nums {
-    <span class="fn">print</span>(item)
-}
-<span class="cm"># prints 10, 20, 30</span></pre>
-  </div>
-
-  <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(3)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Strings</span></div>
-    <div class="ch-nav-btn next" onclick="show(5)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Collections — Index</span></div>
-  </div>
-</div>
-
-<!-- ═══ CH 05 — INDEX ═══ -->
-<div class="chapter" id="ch-5">
-  <div class="ch-eyebrow">Chapter 05</div>
-  <h1 class="ch-title">Collections — Index</h1>
-  <p class="ch-intro">A flat key→value map. Keys and values can be any type.</p>
-
-  <div class="callout callout-note">
-    <span class="callout-icon">💡</span>
-    <p><strong>Index vs Dict:</strong> An <code>index</code> maps one key to one value. A <code>dict</code> maps one key to a <em>collection</em> of values. They look similar but behave differently.</p>
-  </div>
-
-  <h2>Creating an index</h2>
-  <p>Uses square brackets with a colon <code>:</code> separating keys from values.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">index.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let mut</span> my_index<span class="op">:</span> <span class="ty">index</span> = [
-    <span class="str">"name"</span><span class="op">:</span>  <span class="str">"Rubidium"</span>,
-    <span class="nb">1</span><span class="op">:</span>       <span class="str">"one"</span>,
-    <span class="nb">2.5</span><span class="op">:</span>     <span class="str">"float key"</span>
-]</pre>
-  </div>
-
-  <h2>Accessing values</h2>
-  <p>Access by key using parentheses.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">index-access.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="fn">print</span>(my_index(<span class="str">"name"</span>))   <span class="cm"># Rubidium</span>
-<span class="fn">print</span>(my_index(<span class="nb">1</span>))         <span class="cm"># one</span></pre>
-  </div>
-
-  <h2>Mutating a value</h2>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">index-mutate.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre>my_index(<span class="str">"name"</span>)<span class="op">.</span><span class="fn">set</span>(<span class="str">"updated"</span>)
-<span class="fn">print</span>(my_index(<span class="str">"name"</span>))   <span class="cm"># updated</span></pre>
-  </div>
-
-  <h2>Adding a new key</h2>
-  <p>Use <code>.add(key, value)</code>. This errors if the key already exists.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">index-add.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre>my_index()<span class="op">.</span><span class="fn">add</span>(<span class="str">"new_key"</span>, <span class="nb">99</span>)</pre>
-  </div>
-
-  <div class="callout callout-warn">
-    <span class="callout-icon">⚠️</span>
-    <p><strong>Note:</strong> Calling <code>.add()</code> with a key that already exists will produce a runtime error. Use <code>.set()</code> if you want to update an existing key.</p>
-  </div>
-
-  <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(4)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Collections — List</span></div>
-    <div class="ch-nav-btn next" onclick="show(6)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Collections — Dict</span></div>
-  </div>
-</div>
-
-<!-- ═══ CH 06 — DICT ═══ -->
-<div class="chapter" id="ch-6">
-  <div class="ch-eyebrow">Chapter 06</div>
-  <h1 class="ch-title">Collections — Dict</h1>
-  <p class="ch-intro">A key→collection map. Each key holds multiple values.</p>
-
-  <h2>Creating a dict</h2>
-  <p>Uses curly braces with <code>=</code> separating keys from their value lists.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">dict.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let mut</span> my_dict<span class="op">:</span> <span class="ty">dict</span> = {
-    <span class="str">"scores"</span> = [<span class="nb">10</span>, <span class="nb">20</span>, <span class="nb">30</span>],
-    <span class="str">"names"</span>  = [<span class="str">"alice"</span>, <span class="str">"bob"</span>]
-}</pre>
-  </div>
-
-  <h2>Accessing values</h2>
-  <p>Access with <code>dict(key, index)</code> — you need both the key and the position within that key's collection.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">dict-access.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="fn">print</span>(my_dict(<span class="str">"scores"</span>, <span class="nb">0</span>))   <span class="cm"># 10</span>
-<span class="fn">print</span>(my_dict(<span class="str">"scores"</span>, <span class="nb">1</span>))   <span class="cm"># 20</span>
-<span class="fn">print</span>(my_dict(<span class="str">"names"</span>,  <span class="nb">0</span>))   <span class="cm"># alice</span></pre>
-  </div>
-
-  <h2>Mutating a value</h2>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">dict-mutate.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre>my_dict(<span class="str">"scores"</span>, <span class="nb">1</span>)<span class="op">.</span><span class="fn">set</span>(<span class="nb">999</span>)
-<span class="fn">print</span>(my_dict(<span class="str">"scores"</span>, <span class="nb">1</span>))   <span class="cm"># 999</span></pre>
-  </div>
-
-  <h2>Adding values</h2>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">dict-add.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="cm"># Append to an existing key's collection</span>
-my_dict(<span class="str">"scores"</span>)<span class="op">.</span><span class="fn">add</span>(<span class="nb">40</span>)
-
-<span class="cm"># Add a brand-new top-level key (starts as Null)</span>
-my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">"new_key"</span>)</pre>
-  </div>
-
-  <h2>Iterating over a dict</h2>
-  <p>A <code>for</code> loop over a dict yields <strong>keys</strong>, not values. Use the key to access values.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">dict-iter.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">for</span> key <span class="kw">in</span> my_dict {
-    <span class="fn">print</span>(key)
-    <span class="fn">print</span>(my_dict(key, <span class="nb">0</span>))
-}</pre>
-  </div>
-
-  <h2>Collection comparison</h2>
-  <table class="compare-table">
-    <thead><tr><th>Type</th><th>Syntax</th><th>Access</th><th>Use when…</th></tr></thead>
-    <tbody>
-      <tr><td class="tag-rb">list</td><td><code>[a, b, c]</code></td><td><code>list(0)</code></td><td>Ordered sequence of items</td></tr>
-      <tr><td class="tag-rb">index</td><td><code>["k": v]</code></td><td><code>index("k")</code></td><td>One key → one value</td></tr>
-      <tr><td class="tag-rb">dict</td><td><code>{"k" = [...]}</code></td><td><code>dict("k", 0)</code></td><td>One key → many values</td></tr>
-    </tbody>
-  </table>
-
-  <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(5)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Collections — Index</span></div>
-    <div class="ch-nav-btn next" onclick="show(7)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Control Flow</span></div>
-  </div>
-</div>
-
-<!-- ═══ CH 07 — CONTROL FLOW ═══ -->
-<div class="chapter" id="ch-7">
-  <div class="ch-eyebrow">Chapter 07</div>
-  <h1 class="ch-title">Control Flow</h1>
-  <p class="ch-intro">Branching with if/else, looping with while and for.</p>
-
-  <h2>if / else if / else</h2>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">conditionals.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let</span> x = <span class="nb">7</span>
-
-<span class="kw">if</span> x == <span class="nb">7</span> {
-    <span class="fn">print</span>(<span class="str">"lucky seven"</span>)
-} <span class="kw">else if</span> x > <span class="nb">10</span> {
-    <span class="fn">print</span>(<span class="str">"big number"</span>)
-} <span class="kw">else</span> {
-    <span class="fn">print</span>(<span class="str">"something else"</span>)
-}</pre>
-  </div>
-
-  <h2>while loop</h2>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">while.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let mut</span> count = <span class="nb">0</span>
-
-<span class="kw">while</span> count < <span class="nb">5</span> {
-    <span class="fn">print</span>(count)
-    count = count + <span class="nb">1</span>
-}</pre>
-  </div>
-
-  <h2>for loop with range</h2>
-  <p><code>range(start, end)</code> — end is <em>exclusive</em>. The loop variable is automatically freed at the end of the block.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">for-range.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nb">1</span>, <span class="nb">10</span>) {
-    <span class="kw">if</span> i == <span class="nb">5</span> {
-        <span class="kw">break</span>
-    }
-    <span class="fn">print</span>(i)
-}
-<span class="cm"># prints 1 2 3 4</span></pre>
-  </div>
-
-  <h2>for loop over a list</h2>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">for-list.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let mut</span> items<span class="op">:</span> <span class="ty">list</span> = [<span class="nb">10</span>, <span class="nb">20</span>, <span class="nb">30</span>]
-
-<span class="kw">for</span> item <span class="kw">in</span> items {
-    <span class="fn">print</span>(item)
-}</pre>
-  </div>
-
-  <div class="callout callout-note">
-    <span class="callout-icon">💡</span>
-    <p><strong>Loop variables are auto-freed.</strong> The loop variable (like <code>i</code> or <code>item</code>) is automatically dropped at the end of the loop block — you don't need to call <code>.drop()</code>.</p>
-  </div>
-
-  <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(6)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Collections — Dict</span></div>
-    <div class="ch-nav-btn next" onclick="show(8)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Functions</span></div>
-  </div>
-</div>
-
-<!-- ═══ CH 08 — FUNCTIONS ═══ -->
-<div class="chapter" id="ch-8">
-  <div class="ch-eyebrow">Chapter 08</div>
-  <h1 class="ch-title">Functions</h1>
-  <p class="ch-intro">Defining reusable, isolated pieces of logic.</p>
-
-  <h2>Basic function</h2>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">functions.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">fn</span> <span class="fn">greet</span>() {
-    <span class="fn">print</span>(<span class="str">"Hello!"</span>)
-}
-
-<span class="fn">greet</span>()</pre>
-  </div>
-
-  <h2>Parameters and return types</h2>
-  <p>Parameter types and the return type use the same colon annotation as variables. The return type goes after <code>-&gt;</code>.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">params.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">fn</span> <span class="fn">add</span>(a<span class="op">:</span> <span class="ty">i32</span>, b<span class="op">:</span> <span class="ty">i32</span>) -> <span class="ty">i32</span> {
-    <span class="kw">return</span> a + b
-}
-
-<span class="kw">let</span> result<span class="op">:</span> <span class="ty">i32</span> = <span class="fn">add</span>(<span class="nb">10</span>, <span class="nb">32</span>)
-<span class="fn">print</span>(result)   <span class="cm"># 42</span></pre>
-  </div>
-
-  <h2>Functions without a return value</h2>
-  <p>If a function doesn't return anything, just omit the <code>-&gt;</code> and return type entirely.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">no-return.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">fn</span> <span class="fn">log</span>(msg<span class="op">:</span> <span class="ty">str</span>) {
-    <span class="fn">print</span>(<span class="str">i"[LOG] {msg}"</span>)
-}
-
-<span class="fn">log</span>(<span class="str">"Server started"</span>)</pre>
-  </div>
-
-  <h2>Isolated scope</h2>
-  <p>Variables declared inside a function are <strong>not</strong> placed in the global pool. They only exist for the lifetime of that function call.</p>
-
-  <div class="callout callout-note">
-    <span class="callout-icon">💡</span>
-    <p><strong>Global pool vs function scope:</strong> Top-level variables and class fields live in the global pool — visible everywhere. Function-local variables are isolated and disappear when the function returns.</p>
-  </div>
-
-  <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(7)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Control Flow</span></div>
-    <div class="ch-nav-btn next" onclick="show(9)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Memory Management</span></div>
-  </div>
-</div>
-
-<!-- ═══ CH 09 — MEMORY ═══ -->
-<div class="chapter" id="ch-9">
-  <div class="ch-eyebrow">Chapter 09</div>
-  <h1 class="ch-title">Memory Management</h1>
-  <p class="ch-intro">Rubidium has no garbage collector. You manage memory explicitly with <code>.drop()</code>.</p>
-
-  <h2>The global pool</h2>
-  <p>All variables — except those inside functions, classes, or <code>open()</code> blocks — live in a shared global pool. Think of it as a whiteboard everyone can see and write on. Memory on this pool persists until you explicitly free it.</p>
-
-  <h2>Freeing memory with .drop()</h2>
-  <p>Call <code>.drop()</code> on any variable to immediately free its memory. After dropping, the variable no longer exists.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">drop.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let</span> val = <span class="nb">42</span>
-val<span class="op">.</span><span class="fn">drop</span>()
-<span class="cm"># val no longer exists after this point</span></pre>
-  </div>
-
-  <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(8)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Functions</span></div>
-    <div class="ch-nav-btn next" onclick="show(10)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Classes</span></div>
-  </div>
-</div>
-
 </main>
 
 </div>
 
 <script>
-function show(n) {
-  const chapters = document.querySelectorAll('.chapter');
-  const items = document.querySelectorAll('.sidebar-item');
-  
-  chapters.forEach(ch => ch.classList.remove('active'));
-  items.forEach(item => item.classList.remove('active'));
-  
-  chapters[n].classList.add('active');
-  items[n].classList.add('active');
-  
-  document.getElementById('sidebar').classList.remove('open');
-}
+  function show(n) {
+    const chapters = document.querySelectorAll('.chapter');
+    chapters.forEach(ch => ch.classList.remove('active'));
+    document.getElementById('ch-' + n).classList.add('active');
 
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-}
+    const items = document.querySelectorAll('.sidebar-item');
+    items.forEach(item => item.classList.remove('active'));
+    const sidebarItems = document.querySelectorAll('.sidebar-item');
+    if (sidebarItems[n]) sidebarItems[n].classList.add('active');
+  }
+
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+  }
 </script>
 
 </body>
