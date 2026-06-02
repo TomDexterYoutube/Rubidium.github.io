@@ -8,10 +8,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;800&family=Azeret+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --bg:      #09090b;
-    --bg2:     #111114;
-    --bg3:     #18181c;
-    --border:  #2a2a30;
+    --bg:      #0a0809;
+    --bg2:     #13111c;
+    --bg3:     #1a1825;
+    --border:  #2a2530;
     --rb:      #3776ab;
     --rb-hi:   #2563aa;
     --rb-glow: rgba(55, 118, 171, 0.18);
@@ -20,12 +20,15 @@
     --muted:   #7a7a88;
     --mono:    'Azeret Mono', monospace;
     --head:    'Unbounded', sans-serif;
+    
+    --blue:    #3776ab;
+    --red:     #ce422b;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
-    background: var(--bg);
+    background: linear-gradient(135deg, #0a0809 0%, #1a0f14 50%, #0a0809 100%);
     color: var(--text);
     font-family: var(--mono);
     font-size: 15px;
@@ -43,7 +46,7 @@
     justify-content: space-between;
     padding: 0 3rem;
     height: 60px;
-    background: rgba(9,9,11,0.88);
+    background: rgba(10, 8, 9, 0.95);
     backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border);
   }
@@ -54,8 +57,8 @@
     letter-spacing: -0.02em;
     text-decoration: none;
   }
-  .nav-logo .logo-Rub    { color: var(--rb); }
-  .nav-logo .logo-idium  { color: var(--text); }
+  .nav-logo .logo-Rub    { color: var(--blue); }
+  .nav-logo .logo-idium  { color: var(--red); }
   .nav-links { display: flex; gap: 2.5rem; list-style: none; }
   .nav-links a {
     color: var(--muted);
@@ -71,7 +74,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.45rem 1.1rem;
-    background: var(--rb);
+    background: var(--blue);
     color: #fff;
     font-family: var(--mono);
     font-size: 0.78rem;
@@ -99,7 +102,7 @@
     position: absolute;
     top: -120px; left: -120px;
     width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(55,118,171,0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(206, 66, 43, 0.15) 0%, transparent 70%);
     pointer-events: none;
     animation: pulse 6s ease-in-out infinite alternate;
   }
@@ -113,8 +116,8 @@
     font-weight: 500;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--rb);
-    border: 1px solid var(--rb);
+    color: var(--blue);
+    border: 1px solid var(--blue);
     padding: 0.3rem 0.75rem;
     margin-bottom: 1.5rem;
     animation: fadeup 0.6s ease both;
@@ -128,7 +131,7 @@
     margin-bottom: 1.5rem;
     animation: fadeup 0.6s 0.1s ease both;
   }
-  .hero-title .accent { color: var(--rb); }
+  .hero-title .accent { color: var(--red); }
   .hero-sub {
     color: var(--muted);
     font-size: 0.92rem;
@@ -150,7 +153,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.6rem;
-    background: var(--rb);
+    background: var(--blue);
     color: #fff;
     font-family: var(--mono);
     font-size: 0.82rem;
@@ -196,7 +199,7 @@
     border-bottom: 1px solid var(--border);
   }
   .dot { width: 11px; height: 11px; border-radius: 50%; }
-  .dot-r { background: #3776ab; }
+  .dot-r { background: var(--blue); }
   .dot-y { background: #f5a623; }
   .dot-g { background: #29c55c; }
   .term-title { margin-left: 0.4rem; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; }
@@ -204,7 +207,7 @@
   .term-body pre { white-space: pre; }
 
   /* SYNTAX COLOURS */
-  .kw  { color: #3776ab; }
+  .kw  { color: var(--blue); }
   .ty  { color: #8b5a7d; }
   .fn  { color: #6bceff; }
   .str { color: #7ec88a; }
@@ -226,7 +229,7 @@
     font-weight: 500;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--rb);
+    color: var(--blue);
     margin-bottom: 0.8rem;
   }
   .section-title {
@@ -266,7 +269,7 @@
     position: absolute;
     bottom: 0; left: 0; right: 0;
     height: 2px;
-    background: var(--rb);
+    background: var(--red);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.3s ease;
@@ -278,8 +281,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--rb-dim);
-    border: 1px solid rgba(55,118,171,0.25);
+    background: rgba(206, 66, 43, 0.08);
+    border: 1px solid rgba(206, 66, 43, 0.25);
     margin-bottom: 1.2rem;
     font-size: 1.1rem;
   }
@@ -315,7 +318,7 @@
     transition: color 0.2s, border-color 0.2s;
     text-transform: uppercase;
   }
-  .tab.active { color: var(--rb); border-bottom-color: var(--rb); }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
   .tab:hover:not(.active) { color: var(--text); }
   .code-panel { display: none; background: var(--bg2); border: 1px solid var(--border); }
   .code-panel.active { display: block; }
@@ -330,9 +333,9 @@
   .code-filename { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.05em; }
   .code-lang {
     font-size: 0.68rem;
-    background: var(--rb-dim);
-    color: var(--rb);
-    border: 1px solid rgba(55,118,171,0.25);
+    background: rgba(206, 66, 43, 0.08);
+    color: var(--red);
+    border: 1px solid rgba(206, 66, 43, 0.25);
     padding: 0.15rem 0.5rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -354,12 +357,12 @@
     border-left: 3px solid transparent;
     transition: border-left-color 0.2s, background 0.2s;
   }
-  .cmd-row:hover { border-left-color: var(--rb); background: var(--bg3); }
-  .cmd-name { color: var(--rb); font-weight: 600; font-size: 0.85rem; min-width: 120px; letter-spacing: 0.04em; }
+  .cmd-row:hover { border-left-color: var(--blue); background: var(--bg3); }
+  .cmd-name { color: var(--blue); font-weight: 600; font-size: 0.85rem; min-width: 120px; letter-spacing: 0.04em; }
   .cmd-desc { color: var(--muted); font-size: 0.78rem; }
   .xeon-terminal { background: var(--bg2); border: 1px solid var(--border); overflow: hidden; }
   .xeon-term-body { padding: 1.4rem 1.6rem; font-size: 0.82rem; line-height: 2.1; }
-  .prompt  { color: var(--rb); }
+  .prompt  { color: var(--blue); }
   .cmd-text { color: var(--text); }
   .out-text { color: var(--muted); }
   .success  { color: #29c55c; }
@@ -375,7 +378,7 @@
     display: inline-block;
     background: var(--bg3);
     border: 1px solid var(--border);
-    color: var(--rb);
+    color: var(--blue);
     padding: 0.05rem 0.4rem;
     font-size: 0.82em;
   }
@@ -385,7 +388,7 @@
   .cta-banner {
     background: var(--bg2);
     border: 1px solid var(--border);
-    border-left: 4px solid var(--rb);
+    border-left: 4px solid var(--red);
     padding: 3rem 3.5rem;
     display: flex;
     align-items: center;
@@ -406,8 +409,8 @@
     margin: 0 auto;
   }
   .footer-brand { font-family: var(--head); font-size: 0.9rem; font-weight: 700; letter-spacing: -0.01em; }
-  .footer-brand .logo-Rub   { color: var(--rb); }
-  .footer-brand .logo-idium { color: var(--muted); }
+  .footer-brand .logo-Rub   { color: var(--blue); }
+  .footer-brand .logo-idium { color: var(--red); }
   .footer-links { display: flex; gap: 1.8rem; list-style: none; }
   .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.2s; }
   .footer-links a:hover { color: var(--text); }
@@ -445,7 +448,7 @@
     <li><a href="#syntax">Syntax</a></li>
     <li><a href="#xeon">Xeon</a></li>
     <li><a href="#start">Get Started</a></li>
-    <li><a href="learn.html" style="color:var(--rb);">Learn</a></li>
+    <li><a href="learn.html" style="color:var(--blue);">Learn</a></li>
   </ul>
   <a class="nav-cta" href="https://github.com/TomDexterYoutube/Rubidium" target="_blank">GitHub →</a>
 </nav>
