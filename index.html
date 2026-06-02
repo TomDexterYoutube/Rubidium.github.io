@@ -12,14 +12,17 @@
     --bg2:     #111114;
     --bg3:     #18181c;
     --border:  #2a2a30;
-    --rb:      #c8374a;
-    --rb-hi:   #e84255;
-    --rb-glow: rgba(200, 55, 74, 0.18);
-    --rb-dim:  rgba(200, 55, 74, 0.08);
+    --rb: #E34234;
+    --rb-hi: #F05030;
+    --rb-glow: rgba(227, 66, 52, 0.18);
+    --rb-dim: rgba(227, 66, 52, 0.08);
     --text:    #e8e8ec;
     --muted:   #7a7a88;
     --mono:    'Azeret Mono', monospace;
     --head:    'Unbounded', sans-serif;
+  --py: #3776AB;
+  --py-hi: #4B8BBE;
+  --py-dim: rgba(55, 118, 171, 0.10);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -71,7 +74,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.45rem 1.1rem;
-    background: var(--rb);
+    background: var(--py);
     color: #fff;
     font-family: var(--mono);
     font-size: 0.78rem;
@@ -81,7 +84,7 @@
     text-decoration: none;
     transition: background 0.2s, transform 0.15s;
   }
-  .nav-cta:hover { background: var(--rb-hi); transform: translateY(-1px); }
+  .nav-cta:hover { background: var(--py-hi); transform: translateY(-1px); }
 
   /* HERO */
   .hero {
@@ -94,15 +97,7 @@
     position: relative;
     overflow: hidden;
   }
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -120px; left: -120px;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(200,55,74,0.12) 0%, transparent 70%);
-    pointer-events: none;
-    animation: pulse 6s ease-in-out infinite alternate;
-  }
+  /* hero::before — see polish layer */
   @keyframes pulse {
     from { opacity: 0.6; transform: scale(1); }
     to   { opacity: 1;   transform: scale(1.1); }
@@ -150,7 +145,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.6rem;
-    background: var(--rb);
+    background: var(--py);
     color: #fff;
     font-family: var(--mono);
     font-size: 0.82rem;
@@ -160,7 +155,7 @@
     text-decoration: none;
     transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
   }
-  .btn-primary:hover { background: var(--rb-hi); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200,55,74,0.35); }
+  .btn-primary:hover { background: var(--py-hi); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(55,118,171,0.30); }
   .btn-ghost {
     display: inline-flex;
     align-items: center;
@@ -206,7 +201,7 @@
   /* SYNTAX COLOURS */
   .kw  { color: #e84255; }
   .ty  { color: #e8a44a; }
-  .fn  { color: #6bceff; }
+  .fn { color: #5BAEE0; }
   .str { color: #7ec88a; }
   .cm  { color: #555560; font-style: italic; }
   .nb  { color: #c678dd; }
@@ -226,7 +221,7 @@
     font-weight: 500;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--rb);
+    color: var(--py);
     margin-bottom: 0.8rem;
   }
   .section-title {
@@ -315,7 +310,7 @@
     transition: color 0.2s, border-color 0.2s;
     text-transform: uppercase;
   }
-  .tab.active { color: var(--rb); border-bottom-color: var(--rb); }
+  .tab.active { color: var(--py); border-bottom-color: var(--py); }
   .tab:hover:not(.active) { color: var(--text); }
   .code-panel { display: none; background: var(--bg2); border: 1px solid var(--border); }
   .code-panel.active { display: block; }
@@ -330,9 +325,9 @@
   .code-filename { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.05em; }
   .code-lang {
     font-size: 0.68rem;
-    background: var(--rb-dim);
-    color: var(--rb);
-    border: 1px solid rgba(200,55,74,0.25);
+    background: var(--py-dim);
+    color: var(--py);
+    border: 1px solid rgba(55,118,171,0.25);
     padding: 0.15rem 0.5rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -431,6 +426,193 @@
   @media (max-width: 600px) {
     .features-grid { grid-template-columns: 1fr; }
   }
+
+/* ══════════════════════════════════════════════
+   POLISH & SMOOTHNESS LAYER
+   ══════════════════════════════════════════════ */
+
+/* Smooth scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+* { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+
+/* Text selection */
+::selection { background: rgba(55, 118, 171, 0.25); color: var(--text); }
+
+/* Nav — grows on scroll */
+nav { transition: height 0.3s ease, background 0.3s ease, box-shadow 0.3s ease; }
+nav.scrolled {
+  background: rgba(9,9,11,0.97);
+  box-shadow: 0 1px 0 var(--border), 0 8px 32px rgba(0,0,0,0.4);
+}
+
+/* Nav links — animated underline */
+.nav-links a { position: relative; }
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; left: 0; right: 0;
+  height: 1px;
+  background: var(--rb);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.nav-links a:hover::after { transform: scaleX(1); }
+.nav-links a:hover { color: var(--text); }
+
+/* Hero — dual-colour atmosphere */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -120px; left: -120px;
+  width: 700px; height: 700px;
+  background: radial-gradient(ellipse, rgba(227,66,52,0.13) 0%, transparent 68%);
+  pointer-events: none;
+  animation: pulse 7s ease-in-out infinite alternate;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  top: -40px; right: -100px;
+  width: 560px; height: 560px;
+  background: radial-gradient(ellipse, rgba(55,118,171,0.10) 0%, transparent 68%);
+  pointer-events: none;
+  animation: pulse 9s ease-in-out infinite alternate-reverse;
+}
+
+/* Hero accent — gradient shimmer */
+.hero-title .accent {
+  background: linear-gradient(125deg, var(--rb) 0%, #F07030 55%, var(--rb) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 5s linear infinite;
+}
+@keyframes shimmer {
+  from { background-position: 0% center; }
+  to   { background-position: 200% center; }
+}
+
+/* Buttons — smooth glow */
+.btn-primary {
+  transition: background 0.2s, transform 0.18s cubic-bezier(0.4,0,0.2,1),
+              box-shadow 0.25s cubic-bezier(0.4,0,0.2,1);
+  letter-spacing: 0.07em;
+}
+.btn-primary:hover {
+  background: var(--py-hi);
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 1px rgba(75,139,190,0.4), 0 10px 32px rgba(55,118,171,0.28);
+}
+.btn-ghost {
+  transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.18s;
+}
+.btn-ghost:hover {
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+  border-color: var(--muted);
+  transform: translateY(-1px);
+}
+
+/* Feature grid — card lift + gradient underline */
+.features-grid { border-radius: 2px; overflow: hidden; }
+.feat-card {
+  transition: background 0.22s, transform 0.2s cubic-bezier(0.4,0,0.2,1),
+              box-shadow 0.25s cubic-bezier(0.4,0,0.2,1);
+  position: relative;
+}
+.feat-card:hover {
+  background: var(--bg2);
+  transform: translateY(-2px);
+  box-shadow: inset 0 0 0 1px var(--border), 0 12px 36px rgba(0,0,0,0.35);
+  z-index: 2;
+}
+.feat-card::after {
+  background: linear-gradient(90deg, var(--rb), var(--py));
+  height: 2px;
+  transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
+}
+.feat-card:hover::after { transform: scaleX(1); }
+.feat-icon {
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.feat-card:hover .feat-icon {
+  background: rgba(227,66,52,0.12);
+  border-color: rgba(227,66,52,0.4);
+  transform: scale(1.08);
+}
+
+/* Terminal — warmer glow */
+.terminal {
+  box-shadow: 0 28px 70px rgba(0,0,0,0.55), 0 0 0 1px var(--border), 0 0 60px rgba(227,66,52,0.05);
+  transition: box-shadow 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.terminal:hover {
+  box-shadow: 0 32px 80px rgba(0,0,0,0.65), 0 0 0 1px rgba(227,66,52,0.25), 0 0 80px rgba(227,66,52,0.10);
+}
+
+/* Tab hover */
+.tab { transition: color 0.18s, border-color 0.18s; }
+
+/* Code panel — subtle shadow */
+.code-panel.active {
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+}
+
+/* Xeon cmd rows — slide on hover */
+.cmd-row {
+  transition: border-left-color 0.2s cubic-bezier(0.4,0,0.2,1),
+              background 0.2s, transform 0.18s cubic-bezier(0.4,0,0.2,1);
+}
+.cmd-row:hover { transform: translateX(3px); }
+
+/* Steps — gradient numbers */
+.step {
+  transition: background 0.2s, box-shadow 0.25s, transform 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+.step:hover {
+  background: var(--bg3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+}
+.step-num {
+  background: linear-gradient(125deg, var(--rb) 0%, var(--py) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* CTA banner */
+.cta-banner {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--bg2) 0%, #141420 100%);
+  border-left: 4px solid var(--rb);
+  transition: box-shadow 0.3s;
+}
+.cta-banner::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(227,66,52,0.04) 0%, rgba(55,118,171,0.05) 100%);
+  pointer-events: none;
+}
+.cta-banner:hover {
+  box-shadow: 0 0 0 1px rgba(227,66,52,0.2), 0 16px 48px rgba(0,0,0,0.3);
+}
+
+/* Reveal — smoother spring */
+.reveal {
+  transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1), transform 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Footer links */
+.footer-links a { transition: color 0.18s, letter-spacing 0.18s; }
+.footer-links a:hover { letter-spacing: 0.09em; }
 </style>
 </head>
 <body>
@@ -885,6 +1067,16 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
   }, { threshold: 0.08 });
 
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+<script>
+/* Scrolled nav */
+(function() {
+  var nav = document.querySelector('nav');
+  window.addEventListener('scroll', function() {
+    nav.classList.toggle('scrolled', window.scrollY > 30);
+  }, { passive: true });
+})();
 </script>
 </body>
 </html>
