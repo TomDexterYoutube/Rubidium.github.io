@@ -12,17 +12,17 @@
     --bg2:     #111114;
     --bg3:     #18181c;
     --border:  #2a2a30;
-    --rb: #E34234;
-    --rb-hi: #F05030;
-    --rb-glow: rgba(227, 66, 52, 0.18);
-    --rb-dim: rgba(227, 66, 52, 0.08);
+    --rb:      #E34234;
+    --rb-hi:   #F05030;
+    --rb-glow: rgba(227,66,52,0.18);
+    --rb-dim:  rgba(227,66,52,0.08);
     --text:    #e8e8ec;
     --muted:   #7a7a88;
     --mono:    'Azeret Mono', monospace;
     --head:    'Unbounded', sans-serif;
-  --py: #3776AB;
-  --py-hi: #4B8BBE;
-  --py-dim: rgba(55, 118, 171, 0.10);
+    --py:      #3776AB;
+    --py-hi:   #4B8BBE;
+    --py-dim:  rgba(55,118,171,0.10);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -36,383 +36,418 @@
     overflow-x: hidden;
   }
 
-  /* NAV */
-  nav {
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
     position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 3rem;
-    height: 60px;
-    background: rgba(9,9,11,0.88);
-    backdrop-filter: blur(14px);
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 3rem; height: 60px;
+    background: rgba(9,9,11,0.85);
+    backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
+    transition: box-shadow 0.3s ease;
   }
+  nav.scrolled { box-shadow: 0 1px 0 var(--border), 0 8px 32px rgba(0,0,0,0.5); }
   .nav-logo {
-    font-family: var(--head);
-    font-weight: 800;
-    font-size: 1.1rem;
-    letter-spacing: -0.02em;
-    text-decoration: none;
+    font-family: var(--head); font-weight: 800; font-size: 1.1rem;
+    letter-spacing: -0.02em; text-decoration: none;
   }
-  .nav-logo .logo-Rub    { color: var(--rb); }
-  .nav-logo .logo-idium  { color: var(--text); }
+  .nav-logo .logo-Rub   { color: var(--rb); }
+  .nav-logo .logo-idium { color: var(--text); }
   .nav-links { display: flex; gap: 2.5rem; list-style: none; }
   .nav-links a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: color 0.2s;
+    color: var(--muted); text-decoration: none; font-size: 0.78rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    position: relative; transition: color 0.2s;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+    height: 1px; background: var(--rb);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.22s cubic-bezier(0.4,0,0.2,1);
   }
   .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover::after { transform: scaleX(1); }
   .nav-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.45rem 1.1rem;
-    background: var(--py);
-    color: #fff;
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: background 0.2s, transform 0.15s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.45rem 1.1rem; background: var(--py); color: #fff;
+    font-family: var(--mono); font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    text-decoration: none; transition: background 0.2s, transform 0.15s;
   }
   .nav-cta:hover { background: var(--py-hi); transform: translateY(-1px); }
 
-  /* HERO */
+  /* ── HERO ── */
   .hero {
     min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    padding: 7rem 3rem 4rem;
-    gap: 4rem;
-    position: relative;
-    overflow: hidden;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; padding: 7rem 3rem 4rem; gap: 4rem;
+    position: relative; overflow: hidden;
+    background-image: radial-gradient(circle, rgba(42,42,48,0.7) 1px, transparent 1px);
+    background-size: 28px 28px;
   }
-  /* hero::before — see polish layer */
+  .hero::before {
+    content: ''; position: absolute; top: -120px; left: -120px;
+    width: 700px; height: 700px;
+    background: radial-gradient(ellipse, rgba(227,66,52,0.15) 0%, transparent 68%);
+    pointer-events: none; animation: pulse 7s ease-in-out infinite alternate;
+  }
+  .hero::after {
+    content: ''; position: absolute; top: -40px; right: -100px;
+    width: 560px; height: 560px;
+    background: radial-gradient(ellipse, rgba(55,118,171,0.12) 0%, transparent 68%);
+    pointer-events: none; animation: pulse 9s ease-in-out infinite alternate-reverse;
+  }
   @keyframes pulse {
     from { opacity: 0.6; transform: scale(1); }
     to   { opacity: 1;   transform: scale(1.1); }
   }
+
   .hero-badge {
-    display: inline-block;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--rb);
-    border: 1px solid var(--rb);
-    padding: 0.3rem 0.75rem;
-    margin-bottom: 1.5rem;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.68rem; font-weight: 500; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--rb);
+    border: 1px solid rgba(227,66,52,0.4);
+    padding: 0.3rem 0.75rem; margin-bottom: 1.5rem;
+    background: var(--rb-dim);
     animation: fadeup 0.6s ease both;
   }
+  .badge-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--rb); animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+  }
+
   .hero-title {
     font-family: var(--head);
-    font-size: clamp(2.6rem, 5vw, 4.4rem);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -0.04em;
-    margin-bottom: 1.5rem;
-    animation: fadeup 0.6s 0.1s ease both;
+    font-size: clamp(2.6rem, 5vw, 4.6rem);
+    font-weight: 800; line-height: 1.0; letter-spacing: -0.04em;
+    margin-bottom: 1.5rem; animation: fadeup 0.6s 0.1s ease both;
   }
-  .hero-title .accent { color: var(--rb); }
+  .hero-title .accent {
+    background: linear-gradient(125deg, var(--rb) 0%, #F07030 55%, var(--rb) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 5s linear infinite;
+  }
+  @keyframes shimmer {
+    from { background-position: 0% center; }
+    to   { background-position: 200% center; }
+  }
   .hero-sub {
-    color: var(--muted);
-    font-size: 0.92rem;
-    max-width: 460px;
-    line-height: 1.8;
-    margin-bottom: 2.5rem;
+    color: var(--muted); font-size: 0.92rem; max-width: 460px;
+    line-height: 1.8; margin-bottom: 2.5rem;
     animation: fadeup 0.6s 0.2s ease both;
   }
   .hero-actions {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
+    display: flex; gap: 1rem; flex-wrap: wrap;
     animation: fadeup 0.6s 0.3s ease both;
   }
-
-  /* BUTTONS */
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.6rem;
-    background: var(--py);
-    color: #fff;
-    font-family: var(--mono);
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-  }
-  .btn-primary:hover { background: var(--py-hi); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(55,118,171,0.30); }
-  .btn-ghost {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.6rem;
-    background: transparent;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 0.82rem;
-    font-weight: 400;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: 1px solid var(--border);
-    transition: border-color 0.2s;
-  }
-  .btn-ghost:hover { border-color: var(--muted); }
-
-  /* TERMINAL */
-  .terminal {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    overflow: hidden;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
-    animation: fadeup 0.7s 0.2s ease both;
-  }
-  .term-bar {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.7rem 1rem;
-    background: var(--bg3);
-    border-bottom: 1px solid var(--border);
-  }
-  .dot { width: 11px; height: 11px; border-radius: 50%; }
-  .dot-r { background: #e84255; }
-  .dot-y { background: #f5a623; }
-  .dot-g { background: #29c55c; }
-  .term-title { margin-left: 0.4rem; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; }
-  .term-body { padding: 1.4rem 1.6rem; font-size: 0.82rem; line-height: 1.9; overflow-x: auto; }
-  .term-body pre { white-space: pre; }
-
-  /* SYNTAX COLOURS */
-  .kw  { color: #e84255; }
-  .ty  { color: #e8a44a; }
-  .fn { color: #5BAEE0; }
-  .str { color: #7ec88a; }
-  .cm  { color: #555560; font-style: italic; }
-  .nb  { color: #c678dd; }
-  .op  { color: var(--muted); }
-  .istr { color: #7ec88a; }
-  .ivar { color: #e8a44a; }
-
   @keyframes fadeup {
     from { opacity: 0; transform: translateY(18px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* SECTION TEMPLATE */
+  /* ── BUTTONS ── */
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.75rem 1.6rem; background: var(--py); color: #fff;
+    font-family: var(--mono); font-size: 0.82rem; font-weight: 600;
+    letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none;
+    transition: background 0.2s, transform 0.18s cubic-bezier(0.4,0,0.2,1), box-shadow 0.25s;
+  }
+  .btn-primary:hover {
+    background: var(--py-hi); transform: translateY(-2px);
+    box-shadow: 0 0 0 1px rgba(75,139,190,0.4), 0 10px 32px rgba(55,118,171,0.28);
+  }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.75rem 1.6rem; background: transparent; color: var(--text);
+    font-family: var(--mono); font-size: 0.82rem; letter-spacing: 0.06em;
+    text-transform: uppercase; text-decoration: none;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.18s;
+  }
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.03);
+    border-color: var(--muted); transform: translateY(-1px);
+  }
+
+  /* ── TERMINAL ── */
+  .terminal {
+    background: var(--bg2); border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px var(--border), 0 0 60px rgba(227,66,52,0.05);
+    animation: fadeup 0.7s 0.2s ease both;
+    transition: box-shadow 0.4s cubic-bezier(0.4,0,0.2,1);
+    position: relative; z-index: 1;
+  }
+  .terminal:hover {
+    box-shadow: 0 32px 80px rgba(0,0,0,0.65), 0 0 0 1px rgba(227,66,52,0.25), 0 0 80px rgba(227,66,52,0.10);
+  }
+  .term-bar {
+    display: flex; align-items: center; gap: 0.4rem;
+    padding: 0.7rem 1rem; background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+  }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot-r { background: #e84255; } .dot-y { background: #f5a623; } .dot-g { background: #29c55c; }
+  .term-title { margin-left: 0.4rem; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; }
+  .term-body { padding: 1.4rem 1.6rem; font-size: 0.82rem; line-height: 1.9; overflow-x: auto; }
+  .term-body pre { white-space: pre; }
+  .cursor { display: inline-block; width: 7px; height: 14px; background: var(--rb); vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+
+  /* ── SYNTAX ── */
+  .kw  { color: #e84255; } .ty  { color: #e8a44a; } .fn  { color: #5BAEE0; }
+  .str { color: #7ec88a; } .cm  { color: #555560; font-style: italic; }
+  .nb  { color: #c678dd; } .op  { color: var(--muted); }
+
+  /* ── STATS STRIP ── */
+  .stats-strip {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    overflow: hidden;
+  }
+  .stat-item {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 1.6rem 1rem; gap: 0.35rem;
+    border-right: 1px solid var(--border);
+    position: relative; transition: background 0.2s;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-item:hover { background: var(--bg2); }
+  .stat-item::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px; background: linear-gradient(90deg, var(--rb), var(--py));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  .stat-item:hover::after { transform: scaleX(1); }
+  .stat-val {
+    font-family: var(--head); font-size: 1.4rem; font-weight: 800;
+    letter-spacing: -0.04em;
+    background: linear-gradient(135deg, var(--rb) 0%, var(--py) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-label {
+    font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ── TICKER ── */
+  .ticker {
+    border-bottom: 1px solid var(--border);
+    overflow: hidden; padding: 0.7rem 0;
+    background: var(--bg2);
+  }
+  .ticker-track {
+    display: flex; gap: 3rem; white-space: nowrap;
+    animation: ticker 30s linear infinite;
+  }
+  .ticker-track:hover { animation-play-state: paused; }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .ticker-item {
+    font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted); display: flex; align-items: center; gap: 0.75rem;
+    flex-shrink: 0;
+  }
+  .ticker-item .tick-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--rb); flex-shrink: 0; }
+
+  /* ── SECTION ── */
   section { padding: 6rem 3rem; max-width: 1200px; margin: 0 auto; }
   .section-label {
-    font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--py);
-    margin-bottom: 0.8rem;
+    font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--py); margin-bottom: 0.8rem;
   }
   .section-title {
-    font-family: var(--head);
-    font-size: clamp(1.8rem, 3vw, 2.8rem);
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1.15;
-    margin-bottom: 1.2rem;
+    font-family: var(--head); font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 1.2rem;
   }
   .section-desc {
-    color: var(--muted);
-    max-width: 560px;
-    font-size: 0.9rem;
-    line-height: 1.8;
-    margin-bottom: 3.5rem;
+    color: var(--muted); max-width: 560px; font-size: 0.9rem;
+    line-height: 1.8; margin-bottom: 3.5rem;
   }
   .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
 
-  /* FEATURES */
+  /* ── FEATURES ── */
   .features-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--border);
+    border: 1px solid var(--border); overflow: hidden;
   }
   .feat-card {
-    background: var(--bg);
-    padding: 2rem;
-    position: relative;
-    overflow: hidden;
-    transition: background 0.2s;
+    background: var(--bg); padding: 2rem; position: relative; overflow: hidden;
+    transition: background 0.22s, transform 0.2s cubic-bezier(0.4,0,0.2,1), box-shadow 0.25s;
   }
+  .feat-card:hover { background: var(--bg2); transform: translateY(-2px); z-index: 2;
+    box-shadow: inset 0 0 0 1px var(--border), 0 12px 36px rgba(0,0,0,0.35); }
   .feat-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--rb);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--rb), var(--py));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
   }
-  .feat-card:hover { background: var(--bg2); }
   .feat-card:hover::after { transform: scaleX(1); }
   .feat-icon {
-    width: 40px; height: 40px;
-    display: flex;
-    align-items: center;
+    width: 40px; height: 40px; display: flex; align-items: center;
     justify-content: center;
-    background: var(--rb-dim);
-    border: 1px solid rgba(200,55,74,0.25);
-    margin-bottom: 1.2rem;
-    font-size: 1.1rem;
+    background: var(--rb-dim); border: 1px solid rgba(200,55,74,0.25);
+    margin-bottom: 1.2rem; font-size: 1.1rem;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
   }
-  .feat-name {
-    font-family: var(--head);
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    margin-bottom: 0.6rem;
+  .feat-card:hover .feat-icon {
+    background: rgba(227,66,52,0.12); border-color: rgba(227,66,52,0.4);
+    transform: scale(1.08);
   }
+  .feat-name { font-family: var(--head); font-size: 0.85rem; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 0.6rem; }
   .feat-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.75; }
 
-  /* TABS / CODE PANELS */
+  /* ── TABS / CODE PANELS ── */
   .syntax-section { max-width: 1200px; margin: 0 auto; padding: 6rem 3rem; }
-  .tabs {
-    display: flex;
-    gap: 0;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-  }
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 2rem; flex-wrap: wrap; }
   .tab {
-    padding: 0.6rem 1.3rem;
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    letter-spacing: 0.05em;
-    color: var(--muted);
-    cursor: pointer;
-    border: none;
-    background: transparent;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: color 0.2s, border-color 0.2s;
-    text-transform: uppercase;
+    padding: 0.6rem 1.3rem; font-family: var(--mono); font-size: 0.78rem;
+    letter-spacing: 0.05em; color: var(--muted); cursor: pointer;
+    border: none; background: transparent;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: color 0.18s, border-color 0.18s; text-transform: uppercase;
   }
   .tab.active { color: var(--py); border-bottom-color: var(--py); }
   .tab:hover:not(.active) { color: var(--text); }
   .code-panel { display: none; background: var(--bg2); border: 1px solid var(--border); }
-  .code-panel.active { display: block; }
+  .code-panel.active { display: block; box-shadow: 0 4px 24px rgba(0,0,0,0.25); }
   .code-panel-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.7rem 1.4rem;
-    background: var(--bg3);
-    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.7rem 1.4rem; background: var(--bg3); border-bottom: 1px solid var(--border);
   }
   .code-filename { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.05em; }
   .code-lang {
-    font-size: 0.68rem;
-    background: var(--py-dim);
-    color: var(--py);
-    border: 1px solid rgba(55,118,171,0.25);
-    padding: 0.15rem 0.5rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 0.68rem; background: var(--py-dim); color: var(--py);
+    border: 1px solid rgba(55,118,171,0.25); padding: 0.15rem 0.5rem;
+    letter-spacing: 0.08em; text-transform: uppercase;
   }
   .code-body { padding: 1.6rem 1.8rem; font-size: 0.82rem; line-height: 1.9; overflow-x: auto; }
   .code-body pre { white-space: pre; }
 
-  /* XEON SECTION */
+  /* Copy button */
+  .copy-btn {
+    display: flex; align-items: center; gap: 0.3rem;
+    font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--muted); background: transparent;
+    border: 1px solid var(--border); padding: 0.2rem 0.55rem; cursor: pointer;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    user-select: none;
+  }
+  .copy-btn:hover { color: var(--text); border-color: var(--muted); background: var(--bg); }
+  .copy-btn.copied { color: #29c55c; border-color: #29c55c; }
+
+  /* ── XEON ── */
   .xeon-section { max-width: 1200px; margin: 0 auto; padding: 6rem 3rem; }
   .xeon-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
   .xeon-commands { display: flex; flex-direction: column; gap: 0.5rem; }
   .cmd-row {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-    padding: 0.9rem 1.2rem;
-    background: var(--bg2);
-    border: 1px solid var(--border);
+    display: flex; align-items: baseline; gap: 1rem; padding: 0.9rem 1.2rem;
+    background: var(--bg2); border: 1px solid var(--border);
     border-left: 3px solid transparent;
-    transition: border-left-color 0.2s, background 0.2s;
+    transition: border-left-color 0.2s, background 0.2s, transform 0.18s;
   }
-  .cmd-row:hover { border-left-color: var(--rb); background: var(--bg3); }
+  .cmd-row:hover { border-left-color: var(--rb); background: var(--bg3); transform: translateX(3px); }
   .cmd-name { color: var(--rb); font-weight: 600; font-size: 0.85rem; min-width: 120px; letter-spacing: 0.04em; }
   .cmd-desc { color: var(--muted); font-size: 0.78rem; }
   .xeon-terminal { background: var(--bg2); border: 1px solid var(--border); overflow: hidden; }
   .xeon-term-body { padding: 1.4rem 1.6rem; font-size: 0.82rem; line-height: 2.1; }
-  .prompt  { color: var(--rb); }
-  .cmd-text { color: var(--text); }
-  .out-text { color: var(--muted); }
-  .success  { color: #29c55c; }
+  .prompt { color: var(--rb); } .cmd-text { color: var(--text); }
+  .out-text { color: var(--muted); } .success { color: #29c55c; }
 
-  /* GET STARTED */
+  /* ── GET STARTED ── */
   .start-section { max-width: 1200px; margin: 0 auto; padding: 6rem 3rem; }
   .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-  .step { padding: 2rem; background: var(--bg2); border: 1px solid var(--border); }
-  .step-num { font-family: var(--head); font-size: 3rem; font-weight: 800; color: var(--border); line-height: 1; margin-bottom: 1rem; }
+  .step {
+    padding: 2rem; background: var(--bg2); border: 1px solid var(--border);
+    transition: background 0.2s, box-shadow 0.25s, transform 0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  .step:hover { background: var(--bg3); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
+  .step-num {
+    font-family: var(--head); font-size: 3rem; font-weight: 800; line-height: 1; margin-bottom: 1rem;
+    background: linear-gradient(125deg, var(--rb) 0%, var(--py) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
   .step-title { font-family: var(--head); font-size: 0.9rem; font-weight: 600; margin-bottom: 0.6rem; }
   .step-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.75; }
   .inline-code {
-    display: inline-block;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    color: var(--rb);
-    padding: 0.05rem 0.4rem;
-    font-size: 0.82em;
+    display: inline-block; background: var(--bg3); border: 1px solid var(--border);
+    color: var(--rb); padding: 0.05rem 0.4rem; font-size: 0.82em;
   }
 
-  /* CTA */
+  /* ── CTA ── */
   .cta-wrap { max-width: 1200px; margin: 0 auto; padding: 0 3rem 6rem; }
   .cta-banner {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--rb);
-    padding: 3rem 3.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
+    position: relative; overflow: hidden;
+    background: linear-gradient(135deg, var(--bg2) 0%, #141420 100%);
+    border: 1px solid var(--border); border-left: 4px solid var(--rb);
+    padding: 3.5rem 4rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    transition: box-shadow 0.3s;
   }
-  .cta-banner-title { font-family: var(--head); font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+  .cta-banner::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(227,66,52,0.04) 0%, rgba(55,118,171,0.05) 100%);
+    pointer-events: none;
+  }
+  .cta-banner:hover { box-shadow: 0 0 0 1px rgba(227,66,52,0.2), 0 16px 48px rgba(0,0,0,0.3); }
+  .cta-banner-title { font-family: var(--head); font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
   .cta-banner-sub { color: var(--muted); font-size: 0.85rem; }
 
-  /* FOOTER */
+  /* ── FOOTER ── */
+  .footer-outer { border-top: 1px solid var(--border); }
   footer {
-    border-top: 1px solid var(--border);
-    padding: 2.5rem 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between;
+    max-width: 1200px; margin: 0 auto;
   }
   .footer-brand { font-family: var(--head); font-size: 0.9rem; font-weight: 700; letter-spacing: -0.01em; }
   .footer-brand .logo-Rub   { color: var(--rb); }
   .footer-brand .logo-idium { color: var(--muted); }
   .footer-links { display: flex; gap: 1.8rem; list-style: none; }
-  .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.2s; }
-  .footer-links a:hover { color: var(--text); }
+  .footer-links a {
+    color: var(--muted); text-decoration: none; font-size: 0.78rem;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    transition: color 0.18s, letter-spacing 0.18s;
+  }
+  .footer-links a:hover { color: var(--text); letter-spacing: 0.09em; }
   .footer-copy { font-size: 0.72rem; color: #444; letter-spacing: 0.04em; }
 
-  /* SCROLL REVEAL */
-  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.55s ease, transform 0.55s ease; }
+  /* ── REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1), transform 0.6s cubic-bezier(0.4,0,0.2,1); }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  /* RESPONSIVE */
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+  * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  ::selection { background: rgba(55,118,171,0.25); color: var(--text); }
+
+  /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
     .hero { grid-template-columns: 1fr; padding-top: 6rem; }
     .features-grid { grid-template-columns: 1fr 1fr; }
@@ -422,197 +457,12 @@
     nav { padding: 0 1.5rem; }
     .nav-links { display: none; }
     section, .syntax-section, .xeon-section, .start-section { padding: 4rem 1.5rem; }
+    .stats-strip { grid-template-columns: repeat(3, 1fr); }
   }
   @media (max-width: 600px) {
     .features-grid { grid-template-columns: 1fr; }
+    .stats-strip { grid-template-columns: repeat(2, 1fr); }
   }
-
-/* ══════════════════════════════════════════════
-   POLISH & SMOOTHNESS LAYER
-   ══════════════════════════════════════════════ */
-
-/* Smooth scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--muted); }
-* { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
-
-/* Text selection */
-::selection { background: rgba(55, 118, 171, 0.25); color: var(--text); }
-
-/* Nav — grows on scroll */
-nav { transition: height 0.3s ease, background 0.3s ease, box-shadow 0.3s ease; }
-nav.scrolled {
-  background: rgba(9,9,11,0.97);
-  box-shadow: 0 1px 0 var(--border), 0 8px 32px rgba(0,0,0,0.4);
-}
-
-/* Nav links — animated underline */
-.nav-links a { position: relative; }
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -3px; left: 0; right: 0;
-  height: 1px;
-  background: var(--rb);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.nav-links a:hover::after { transform: scaleX(1); }
-.nav-links a:hover { color: var(--text); }
-
-/* Hero — dual-colour atmosphere */
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -120px; left: -120px;
-  width: 700px; height: 700px;
-  background: radial-gradient(ellipse, rgba(227,66,52,0.13) 0%, transparent 68%);
-  pointer-events: none;
-  animation: pulse 7s ease-in-out infinite alternate;
-}
-.hero::after {
-  content: '';
-  position: absolute;
-  top: -40px; right: -100px;
-  width: 560px; height: 560px;
-  background: radial-gradient(ellipse, rgba(55,118,171,0.10) 0%, transparent 68%);
-  pointer-events: none;
-  animation: pulse 9s ease-in-out infinite alternate-reverse;
-}
-
-/* Hero accent — gradient shimmer */
-.hero-title .accent {
-  background: linear-gradient(125deg, var(--rb) 0%, #F07030 55%, var(--rb) 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: shimmer 5s linear infinite;
-}
-@keyframes shimmer {
-  from { background-position: 0% center; }
-  to   { background-position: 200% center; }
-}
-
-/* Buttons — smooth glow */
-.btn-primary {
-  transition: background 0.2s, transform 0.18s cubic-bezier(0.4,0,0.2,1),
-              box-shadow 0.25s cubic-bezier(0.4,0,0.2,1);
-  letter-spacing: 0.07em;
-}
-.btn-primary:hover {
-  background: var(--py-hi);
-  transform: translateY(-2px);
-  box-shadow: 0 0 0 1px rgba(75,139,190,0.4), 0 10px 32px rgba(55,118,171,0.28);
-}
-.btn-ghost {
-  transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.18s;
-}
-.btn-ghost:hover {
-  background: rgba(255,255,255,0.03);
-  color: var(--text);
-  border-color: var(--muted);
-  transform: translateY(-1px);
-}
-
-/* Feature grid — card lift + gradient underline */
-.features-grid { border-radius: 2px; overflow: hidden; }
-.feat-card {
-  transition: background 0.22s, transform 0.2s cubic-bezier(0.4,0,0.2,1),
-              box-shadow 0.25s cubic-bezier(0.4,0,0.2,1);
-  position: relative;
-}
-.feat-card:hover {
-  background: var(--bg2);
-  transform: translateY(-2px);
-  box-shadow: inset 0 0 0 1px var(--border), 0 12px 36px rgba(0,0,0,0.35);
-  z-index: 2;
-}
-.feat-card::after {
-  background: linear-gradient(90deg, var(--rb), var(--py));
-  height: 2px;
-  transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
-}
-.feat-card:hover::after { transform: scaleX(1); }
-.feat-icon {
-  transition: background 0.2s, border-color 0.2s, transform 0.2s;
-}
-.feat-card:hover .feat-icon {
-  background: rgba(227,66,52,0.12);
-  border-color: rgba(227,66,52,0.4);
-  transform: scale(1.08);
-}
-
-/* Terminal — warmer glow */
-.terminal {
-  box-shadow: 0 28px 70px rgba(0,0,0,0.55), 0 0 0 1px var(--border), 0 0 60px rgba(227,66,52,0.05);
-  transition: box-shadow 0.4s cubic-bezier(0.4,0,0.2,1);
-}
-.terminal:hover {
-  box-shadow: 0 32px 80px rgba(0,0,0,0.65), 0 0 0 1px rgba(227,66,52,0.25), 0 0 80px rgba(227,66,52,0.10);
-}
-
-/* Tab hover */
-.tab { transition: color 0.18s, border-color 0.18s; }
-
-/* Code panel — subtle shadow */
-.code-panel.active {
-  box-shadow: 0 4px 24px rgba(0,0,0,0.25);
-}
-
-/* Xeon cmd rows — slide on hover */
-.cmd-row {
-  transition: border-left-color 0.2s cubic-bezier(0.4,0,0.2,1),
-              background 0.2s, transform 0.18s cubic-bezier(0.4,0,0.2,1);
-}
-.cmd-row:hover { transform: translateX(3px); }
-
-/* Steps — gradient numbers */
-.step {
-  transition: background 0.2s, box-shadow 0.25s, transform 0.2s cubic-bezier(0.4,0,0.2,1);
-}
-.step:hover {
-  background: var(--bg3);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
-}
-.step-num {
-  background: linear-gradient(125deg, var(--rb) 0%, var(--py) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-}
-
-/* CTA banner */
-.cta-banner {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(135deg, var(--bg2) 0%, #141420 100%);
-  border-left: 4px solid var(--rb);
-  transition: box-shadow 0.3s;
-}
-.cta-banner::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(227,66,52,0.04) 0%, rgba(55,118,171,0.05) 100%);
-  pointer-events: none;
-}
-.cta-banner:hover {
-  box-shadow: 0 0 0 1px rgba(227,66,52,0.2), 0 16px 48px rgba(0,0,0,0.3);
-}
-
-/* Reveal — smoother spring */
-.reveal {
-  transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1), transform 0.6s cubic-bezier(0.4,0,0.2,1);
-}
-
-/* Footer links */
-.footer-links a { transition: color 0.18s, letter-spacing 0.18s; }
-.footer-links a:hover { letter-spacing: 0.09em; }
 </style>
 </head>
 <body>
@@ -634,8 +484,8 @@ nav.scrolled {
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-left">
-    <div class="hero-badge">Early Access</div>
+  <div class="hero-left" style="position:relative;z-index:1">
+    <div class="hero-badge"><span class="badge-dot"></span> Early Access</div>
     <h1 class="hero-title">
       Fast.<br>Safe.<br><span class="accent">Compiled.</span>
     </h1>
@@ -658,7 +508,7 @@ nav.scrolled {
         <span class="term-title">main.rub</span>
       </div>
       <div class="term-body">
-<pre><span class="cm"># hello world + threading</span>
+<pre id="typed-code"><span class="cm"># hello world + threading</span>
 <span class="kw">use</span> thread
 
 <span class="kw">fn</span> <span class="fn">worker</span>() {
@@ -682,6 +532,37 @@ nav.scrolled {
   </div>
 </div>
 
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <span class="stat-val">0</span>
+    <span class="stat-label">GC Pauses</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-val">LLVM</span>
+    <span class="stat-label">Backend</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-val">POSIX</span>
+    <span class="stat-label">Threads</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-val">3</span>
+    <span class="stat-label">Collection Types</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-val">FFI</span>
+    <span class="stat-label">C / C++ / Rust</span>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track" id="ticker">
+    <!-- filled by JS -->
+  </div>
+</div>
+
 <hr class="divider" />
 
 <!-- FEATURES -->
@@ -696,22 +577,22 @@ nav.scrolled {
     <div class="feat-card">
       <div class="feat-icon">⊕</div>
       <div class="feat-name">Static Typing</div>
-      <div class="feat-desc">Compile-time type checking catches mismatches before your code ever runs. Types are annotated with <code>:</code> and checked rigorously.</div>
+      <div class="feat-desc">Compile-time type checking catches mismatches before your code ever runs. Types are annotated with <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">:</code> and checked rigorously.</div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">◈</div>
       <div class="feat-name">Manual Memory</div>
-      <div class="feat-desc">Use <code>.drop()</code> to explicitly reclaim heap memory. Collections recursively free all nested data. No GC pauses.</div>
+      <div class="feat-desc">Use <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">.drop()</code> to explicitly reclaim heap memory. Collections recursively free all nested data. No GC pauses.</div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">⋈</div>
       <div class="feat-name">Hardware Threads</div>
-      <div class="feat-desc">Real POSIX hardware threads for parallel execution. Synchronize with <code>thread.wait()</code> — no async overhead.</div>
+      <div class="feat-desc">Real POSIX hardware threads for parallel execution. Synchronize with <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">thread.wait()</code> — no async overhead.</div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">▦</div>
       <div class="feat-name">Rich Collections</div>
-      <div class="feat-desc">Three distinct collection types — <code>list</code>, <code>index</code>, and <code>dict</code> — each with a clear, consistent access syntax.</div>
+      <div class="feat-desc">Three distinct collection types — <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">list</code>, <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">index</code>, and <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">dict</code> — each with a clear, consistent access syntax.</div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">◎</div>
@@ -721,7 +602,7 @@ nav.scrolled {
     <div class="feat-card">
       <div class="feat-icon">⊞</div>
       <div class="feat-name">Modular Design</div>
-      <div class="feat-desc">Built-in modules via <code>use</code> (thread, random, time, os, FFI). External files via <code>import</code>. Clean, explicit boundaries.</div>
+      <div class="feat-desc">Built-in modules via <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">use</code> (thread, random, time, os, FFI). External files via <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">import</code>. Clean, explicit boundaries.</div>
     </div>
   </div>
 </section>
@@ -750,7 +631,10 @@ nav.scrolled {
   <div id="tab-vars" class="code-panel active reveal">
     <div class="code-panel-header">
       <span class="code-filename">variables.rub</span>
-      <span class="code-lang">Rubidium</span>
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <span class="code-lang">Rubidium</span>
+        <button class="copy-btn" onclick="copyCode(this)">⎘ Copy</button>
+      </div>
     </div>
     <div class="code-body">
 <pre><span class="cm"># Type annotation uses a colon before the type</span>
@@ -777,7 +661,10 @@ name<span class="op">.</span><span class="fn">drop</span>()     <span class="cm"
   <div id="tab-fns" class="code-panel reveal">
     <div class="code-panel-header">
       <span class="code-filename">functions.rub</span>
-      <span class="code-lang">Rubidium</span>
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <span class="code-lang">Rubidium</span>
+        <button class="copy-btn" onclick="copyCode(this)">⎘ Copy</button>
+      </div>
     </div>
     <div class="code-body">
 <pre><span class="cm"># Typed parameters, typed return value</span>
@@ -790,8 +677,6 @@ name<span class="op">.</span><span class="fn">drop</span>()     <span class="cm"
     <span class="fn">print</span>(<span class="str">i"Hello, {name}!"</span>)
 }
 
-<span class="cm"># Functions create an isolated scope —</span>
-<span class="cm"># variables inside are NOT in the global pool</span>
 <span class="kw">fn</span> <span class="fn">main</span>() {
     <span class="kw">let</span> result<span class="op">:</span> <span class="ty">i32</span> = <span class="fn">add</span>(<span class="nb">10</span>, <span class="nb">32</span>)
     <span class="fn">print</span>(result)      <span class="cm"># 42</span>
@@ -804,30 +689,28 @@ name<span class="op">.</span><span class="fn">drop</span>()     <span class="cm"
   <div id="tab-list" class="code-panel reveal">
     <div class="code-panel-header">
       <span class="code-filename">list.rub</span>
-      <span class="code-lang">Rubidium</span>
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <span class="code-lang">Rubidium</span>
+        <button class="copy-btn" onclick="copyCode(this)">⎘ Copy</button>
+      </div>
     </div>
     <div class="code-body">
 <pre><span class="cm"># list — ordered sequence, zero-indexed</span>
-<span class="cm"># requires 'mut' to modify</span>
 <span class="kw">let mut</span> items<span class="op">:</span> <span class="ty">list</span> = [<span class="str">"hello"</span>, <span class="nb">2.5</span>, <span class="nb">True</span>]
 
-<span class="cm"># Access by index</span>
 <span class="fn">print</span>(items(<span class="nb">0</span>))          <span class="cm"># hello</span>
 
-<span class="cm"># Mutate an item in place with .set()</span>
 items(<span class="nb">0</span>)<span class="op">.</span><span class="fn">set</span>(<span class="str">"changed"</span>)
 <span class="fn">print</span>(items(<span class="nb">0</span>))          <span class="cm"># changed</span>
 
-<span class="cm"># Append a new item with .add()</span>
 items()<span class="op">.</span><span class="fn">add</span>(<span class="str">"new_item"</span>)
 
-<span class="cm"># Assignments are deep copies —</span>
-<span class="cm"># modifying 'b' does NOT affect 'a'</span>
+<span class="cm"># Deep copy — modifying 'b' does NOT affect 'a'</span>
 <span class="kw">let mut</span> a<span class="op">:</span> <span class="ty">list</span> = [<span class="nb">1</span>, <span class="nb">2</span>, <span class="nb">3</span>]
 <span class="kw">let mut</span> b = a
 b(<span class="nb">0</span>)<span class="op">.</span><span class="fn">set</span>(<span class="nb">999</span>)
-<span class="fn">print</span>(a)                  <span class="cm"># [1, 2, 3]</span>
-<span class="fn">print</span>(b)                  <span class="cm"># [999, 2, 3]</span></pre>
+<span class="fn">print</span>(a)   <span class="cm"># [1, 2, 3]</span>
+<span class="fn">print</span>(b)   <span class="cm"># [999, 2, 3]</span></pre>
     </div>
   </div>
 
@@ -835,26 +718,22 @@ b(<span class="nb">0</span>)<span class="op">.</span><span class="fn">set</span>
   <div id="tab-index" class="code-panel reveal">
     <div class="code-panel-header">
       <span class="code-filename">index.rub</span>
-      <span class="code-lang">Rubidium</span>
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <span class="code-lang">Rubidium</span>
+        <button class="copy-btn" onclick="copyCode(this)">⎘ Copy</button>
+      </div>
     </div>
     <div class="code-body">
 <pre><span class="cm"># index — flat key→value map</span>
-<span class="cm"># keys and values can be any type</span>
-<span class="cm"># uses square brackets with colon separator</span>
 <span class="kw">let mut</span> my_index<span class="op">:</span> <span class="ty">index</span> = [
     <span class="str">"name"</span><span class="op">:</span> <span class="str">"Rubidium"</span>,
     <span class="nb">1</span><span class="op">:</span>      <span class="str">"one"</span>,
     <span class="nb">2.5</span><span class="op">:</span>    <span class="str">"float key"</span>
 ]
 
-<span class="cm"># Access by key</span>
 <span class="fn">print</span>(my_index(<span class="str">"name"</span>))       <span class="cm"># Rubidium</span>
 
-<span class="cm"># Mutate a value with .set()</span>
 my_index(<span class="str">"name"</span>)<span class="op">.</span><span class="fn">set</span>(<span class="str">"updated"</span>)
-
-<span class="cm"># Add a new key-value pair with .add()</span>
-<span class="cm"># Errors if the key already exists</span>
 my_index()<span class="op">.</span><span class="fn">add</span>(<span class="str">"new_key"</span>, <span class="nb">99</span>)</pre>
     </div>
   </div>
@@ -863,29 +742,23 @@ my_index()<span class="op">.</span><span class="fn">add</span>(<span class="str"
   <div id="tab-dict" class="code-panel reveal">
     <div class="code-panel-header">
       <span class="code-filename">dict.rub</span>
-      <span class="code-lang">Rubidium</span>
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <span class="code-lang">Rubidium</span>
+        <button class="copy-btn" onclick="copyCode(this)">⎘ Copy</button>
+      </div>
     </div>
     <div class="code-body">
 <pre><span class="cm"># dict — each key holds a collection of values</span>
-<span class="cm"># uses curly braces with = separator</span>
 <span class="kw">let mut</span> my_dict<span class="op">:</span> <span class="ty">dict</span> = {
     <span class="str">"scores"</span> = [<span class="nb">10</span>, <span class="nb">20</span>, <span class="nb">30</span>],
     <span class="str">"names"</span>  = [<span class="str">"alice"</span>, <span class="str">"bob"</span>]
 }
 
-<span class="cm"># Access: dict(key, index)</span>
 <span class="fn">print</span>(my_dict(<span class="str">"scores"</span>, <span class="nb">1</span>))      <span class="cm"># 20</span>
-
-<span class="cm"># Mutate a value with .set()</span>
 my_dict(<span class="str">"scores"</span>, <span class="nb">1</span>)<span class="op">.</span><span class="fn">set</span>(<span class="nb">999</span>)
-
-<span class="cm"># Append to an existing key's collection</span>
 my_dict(<span class="str">"scores"</span>)<span class="op">.</span><span class="fn">add</span>(<span class="nb">40</span>)
-
-<span class="cm"># Add a brand-new top-level key (value starts as Null)</span>
 my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">"new_key"</span>)
 
-<span class="cm"># Iterate — yields keys, not values</span>
 <span class="kw">for</span> key <span class="kw">in</span> my_dict {
     <span class="fn">print</span>(my_dict(key, <span class="nb">0</span>))
 }</pre>
@@ -896,7 +769,10 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
   <div id="tab-threads" class="code-panel reveal">
     <div class="code-panel-header">
       <span class="code-filename">threads.rub</span>
-      <span class="code-lang">Rubidium</span>
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <span class="code-lang">Rubidium</span>
+        <button class="copy-btn" onclick="copyCode(this)">⎘ Copy</button>
+      </div>
     </div>
     <div class="code-body">
 <pre><span class="kw">use</span> thread
@@ -910,14 +786,10 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
 }
 
 <span class="kw">fn</span> <span class="fn">run</span>() {
-    <span class="cm"># thread(fn(), id) — spawns a real POSIX thread</span>
     thread(<span class="fn">task_a</span>(), <span class="nb">1</span>)
     thread(<span class="fn">task_b</span>(), <span class="nb">2</span>)
-
-    <span class="cm"># thread.wait() blocks until all listed IDs finish</span>
     thread<span class="op">.</span><span class="fn">wait</span>(<span class="nb">1</span>, <span class="nb">2</span>)
 
-    <span class="cm"># Check if a thread is still running</span>
     <span class="kw">let</span> still<span class="op">:</span> <span class="ty">bool</span> = thread<span class="op">.</span><span class="fn">running</span>(<span class="nb">1</span>)
     <span class="fn">print</span>(<span class="str">i"Thread 1 still running: {still}"</span>)
 }</pre>
@@ -937,32 +809,15 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
   </p>
   <div class="xeon-wrap reveal">
     <div class="xeon-commands">
-      <div class="cmd-row">
-        <span class="cmd-name">xeon init</span>
-        <span class="cmd-desc">Scaffolds a <code>src/</code> directory and a <code>main.rub</code> entry point in the current folder</span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">xeon build</span>
-        <span class="cmd-desc">Compiles your project to native machine code via the LLVM backend</span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">xeon run</span>
-        <span class="cmd-desc">Compiles and immediately executes your program in one step</span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">install.sh</span>
-        <span class="cmd-desc">Bash install script for Linux / macOS to set up the Xeon toolchain</span>
-      </div>
-      <div class="cmd-row">
-        <span class="cmd-name">install.bat</span>
-        <span class="cmd-desc">Windows batch install script for setting up the Xeon toolchain</span>
-      </div>
+      <div class="cmd-row"><span class="cmd-name">xeon init</span><span class="cmd-desc">Scaffolds a <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">src/</code> directory and a <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">main.rub</code> entry point</span></div>
+      <div class="cmd-row"><span class="cmd-name">xeon build</span><span class="cmd-desc">Compiles your project to native machine code via the LLVM backend</span></div>
+      <div class="cmd-row"><span class="cmd-name">xeon run</span><span class="cmd-desc">Compiles and immediately executes your program in one step</span></div>
+      <div class="cmd-row"><span class="cmd-name">install.sh</span><span class="cmd-desc">Bash install script for Linux / macOS to set up the Xeon toolchain</span></div>
+      <div class="cmd-row"><span class="cmd-name">install.bat</span><span class="cmd-desc">Windows batch install script for setting up the Xeon toolchain</span></div>
     </div>
     <div class="xeon-terminal">
       <div class="term-bar">
-        <span class="dot dot-r"></span>
-        <span class="dot dot-y"></span>
-        <span class="dot dot-g"></span>
+        <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
         <span class="term-title">bash — xeon workflow</span>
       </div>
       <div class="xeon-term-body">
@@ -1000,29 +855,17 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
     <div class="step">
       <div class="step-num">01</div>
       <div class="step-title">Install Xeon</div>
-      <div class="step-desc">
-        Clone the repo and run <span class="inline-code">install.sh</span> (Linux/macOS)
-        or <span class="inline-code">install.bat</span> (Windows) to put the
-        Xeon build manager on your system.
-      </div>
+      <div class="step-desc">Clone the repo and run <span class="inline-code">install.sh</span> (Linux/macOS) or <span class="inline-code">install.bat</span> (Windows) to put the Xeon build manager on your system.</div>
     </div>
     <div class="step">
       <div class="step-num">02</div>
       <div class="step-title">Init a Project</div>
-      <div class="step-desc">
-        Create a new folder and run <span class="inline-code">xeon init</span> inside it.
-        Xeon generates a <span class="inline-code">src/</span> directory and a
-        <span class="inline-code">main.rub</span> entry point ready to edit.
-      </div>
+      <div class="step-desc">Create a new folder and run <span class="inline-code">xeon init</span> inside it. Xeon generates a <span class="inline-code">src/</span> directory and a <span class="inline-code">main.rub</span> entry point ready to edit.</div>
     </div>
     <div class="step">
       <div class="step-num">03</div>
       <div class="step-title">Build &amp; Run</div>
-      <div class="step-desc">
-        Use <span class="inline-code">xeon build</span> to compile to a native binary,
-        or <span class="inline-code">xeon run</span> to compile and execute immediately.
-        That's it.
-      </div>
+      <div class="step-desc">Use <span class="inline-code">xeon build</span> to compile to a native binary, or <span class="inline-code">xeon run</span> to compile and execute immediately. That's it.</div>
     </div>
   </div>
 </div>
@@ -1034,7 +877,7 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
       <div class="cta-banner-title">Start building with Rubidium.</div>
       <div class="cta-banner-sub">Open source. Contributions welcome.</div>
     </div>
-    <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;position:relative;z-index:1">
       <a class="btn-primary" href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">View Source →</a>
       <a class="btn-ghost" href="https://github.com/TomDexterYoutube/Xeon-Rubidium/issues" target="_blank">Open an Issue</a>
     </div>
@@ -1042,19 +885,21 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
 </div>
 
 <!-- FOOTER -->
-<footer>
-  <span class="footer-brand">
-    <span class="logo-Rub">Rub</span><span class="logo-idium">idium</span>
-  </span>
-  <ul class="footer-links">
-    <li><a href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">GitHub</a></li>
-    <li><a href="#syntax">Docs</a></li>
-    <li><a href="#xeon">Xeon</a></li>
-  </ul>
-  <span class="footer-copy">Built with LLVM · Open Source</span>
-</footer>
+<div class="footer-outer">
+  <footer>
+    <span class="footer-brand"><span class="logo-Rub">Rub</span><span class="logo-idium">idium</span></span>
+    <ul class="footer-links">
+      <li><a href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">GitHub</a></li>
+      <li><a href="#syntax">Docs</a></li>
+      <li><a href="#xeon">Xeon</a></li>
+      <li><a href="learn.html">Learn</a></li>
+    </ul>
+    <span class="footer-copy">Built with LLVM · Open Source</span>
+  </footer>
+</div>
 
 <script>
+  // Tab switching
   function switchTab(btn, id) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
@@ -1062,21 +907,36 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
     document.getElementById(id).classList.add('active');
   }
 
+  // Copy button
+  function copyCode(btn) {
+    const pre = btn.closest('.code-panel').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = '✓ Copied';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '⎘ Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // Scroll reveal
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.08 });
-
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-</script>
 
-<script>
-/* Scrolled nav */
-(function() {
-  var nav = document.querySelector('nav');
-  window.addEventListener('scroll', function() {
-    nav.classList.toggle('scrolled', window.scrollY > 30);
-  }, { passive: true });
-})();
+  // Scrolled nav
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 30), { passive: true });
+
+  // Ticker
+  const TICKER_ITEMS = [
+    'Static Types', 'Manual Memory', 'LLVM Backend', 'POSIX Threads',
+    'Zero GC', 'FFI Ready', 'Deep Copy Semantics', 'Compile-Time Safety',
+    'Null Safety', 'Rich Collections', 'Xeon Build Tool', 'Open Source',
+    'List · Index · Dict', 'Hardware Threading', 'File I/O', 'OS Module'
+  ];
+  const track = document.getElementById('ticker');
+  const doubled = [...TICKER_ITEMS, ...TICKER_ITEMS];
+  track.innerHTML = doubled.map(t => `<span class="ticker-item"><span class="tick-dot"></span>${t}</span>`).join('');
 </script>
 </body>
 </html>
