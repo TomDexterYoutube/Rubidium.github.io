@@ -475,9 +475,11 @@
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
     <li><a href="#syntax">Syntax</a></li>
+    <li><a href="#benchmarks">Benchmarks</a></li>
     <li><a href="#xeon">Xeon</a></li>
     <li><a href="#start">Get Started</a></li>
     <li><a href="learn.html" style="color:var(--rb);">Learn</a></li>
+    <li><a href="quiz.html">Quiz</a></li>
   </ul>
   <a class="nav-cta" href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">GitHub →</a>
 </nav>
@@ -491,8 +493,9 @@
     </h1>
     <p class="hero-sub">
       Rubidium is a statically-typed, compiled language with the readability
-      of Python and the memory safety patterns of Rust.
-      Targets native machine code via LLVM. No runtime. No GC.
+      of Python and an explicit, always-visible memory model —
+      no hidden GC, no ownership or borrow-checker rules to learn.
+      Targets native machine code via LLVM. No runtime.
     </p>
     <div class="hero-actions">
       <a class="btn-primary" href="#start">Get Started →</a>
@@ -547,7 +550,7 @@
     <span class="stat-label">Threads</span>
   </div>
   <div class="stat-item">
-    <span class="stat-val">3</span>
+    <span class="stat-val">4</span>
     <span class="stat-label">Collection Types</span>
   </div>
   <div class="stat-item">
@@ -592,12 +595,12 @@
     <div class="feat-card">
       <div class="feat-icon">▦</div>
       <div class="feat-name">Rich Collections</div>
-      <div class="feat-desc">Three distinct collection types — <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">list</code>, <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">index</code>, and <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">dict</code> — each with a clear, consistent access syntax.</div>
+      <div class="feat-desc">Four collection types — <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">list</code>, <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">index</code>, <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">dict</code>, and <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">dict+</code> — each with a clear, consistent access syntax.</div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">◎</div>
       <div class="feat-name">LLVM Backend</div>
-      <div class="feat-desc">Compiles directly to highly optimized native machine code via LLVM. Execution speeds comparable to C or Rust.</div>
+      <div class="feat-desc">Compiles directly to native machine code via LLVM. In an early, single-machine test, Rubidium landed within ~1.6× of <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">gcc -O2</code> on a recursive workload — see <a href="#benchmarks" style="color:var(--rb)">benchmarks</a>.</div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">⊞</div>
@@ -614,8 +617,8 @@
   <div class="section-label">Language Syntax</div>
   <h2 class="section-title">Familiar. Precise. Expressive.</h2>
   <p class="section-desc">
-    Rubidium reads like Python but compiles like Rust.
-    Explicit types, explicit ownership, zero ambiguity.
+    Rubidium reads like Python and compiles to native code.
+    Explicit types, explicit memory, zero ambiguity.
   </p>
 
   <div class="tabs reveal">
@@ -799,6 +802,64 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
 
 <hr class="divider" />
 
+<!-- BENCHMARKS -->
+<section id="benchmarks">
+  <div class="section-label">Early Benchmarks</div>
+  <h2 class="section-title">Real numbers,<br>honestly labeled.</h2>
+  <p class="section-desc">
+    A single informal run on one Linux machine — not a rigorous benchmark suite yet.
+    Two workloads: a recursive <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">fib(35)</code>
+    (function-call heavy) and a 10-million-iteration loop sum (memory/loop heavy).
+    Compiled with <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">gcc -O2</code>,
+    <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">rustc -O</code>, and
+    <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">xeon build --release</code>, timed with
+    <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">hyperfine</code>.
+  </p>
+
+  <div class="reveal" style="overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse; font-family:var(--mono); font-size:0.85rem; margin-bottom:2rem;">
+      <thead>
+        <tr style="border-bottom:1px solid var(--border);">
+          <th style="text-align:left; padding:0.7rem 1rem; color:var(--muted); font-weight:600; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em;">fib(35) — recursive calls</th>
+          <th style="text-align:left; padding:0.7rem 1rem; color:var(--muted); font-weight:600; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em;">Mean time</th>
+          <th style="text-align:left; padding:0.7rem 1rem; color:var(--muted); font-weight:600; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em;">Relative to fastest</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.7rem 1rem;">C (<code>gcc -O2</code>)</td><td style="padding:0.7rem 1rem; color:var(--rb);">49.6 ms ± 2.8 ms</td><td style="padding:0.7rem 1rem;">1.00×</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.7rem 1rem;">Rust (<code>rustc -O</code>)</td><td style="padding:0.7rem 1rem;">75.0 ms ± 1.4 ms</td><td style="padding:0.7rem 1rem;">1.51×</td></tr>
+        <tr><td style="padding:0.7rem 1rem;">Rubidium (<code>xeon build --release</code>)</td><td style="padding:0.7rem 1rem;">81.9 ms ± 3.0 ms</td><td style="padding:0.7rem 1rem;">1.65×</td></tr>
+      </tbody>
+    </table>
+
+    <table style="width:100%; border-collapse:collapse; font-family:var(--mono); font-size:0.85rem;">
+      <thead>
+        <tr style="border-bottom:1px solid var(--border);">
+          <th style="text-align:left; padding:0.7rem 1rem; color:var(--muted); font-weight:600; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em;">Sum of 10M — loop throughput</th>
+          <th style="text-align:left; padding:0.7rem 1rem; color:var(--muted); font-weight:600; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em;">Mean time</th>
+          <th style="text-align:left; padding:0.7rem 1rem; color:var(--muted); font-weight:600; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em;">Relative to fastest</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.7rem 1rem;">C (<code>gcc -O2</code>)</td><td style="padding:0.7rem 1rem; color:var(--rb);">1.5 ms ± 0.4 ms</td><td style="padding:0.7rem 1rem;">1.00×</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.7rem 1rem;">Rubidium (<code>xeon build --release</code>)</td><td style="padding:0.7rem 1rem;">2.0 ms ± 0.2 ms</td><td style="padding:0.7rem 1rem;">1.27×</td></tr>
+        <tr><td style="padding:0.7rem 1rem;">Rust (<code>rustc -O</code>)</td><td style="padding:0.7rem 1rem;">2.2 ms ± 0.2 ms</td><td style="padding:0.7rem 1rem;">1.43×</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="background:rgba(232,164,74,0.06); border:1px solid rgba(232,164,74,0.25); padding:1rem 1.25rem; display:flex; gap:0.75rem; align-items:flex-start; margin-top:1.5rem;">
+    <span style="flex-shrink:0;">⚠️</span>
+    <p style="color:var(--muted); font-size:0.85rem; line-height:1.7; margin:0;">
+      Take this with a grain of salt: single machine, single session, no <code style="color:var(--rb)">--warmup</code> pass, and the sum benchmark ran in under 5&nbsp;ms —
+      hyperfine itself flags results that fast as noisy. The fib(35) numbers are more trustworthy since they ran 35–55 times in the multi-tens-of-milliseconds range.
+      We'll update this section as more rigorous, multi-machine benchmarks come in.
+    </p>
+  </div>
+</section>
+
+<hr class="divider" />
+
 <!-- XEON -->
 <div class="xeon-section" id="xeon">
   <div class="section-label">Xeon Build Manager</div>
@@ -813,7 +874,7 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
       <div class="cmd-row"><span class="cmd-name">xeon build</span><span class="cmd-desc">Compiles your project to native machine code via the LLVM backend</span></div>
       <div class="cmd-row"><span class="cmd-name">xeon run</span><span class="cmd-desc">Compiles and immediately executes your program in one step</span></div>
       <div class="cmd-row"><span class="cmd-name">install.sh</span><span class="cmd-desc">Bash install script for Linux / macOS to set up the Xeon toolchain</span></div>
-      <div class="cmd-row"><span class="cmd-name">install.bat</span><span class="cmd-desc">Windows batch install script for setting up the Xeon toolchain</span></div>
+      <div class="cmd-row"><span class="cmd-name">install.ps1</span><span class="cmd-desc">PowerShell install script for Windows to set up the Xeon toolchain</span></div>
     </div>
     <div class="xeon-terminal">
       <div class="term-bar">
@@ -855,7 +916,7 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
     <div class="step">
       <div class="step-num">01</div>
       <div class="step-title">Install Xeon</div>
-      <div class="step-desc">Clone the repo and run <span class="inline-code">install.sh</span> (Linux/macOS) or <span class="inline-code">install.bat</span> (Windows) to put the Xeon build manager on your system.</div>
+      <div class="step-desc">Clone the repo and run <span class="inline-code">install.sh</span> (Linux/macOS) or <span class="inline-code">install.ps1</span> (Windows) to put the Xeon build manager on your system.</div>
     </div>
     <div class="step">
       <div class="step-num">02</div>
@@ -893,6 +954,7 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
       <li><a href="docs.pdf">Docs</a></li>
       <li><a href="#xeon">Xeon</a></li>
       <li><a href="learn.html">Learn</a></li>
+      <li><a href="quiz.html">Quiz</a></li>
     </ul>
     <span class="footer-copy">Built with LLVM · Open Source</span>
   </footer>
@@ -932,7 +994,7 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
     'Static Types', 'Manual Memory', 'LLVM Backend', 'POSIX Threads',
     'Zero GC', 'FFI Ready', 'Deep Copy Semantics', 'Compile-Time Safety',
     'Null Safety', 'Rich Collections', 'Xeon Build Tool', 'Open Source',
-    'List · Index · Dict', 'Hardware Threading', 'File I/O', 'OS Module'
+    'List · Index · Dict · Dict+', 'Hardware Threading', 'File I/O', 'OS Module'
   ];
   const track = document.getElementById('ticker');
   const doubled = [...TICKER_ITEMS, ...TICKER_ITEMS];

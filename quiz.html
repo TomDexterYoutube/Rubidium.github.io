@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rubidium Quiz — Test Your Knowledge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Azeret+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg:       #09090b;
+  --bg2:      #111114;
+  --bg3:      #18181c;
+  --border:   #2a2a30;
+  --rb:       #E34234;
+  --rb-hi:    #F05030;
+  --rb-dim:   rgba(227, 66, 52, 0.08);
+  --good:     #4CAF7D;
+  --good-dim: rgba(76,175,125,0.10);
+  --bad:      #d9534f;
+  --bad-dim:  rgba(217,83,79,0.10);
+  --text:     #e0e0e4;
+  --muted:    #7a7a88;
+  --dim:      #4a4a55;
+  --mono:     'Azeret Mono', monospace;
+  --head:     'Unbounded', sans-serif;
+  --py:       #3776AB;
+  --py-hi:    #4B8BBE;
+  --top-h:    56px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--mono); font-size: 15px; line-height: 1.65; min-height: 100vh; }
+
+/* ── TOP BAR ── */
+.topbar {
+  position: sticky; top: 0; z-index: 200; height: var(--top-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.5rem;
+  background: rgba(9,9,11,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-logo { font-family: var(--head); font-weight: 800; font-size: 1rem; text-decoration: none; }
+.topbar-logo .r { color: var(--rb); }
+.topbar-logo .b { color: var(--text); }
+.topbar-title { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-left: 0.9rem; padding-left: 0.9rem; border-left: 1px solid var(--border); }
+.topbar-right { display: flex; align-items: center; gap: 1.5rem; }
+.topbar-link { font-family: var(--mono); font-size: 0.75rem; color: var(--muted); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.2s; }
+.topbar-link:hover { color: var(--text); }
+.topbar-gh {
+  font-family: var(--mono); font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 0.35rem 0.9rem; background: var(--py); color: #fff;
+  text-decoration: none; transition: background 0.2s;
+}
+.topbar-gh:hover { background: var(--py-hi); }
+
+/* ── LAYOUT ── */
+.wrap {
+  max-width: 680px; margin: 0 auto; padding: 3rem 1.5rem 6rem;
+}
+.quiz-eyebrow {
+  font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--rb); margin-bottom: 0.75rem;
+}
+.quiz-h1 {
+  font-family: var(--head); font-size: clamp(1.7rem, 4vw, 2.3rem); font-weight: 800;
+  letter-spacing: -0.02em; margin-bottom: 0.75rem; line-height: 1.15;
+}
+.quiz-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; max-width: 52ch; }
+
+/* ── PROGRESS ── */
+.progress-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+.progress-track { flex: 1; height: 4px; background: var(--bg3); border: 1px solid var(--border); overflow: hidden; }
+.progress-fill { height: 100%; background: var(--rb); width: 0%; transition: width 0.3s ease; }
+.progress-label { font-size: 0.72rem; color: var(--muted); white-space: nowrap; letter-spacing: 0.05em; }
+.score-pill {
+  font-size: 0.72rem; letter-spacing: 0.05em; color: var(--good);
+  border: 1px solid rgba(76,175,125,0.3); background: var(--good-dim);
+  padding: 0.2rem 0.6rem; white-space: nowrap;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--bg2); border: 1px solid var(--border);
+  padding: 1.75rem; margin-bottom: 1.5rem;
+}
+.card-tag {
+  display: inline-block; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--muted); background: var(--bg3); border: 1px solid var(--border);
+  padding: 0.2rem 0.55rem; margin-bottom: 1rem;
+}
+.q-text { font-size: 1.02rem; color: var(--text); margin-bottom: 1.4rem; line-height: 1.6; }
+.q-text code, .opt code, .fb code {
+  background: var(--bg3); border: 1px solid var(--border); color: var(--rb);
+  padding: 0.05rem 0.35rem; font-size: 0.9em; border-radius: 2px;
+}
+
+.opt-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.opt {
+  display: flex; align-items: center; gap: 0.8rem;
+  text-align: left; width: 100%;
+  background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+  font-family: var(--mono); font-size: 0.88rem; padding: 0.8rem 1rem;
+  cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.1s;
+}
+.opt:hover:not(:disabled) { border-color: var(--muted); transform: translateX(2px); }
+.opt-letter {
+  flex-shrink: 0; width: 1.6rem; height: 1.6rem; border-radius: 50%;
+  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; color: var(--muted);
+}
+.opt:disabled { cursor: default; }
+.opt.correct { border-color: var(--good); background: var(--good-dim); }
+.opt.correct .opt-letter { border-color: var(--good); color: var(--good); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-dim); }
+.opt.wrong .opt-letter { border-color: var(--bad); color: var(--bad); }
+.opt.dim { opacity: 0.45; }
+
+.feedback {
+  margin-top: 1.25rem; padding: 0.9rem 1.1rem; font-size: 0.85rem; line-height: 1.65;
+  border-left: 3px solid var(--border); display: none;
+}
+.feedback.show { display: block; }
+.feedback.good { border-color: var(--good); background: var(--good-dim); color: var(--text); }
+.feedback.bad  { border-color: var(--bad);  background: var(--bad-dim);  color: var(--text); }
+.feedback strong { color: var(--rb); }
+
+.btn-row { display: flex; justify-content: flex-end; margin-top: 1.5rem; }
+.btn-next {
+  font-family: var(--mono); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  background: var(--py); color: #fff; border: none; padding: 0.65rem 1.4rem;
+  cursor: pointer; transition: background 0.2s; display: none;
+}
+.btn-next.show { display: inline-flex; align-items: center; gap: 0.4rem; }
+.btn-next:hover { background: var(--py-hi); }
+
+/* ── RESULTS ── */
+.results { display: none; text-align: center; }
+.results.show { display: block; }
+.results-score {
+  font-family: var(--head); font-weight: 800; font-size: 3.5rem; color: var(--rb);
+  line-height: 1; margin: 1.5rem 0 0.5rem;
+}
+.results-label { color: var(--muted); font-size: 0.85rem; margin-bottom: 2rem; }
+.results-msg { font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.7; }
+.review-list { text-align: left; margin-bottom: 2rem; }
+.review-item {
+  display: flex; gap: 0.75rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border);
+  font-size: 0.82rem; color: var(--muted); align-items: flex-start;
+}
+.review-item:last-child { border-bottom: none; }
+.review-icon { flex-shrink: 0; }
+.review-icon.good { color: var(--good); }
+.review-icon.bad { color: var(--bad); }
+.btn-restart {
+  font-family: var(--mono); font-size: 0.82rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  background: var(--rb); color: #fff; border: none; padding: 0.75rem 1.8rem;
+  cursor: pointer; transition: background 0.2s;
+}
+.btn-restart:hover { background: var(--rb-hi); }
+
+#quiz-body.hidden { display: none; }
+
+@media (max-width: 600px) {
+  .wrap { padding: 2rem 1.1rem 4rem; }
+  .card { padding: 1.25rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="index.html" style="display:flex;align-items:center;">
+    <span class="r">Rub</span><span class="b">idium</span>
+    <span class="topbar-title">Quiz</span>
+  </a>
+  <div class="topbar-right">
+    <a class="topbar-link" href="learn.html">Book</a>
+    <a class="topbar-gh" href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">GitHub →</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="quiz-eyebrow">Test Your Knowledge</div>
+  <h1 class="quiz-h1">Do you actually know Rubidium?</h1>
+  <p class="quiz-sub">16 questions pulled straight from the language spec — mutability, memory, collections, control flow, classes, and the standard modules. Instant feedback, no signup.</p>
+
+  <div id="quiz-body">
+    <div class="progress-row">
+      <span class="progress-label" id="progress-label">Question 1 / 16</span>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <span class="score-pill" id="score-pill">Score: 0</span>
+    </div>
+
+    <div class="card">
+      <div class="card-tag" id="q-tag">Topic</div>
+      <div class="q-text" id="q-text">Loading…</div>
+      <div class="opt-list" id="opt-list"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="btn-row"><button class="btn-next" id="btn-next">Next →</button></div>
+    </div>
+  </div>
+
+  <div class="results" id="results">
+    <div class="quiz-eyebrow">Results</div>
+    <div class="results-score" id="results-score">0 / 16</div>
+    <div class="results-label">correct</div>
+    <p class="results-msg" id="results-msg"></p>
+    <div class="review-list" id="review-list"></div>
+    <button class="btn-restart" onclick="restartQuiz()">Retake Quiz →</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    tag: "Mutability",
+    q: "Is <code>let mut x: i32 = 5; x = \"hello\"</code> legal?",
+    options: ["Yes, mut allows any change", "No — type mismatch, even with mut", "Only if x was Null first", "Only inside a function"],
+    correct: 1,
+    explain: "<code>mut</code> only permits reassignment — it never allows a variable to change type. This is a compile-time type mismatch."
+  },
+  {
+    tag: "Null",
+    q: "What does <code>Null &lt; -999999</code> evaluate to?",
+    options: ["False", "Runtime error", "True", "Null"],
+    correct: 2,
+    explain: "<code>Null</code> behaves like negative infinity — it's smaller than every non-null value of its type."
+  },
+  {
+    tag: "Variables",
+    q: "You call <code>let</code> a second time on a name that already exists. What happens?",
+    options: ["Compile error — duplicate symbol", "It's ignored, old value kept", "The old variable is dropped and a new one created", "It becomes a local shadow automatically"],
+    correct: 2,
+    explain: "This is the Variable Overwrite Rule: using <code>let</code> again silently drops the old variable and creates a fresh one under the same name."
+  },
+  {
+    tag: "Strings",
+    q: "Which of these is a real Rubidium string method?",
+    options: [".has()", ".combine()", ".to()", ".replace()"],
+    correct: 3,
+    explain: "<code>.replace(old, new)</code> is a real string method. <code>.combine()</code> belongs to <code>list</code>, and <code>.has()</code> / <code>.to()</code> aren't part of the spec at all."
+  },
+  {
+    tag: "Lists",
+    q: "How do you append a new item to a mutable list called <code>items</code>?",
+    options: ["items.add(x)", "items(0).add(x)", "items().add(x)", "items.append(x)"],
+    correct: 2,
+    explain: "Appending uses empty parentheses on the list itself: <code>items().add(x)</code>. <code>items(0).add(x)</code> would target index 0 instead."
+  },
+  {
+    tag: "Index",
+    q: "What happens if you <code>.add()</code> a key to an <code>index</code> that already exists?",
+    options: ["It overwrites silently", "Runtime error", "It appends to a list at that key", "Compile error"],
+    correct: 1,
+    explain: "<code>.add()</code> on an <code>index</code> is strictly for new keys — using it on an existing key raises a runtime error. Use <code>.set()</code> to update."
+  },
+  {
+    tag: "Dict",
+    q: "What's the difference between <code>my_dict(\"scores\").add(40)</code> and <code>my_dict().add(\"new_key\")</code>?",
+    options: [
+      "They do the same thing",
+      "First appends to \"scores\"'s collection; second creates a new top-level key",
+      "First is a compile error",
+      "Second appends to every key"
+    ],
+    correct: 1,
+    explain: "The first appends <code>40</code> to the existing <code>\"scores\"</code> collection. The second creates a brand-new top-level key, initialized to <code>Null</code>."
+  },
+  {
+    tag: "Dict+",
+    q: "In <code>dict+</code>, how do you nest another level instead of creating a leaf?",
+    options: ["Pass a list [ ]", "Pass a { } block", "Call .nest() instead of .add()", "Use dict++ type"],
+    correct: 1,
+    explain: "Passing a <code>{ }</code> block as the value nests another <code>dict+</code> level. Passing a list <code>[ ]</code> creates a leaf instead."
+  },
+  {
+    tag: "Control Flow",
+    q: "In <code>range(1, 10)</code>, is 10 included in the loop?",
+    options: ["Yes", "No — end is exclusive", "Only in while loops", "Depends on direction"],
+    correct: 1,
+    explain: "<code>range(start, end)</code> always excludes <code>end</code>, so <code>range(1, 10)</code> yields 1 through 9."
+  },
+  {
+    tag: "Functions",
+    q: "Do function parameters live in Rubidium's global memory pool?",
+    options: ["Yes, everything is global by default", "No — they're always local to that call", "Only if declared mut", "Only in main()"],
+    correct: 1,
+    explain: "Function parameters behave like local variables — they never enter the global pool and are dropped when the function returns."
+  },
+  {
+    tag: "Memory",
+    q: "After <code>items(1).drop()</code> on a list, what fills the gap left behind?",
+    options: ["Null", "Nothing — the list shifts down", "0 or empty string depending on type", "It errors instead"],
+    correct: 1,
+    explain: "Dropping an element removes it and shifts the rest of the list down. Unlike <code>.set()</code>/<code>.add()</code>, no <code>Null</code> placeholder is left."
+  },
+  {
+    tag: "The Link Rule",
+    q: "You link two variables with <code>let b = link a</code>, then later run <code>b = 99</code>. What happens?",
+    options: ["a also becomes 99", "Compile error", "The link breaks — b becomes independent", "b stays linked forever"],
+    correct: 2,
+    explain: "A plain <code>=</code> reassignment always severs a <code>link</code> — after that, the two variables are fully independent."
+  },
+  {
+    tag: "Classes",
+    q: "An instance is declared <code>mut</code>, but a field inside the class wasn't. Can you change that field from outside?",
+    options: ["Yes, mut instance overrides field rules", "No — both the instance and the field need mut", "Only from inside a method", "Only if the field is a collection"],
+    correct: 1,
+    explain: "Two separate gates: the instance must be <code>mut</code> AND the specific field must be declared <code>mut</code> inside the class. Both are required."
+  },
+  {
+    tag: "Error Handling",
+    q: "Will <code>try { let x: i32 = \"hello\" } error { ... }</code> catch that type mismatch?",
+    options: ["Yes, that's exactly what try/error is for", "No — it's a compile error, so the program never builds", "Only in debug mode", "Only if x is mut"],
+    correct: 1,
+    explain: "<code>try / error</code> only catches runtime errors. A type mismatch is caught at compile time, before the program can even run."
+  },
+  {
+    tag: "Threading",
+    q: "Two threads call the same function. Do they share that function's local variables?",
+    options: ["Yes, all variables are shared across threads", "No — locals and parameters are always private per-thread", "Only if declared without mut", "Only the first thread's copy is used"],
+    correct: 1,
+    explain: "Only global variables are shared between threads. Function parameters and local variables are always private to the thread executing them."
+  },
+  {
+    tag: "Modules",
+    q: "You <code>import</code> a file but forget <code>use thread</code>. Can that file's code use threading?",
+    options: ["Yes, import brings in everything", "No — use is required separately for built-in modules", "Only if the file also has use thread", "Threading doesn't need use at all"],
+    correct: 1,
+    explain: "<code>use</code> and <code>import</code> are separate systems. Every built-in module needs its own <code>use</code> declaration regardless of what's imported."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+const results = []; // {correct: bool, tag, q}
+
+const qTag = document.getElementById('q-tag');
+const qText = document.getElementById('q-text');
+const optList = document.getElementById('opt-list');
+const feedback = document.getElementById('feedback');
+const btnNext = document.getElementById('btn-next');
+const progressLabel = document.getElementById('progress-label');
+const progressFill = document.getElementById('progress-fill');
+const scorePill = document.getElementById('score-pill');
+const quizBody = document.getElementById('quiz-body');
+const resultsEl = document.getElementById('results');
+
+function renderQuestion() {
+  answered = false;
+  const item = QUESTIONS[current];
+  qTag.textContent = item.tag;
+  qText.innerHTML = item.q;
+  optList.innerHTML = '';
+  feedback.classList.remove('show', 'good', 'bad');
+  feedback.innerHTML = '';
+  btnNext.classList.remove('show');
+  btnNext.textContent = current === QUESTIONS.length - 1 ? 'See Results →' : 'Next →';
+
+  const letters = ['A', 'B', 'C', 'D'];
+  item.options.forEach((optText, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${optText}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    optList.appendChild(btn);
+  });
+
+  progressLabel.textContent = `Question ${current + 1} / ${QUESTIONS.length}`;
+  progressFill.style.width = `${(current / QUESTIONS.length) * 100}%`;
+  scorePill.textContent = `Score: ${score}`;
+}
+
+function selectAnswer(i) {
+  if (answered) return;
+  answered = true;
+  const item = QUESTIONS[current];
+  const isCorrect = i === item.correct;
+  if (isCorrect) score++;
+
+  results.push({ correct: isCorrect, tag: item.tag, q: item.q });
+
+  const opts = optList.querySelectorAll('.opt');
+  opts.forEach((btn, idx) => {
+    btn.disabled = true;
+    if (idx === item.correct) btn.classList.add('correct');
+    else if (idx === i) btn.classList.add('wrong');
+    else btn.classList.add('dim');
+  });
+
+  feedback.classList.add('show', isCorrect ? 'good' : 'bad');
+  feedback.innerHTML = (isCorrect ? '<strong>Correct.</strong> ' : '<strong>Not quite.</strong> ') + item.explain;
+  btnNext.classList.add('show');
+  scorePill.textContent = `Score: ${score}`;
+}
+
+btnNext.onclick = () => {
+  current++;
+  if (current >= QUESTIONS.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+};
+
+function showResults() {
+  quizBody.classList.add('hidden');
+  resultsEl.classList.add('show');
+  document.getElementById('results-score').textContent = `${score} / ${QUESTIONS.length}`;
+
+  const pct = score / QUESTIONS.length;
+  let msg;
+  if (pct === 1) msg = "Perfect score. You know Rubidium's spec better than most of its own docs.";
+  else if (pct >= 0.75) msg = "Solid grasp of the language — a couple of the sharper edge-cases slipped by.";
+  else if (pct >= 0.5) msg = "Decent start. Worth another pass through the trickier chapters — memory, dict vs dict+, and threading scope trip most people up.";
+  else msg = "Rubidium has more sharp corners than it looks like at first — head back to the book and try again.";
+  document.getElementById('results-msg').textContent = msg;
+
+  const reviewList = document.getElementById('review-list');
+  reviewList.innerHTML = '';
+  results.forEach(r => {
+    const row = document.createElement('div');
+    row.className = 'review-item';
+    row.innerHTML = `<span class="review-icon ${r.correct ? 'good' : 'bad'}">${r.correct ? '✓' : '✗'}</span><span>[${r.tag}] ${r.q}</span>`;
+    reviewList.appendChild(row);
+  });
+
+  progressFill.style.width = '100%';
+}
+
+function restartQuiz() {
+  current = 0;
+  score = 0;
+  results.length = 0;
+  quizBody.classList.remove('hidden');
+  resultsEl.classList.remove('show');
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+renderQuestion();
+</script>
+</body>
+</html>

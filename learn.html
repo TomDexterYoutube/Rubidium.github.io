@@ -254,6 +254,40 @@ code {
 .compare-table tr:hover td { background: var(--bg2); }
 .tag-rb { color: var(--rb); }
 
+/* ── QUIZ ── */
+.quiz-box {
+  margin: 1.5rem 0; border: 1px solid var(--border); background: var(--bg2);
+}
+.quiz-box-title {
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--rb); padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--border);
+}
+.quiz-q { border-bottom: 1px solid var(--border); }
+.quiz-q:last-child { border-bottom: none; }
+.quiz-q summary {
+  cursor: pointer; padding: 0.9rem 1.2rem; font-family: var(--mono); font-size: 0.85rem;
+  color: var(--text); list-style: none; display: flex; gap: 0.6rem; align-items: baseline;
+}
+.quiz-q summary::-webkit-details-marker { display: none; }
+.quiz-q summary::before { content: '▸'; color: var(--muted); transition: transform 0.15s; flex-shrink: 0; }
+.quiz-q[open] summary::before { transform: rotate(90deg); }
+.quiz-q summary:hover { background: var(--bg3); }
+.quiz-a {
+  padding: 0 1.2rem 1rem 2.5rem; font-family: var(--mono); font-size: 0.82rem;
+  color: var(--muted); line-height: 1.7;
+}
+.quiz-a strong { color: var(--rb); }
+
+/* ── WORKED EXAMPLE ── */
+.worked-example {
+  margin: 2rem 0; border: 1px solid var(--rb-dim); border-left: 3px solid var(--rb);
+  background: var(--bg2); padding: 1.5rem 1.75rem;
+}
+.worked-example-label {
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--rb); margin-bottom: 0.75rem;
+}
+
 /* ── CHAPTER NAV ── */
 .ch-nav {
   display: flex; justify-content: space-between;
@@ -401,6 +435,7 @@ code { border-radius: 2px; }
   <div class="topbar-right">
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
     <a class="topbar-link" href="index.html">Home</a>
+    <a class="topbar-link" href="quiz.html">Quiz</a>
     <a class="topbar-gh" href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">GitHub →</a>
   </div>
 </div>
@@ -416,7 +451,6 @@ code { border-radius: 2px; }
   <a class="sidebar-item" onclick="show(1)" href="#">
     <span class="ch-num">01</span> Getting Started
   </a>
-
   <div class="sidebar-section-label">The Language</div>
   <a class="sidebar-item" onclick="show(2)" href="#">
     <span class="ch-num">02</span> Variables &amp; Types
@@ -425,48 +459,53 @@ code { border-radius: 2px; }
     <span class="ch-num">03</span> Strings
   </a>
   <a class="sidebar-item" onclick="show(4)" href="#">
-    <span class="ch-num">04</span> Collections — List
+    <span class="ch-num">04</span> SY &amp; str+
   </a>
   <a class="sidebar-item" onclick="show(5)" href="#">
-    <span class="ch-num">05</span> Collections — Index
+    <span class="ch-num">05</span> Collections — List
   </a>
   <a class="sidebar-item" onclick="show(6)" href="#">
-    <span class="ch-num">06</span> Collections — Dict
+    <span class="ch-num">06</span> Collections — Index
   </a>
   <a class="sidebar-item" onclick="show(7)" href="#">
-    <span class="ch-num">07</span> Control Flow
+    <span class="ch-num">07</span> Collections — Dict
   </a>
   <a class="sidebar-item" onclick="show(8)" href="#">
-    <span class="ch-num">08</span> Functions
+    <span class="ch-num">08</span> Collections — Dict+
   </a>
   <a class="sidebar-item" onclick="show(9)" href="#">
-    <span class="ch-num">09</span> Memory Management
+    <span class="ch-num">09</span> Control Flow
   </a>
   <a class="sidebar-item" onclick="show(10)" href="#">
-    <span class="ch-num">10</span> Classes
+    <span class="ch-num">10</span> Functions
   </a>
   <a class="sidebar-item" onclick="show(11)" href="#">
-    <span class="ch-num">11</span> Error Handling
+    <span class="ch-num">11</span> Memory Management
   </a>
   <a class="sidebar-item" onclick="show(12)" href="#">
-    <span class="ch-num">12</span> Files
+    <span class="ch-num">12</span> Classes
   </a>
-
-  <div class="sidebar-section-label">Standard Modules</div>
   <a class="sidebar-item" onclick="show(13)" href="#">
-    <span class="ch-num">13</span> Threading
+    <span class="ch-num">13</span> Error Handling
   </a>
   <a class="sidebar-item" onclick="show(14)" href="#">
-    <span class="ch-num">14</span> Random
+    <span class="ch-num">14</span> Files
   </a>
+  <div class="sidebar-section-label">Standard Modules</div>
   <a class="sidebar-item" onclick="show(15)" href="#">
-    <span class="ch-num">15</span> Time
+    <span class="ch-num">15</span> Threading
   </a>
   <a class="sidebar-item" onclick="show(16)" href="#">
-    <span class="ch-num">16</span> OS &amp; FFI
+    <span class="ch-num">16</span> Random
   </a>
   <a class="sidebar-item" onclick="show(17)" href="#">
-    <span class="ch-num">17</span> Modules &amp; Imports
+    <span class="ch-num">17</span> Time
+  </a>
+  <a class="sidebar-item" onclick="show(18)" href="#">
+    <span class="ch-num">18</span> OS &amp; FFI
+  </a>
+  <a class="sidebar-item" onclick="show(19)" href="#">
+    <span class="ch-num">19</span> Modules &amp; Imports
   </a>
 </nav>
 
@@ -481,7 +520,7 @@ code { border-radius: 2px; }
     This book will teach you the Rubidium programming language from scratch —
     no prior systems programming experience required.
   </p>
-  <p class="lead">Rubidium is a high-performance, statically-typed compiled language designed to be approachable for beginners while scaling to real systems programming. It combines the clean, readable syntax of Python with the memory control and safety patterns of Rust, and compiles directly to native machine code via LLVM.</p>
+  <p class="lead">Rubidium is a high-performance, statically-typed compiled language designed to be approachable for beginners while scaling to real systems programming. It combines the clean, readable syntax of Python with an explicit, always-visible memory model — no hidden garbage collector, no ownership or borrow-checker rules to learn, just deep-copy-by-default and a manual <code>.drop()</code> when you're done with a value.</p>
 
   <h2>Who this book is for</h2>
   <p>This book assumes you can write basic programs in any language — loops, variables, functions. You don't need to know C, Rust, or anything low-level. If you've written Python, JavaScript, or similar, you'll feel right at home in the first few chapters.</p>
@@ -489,7 +528,7 @@ code { border-radius: 2px; }
   <h2>What you'll learn</h2>
   <ul>
     <li>How Rubidium's type system and memory model work</li>
-    <li>All three collection types — <code>list</code>, <code>index</code>, and <code>dict</code></li>
+    <li>All four collection types — <code>list</code>, <code>index</code>, <code>dict</code>, and <code>dict+</code></li>
     <li>Functions, classes, and isolated scopes</li>
     <li>Manual memory management with <code>.drop()</code></li>
     <li>Real hardware threading with POSIX threads</li>
@@ -507,10 +546,7 @@ code { border-radius: 2px; }
 
   <div class="ch-nav">
     <div></div>
-    <div class="ch-nav-btn next" onclick="show(1)">
-      <span class="ch-nav-direction">Next →</span>
-      <span class="ch-nav-title">Getting Started</span>
-    </div>
+    <div class="ch-nav-btn next" onclick="show(1)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Getting Started</span></div>
   </div>
 </div>
 
@@ -534,7 +570,7 @@ cd Xeon-Rubidium
     <div class="code-block-header"><span class="code-block-filename">Windows</span></div>
     <pre>git clone https://github.com/TomDexterYoutube/Xeon-Rubidium
 cd Xeon-Rubidium
-install.bat</pre>
+.\install.ps1</pre>
   </div>
 
   <h2>Creating a project</h2>
@@ -599,7 +635,7 @@ xeon init</pre>
   </div>
 </div>
 
-<!-- ═══ CH 02 — VARIABLES & TYPES ═══ -->
+<!-- ═══ CH 02 — VARIABLES AND TYPES ═══ -->
 <div class="chapter" id="ch-2">
   <div class="ch-eyebrow">Chapter 02</div>
   <h1 class="ch-title">Variables &amp; Types</h1>
@@ -695,6 +731,48 @@ name = <span class="str">"Bob"</span>          <span class="cm"># ERROR: name is
 <span class="kw">let</span> result<span class="op">:</span> <span class="ty">bool</span> = <span class="nb">True</span> <span class="kw">and</span> <span class="kw">not</span> <span class="nb">False</span>   <span class="cm"># True</span></pre>
   </div>
 
+  <h2>Null behaves like negative infinity</h2>
+  <p><code>Null</code> is comparable, not just an empty placeholder. It is treated as smaller than every non-null value of its type — conceptually like negative infinity.</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-filename">null-compare.rub</span><span class="code-block-lang">Rubidium</span></div>
+    <pre><span class="nb">Null</span> < <span class="nb">0</span>          <span class="cm"># True</span>
+<span class="nb">Null</span> < -<span class="nb">999999</span>   <span class="cm"># True</span>
+<span class="nb">Null</span> == <span class="nb">Null</span>     <span class="cm"># True</span></pre>
+  </div>
+
+  <h2>Integer overflow</h2>
+  <p>Overflow does not crash the program. When a value would exceed a type's maximum or minimum, Rubidium <strong>clamps</strong> it to that limit, raises a runtime overflow error for that operation, and then keeps running.</p>
+  <ul>
+    <li>Exceeding the maximum clamps to the maximum value.</li>
+    <li>Exceeding the minimum clamps to the minimum value.</li>
+    <li>The overflow error is reported once per operation — execution continues afterward with the clamped result already stored.</li>
+  </ul>
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Overflow is recoverable by design.</strong> Rubidium favors a program that keeps running over one that silently wraps or hard-crashes — you get a clamped value and a reported error, not undefined behavior.</p>
+  </div>
+
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> Calling <code>let</code> again on a name that already exists doesn't error and doesn't shadow — it drops the old variable and creates a brand-new one in its place (the <em>Variable Overwrite Rule</em>). And <code>mut</code> only controls whether you can <em>reassign</em> a value; it never lets you change a variable's <em>type</em> — that's still a compile error.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>What happens when you use <code>let</code> a second time on an existing name?</summary>
+      <div class="quiz-a"><strong>A:</strong> The old variable is dropped and a new one is created under the same name — it's not an error, and it's not the same as reassignment.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>Is <code>let mut x: i32 = 5; x = "hello"</code> legal?</summary>
+      <div class="quiz-a"><strong>A:</strong> No. <code>mut</code> permits reassignment, not a type change — this is a compile-time type mismatch regardless of mutability.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>Is <code>Null &lt; -999999</code> true or false?</summary>
+      <div class="quiz-a"><strong>A:</strong> True — <code>Null</code> behaves like negative infinity and is smaller than every non-null value.</div>
+    </details>
+  </div>
+
   <div class="ch-nav">
     <div class="ch-nav-btn" onclick="show(1)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Getting Started</span></div>
     <div class="ch-nav-btn next" onclick="show(3)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Strings</span></div>
@@ -714,9 +792,8 @@ name = <span class="str">"Bob"</span>          <span class="cm"># ERROR: name is
     <pre><span class="kw">let</span> a<span class="op">:</span> <span class="ty">str</span> = <span class="str">"Hello"</span>
 <span class="kw">let</span> b<span class="op">:</span> <span class="ty">str</span> = <span class="str">"World"</span>
 
-<span class="cm"># Concatenation with + or .combine()</span>
-<span class="kw">let</span> c = a + <span class="str">" "</span> + b       <span class="cm"># "Hello World"</span>
-<span class="kw">let</span> d = a<span class="op">.</span><span class="fn">combine</span>(b)      <span class="cm"># "HelloWorld"</span></pre>
+<span class="cm"># Concatenation with +</span>
+<span class="kw">let</span> c = a + <span class="str">" "</span> + b       <span class="cm"># "Hello World"</span></pre>
   </div>
 
   <h2>String interpolation</h2>
@@ -731,28 +808,36 @@ name = <span class="str">"Bob"</span>          <span class="cm"># ERROR: name is
   </div>
 
   <h2>String methods</h2>
+  <p>Rubidium strings are zero-indexed and support a small set of built-in methods. Modifying a string in place (<code>.set()</code> / <code>.insert()</code> / <code>.replace()</code>) requires <code>mut</code>.</p>
+  <table class="compare-table">
+    <thead><tr><th>Method</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td class="tag-rb">.char(index)</td><td>Returns the character at <code>index</code></td></tr>
+      <tr><td class="tag-rb">.set(index, value)</td><td>Replaces the character at <code>index</code>. <code>value</code> must be a single character</td></tr>
+      <tr><td class="tag-rb">.insert(index, value)</td><td>Inserts <code>value</code> before <code>index</code></td></tr>
+      <tr><td class="tag-rb">.replace(old, new)</td><td>Replaces every matching character or substring</td></tr>
+      <tr><td class="tag-rb">.slice()</td><td>Converts the string into a <code>list</code> of characters</td></tr>
+      <tr><td class="tag-rb">.len()</td><td>Returns the number of characters</td></tr>
+    </tbody>
+  </table>
   <div class="code-block">
     <div class="code-block-header"><span class="code-block-filename">string-methods.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="kw">let</span> a<span class="op">:</span> <span class="ty">str</span> = <span class="str">"Hello"</span>
+    <pre><span class="kw">let mut</span> text<span class="op">:</span> <span class="ty">str</span> = <span class="str">"Hello"</span>
 
-<span class="cm"># Length — returns i64</span>
-<span class="kw">let</span> length<span class="op">:</span> <span class="ty">i64</span>  = a<span class="op">.</span><span class="fn">len</span>()
-<span class="cm"># Contains — returns bool</span>
-<span class="kw">let</span> found<span class="op">:</span>  <span class="ty">bool</span> = a<span class="op">.</span><span class="fn">has</span>(<span class="str">"ell"</span>)   <span class="cm"># True</span></pre>
-  </div>
+<span class="fn">print</span>(text<span class="op">.</span><span class="fn">char</span>(<span class="nb">0</span>))          <span class="cm"># H</span>
 
-  <h2>Type conversion</h2>
-  <p>Convert between strings and numbers with <code>.to()</code>.</p>
-  <div class="code-block">
-    <div class="code-block-header"><span class="code-block-filename">conversion.rub</span><span class="code-block-lang">Rubidium</span></div>
-    <pre><span class="cm"># String → number</span>
-<span class="kw">let</span> num_str<span class="op">:</span> <span class="ty">str</span> = <span class="str">"123"</span>
-<span class="kw">let</span> i<span class="op">:</span> <span class="ty">i32</span> = num_str<span class="op">.</span><span class="fn">to</span>(<span class="ty">i32</span>)
-<span class="kw">let</span> f<span class="op">:</span> <span class="ty">f64</span> = num_str<span class="op">.</span><span class="fn">to</span>(<span class="ty">f64</span>)
+text<span class="op">.</span><span class="fn">set</span>(<span class="nb">0</span>, <span class="str">"J"</span>)
+<span class="fn">print</span>(text)                    <span class="cm"># Jello</span>
 
-<span class="cm"># Number → string</span>
-<span class="kw">let</span> n<span class="op">:</span> <span class="ty">i32</span> = <span class="nb">42</span>
-<span class="kw">let</span> s<span class="op">:</span> <span class="ty">str</span> = n<span class="op">.</span><span class="fn">to</span>(<span class="ty">str</span>)</pre>
+text<span class="op">.</span><span class="fn">insert</span>(<span class="nb">5</span>, <span class="str">"!"</span>)
+<span class="fn">print</span>(text)                    <span class="cm"># Jello!</span>
+
+<span class="kw">let mut</span> word<span class="op">:</span> <span class="ty">str</span> = <span class="str">"banana"</span>
+word<span class="op">.</span><span class="fn">replace</span>(<span class="str">"a"</span>, <span class="str">"_"</span>)
+<span class="fn">print</span>(word)                    <span class="cm"># b_n_n_</span>
+
+<span class="fn">print</span>(text<span class="op">.</span><span class="fn">slice</span>())     <span class="cm"># ["J", "e", "l", "l", "o", "!"]</span>
+<span class="fn">print</span>(text<span class="op">.</span><span class="fn">len</span>())       <span class="cm"># 6</span></pre>
   </div>
 
   <h2>User input</h2>
@@ -763,15 +848,94 @@ name = <span class="str">"Bob"</span>          <span class="cm"># ERROR: name is
 <span class="fn">print</span>(<span class="str">i"Hello, {user}!"</span>)</pre>
   </div>
 
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> Methods that change a string in place — <code>.set()</code>, <code>.insert()</code>, <code>.replace()</code> — all require the string to be declared <code>mut</code>. Read-only methods like <code>.char()</code> and <code>.len()</code> work on non-<code>mut</code> strings just fine.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>Which of these needs <code>mut</code>: <code>.len()</code>, <code>.char(i)</code>, or <code>.replace(a,b)</code>?</summary>
+      <div class="quiz-a"><strong>A:</strong> <code>.replace()</code> — it mutates the string. <code>.len()</code> and <code>.char()</code> only read.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>True or false: <code>.combine()</code> is a string method.</summary>
+      <div class="quiz-a"><strong>A:</strong> False — <code>.combine()</code> belongs to <code>list</code>. Strings concatenate with <code>+</code>.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>What does <code>"Hello".slice()</code> return?</summary>
+      <div class="quiz-a"><strong>A:</strong> A <code>list</code> of single-character strings: <code>["H","e","l","l","o"]</code>.</div>
+    </details>
+  </div>
+
   <div class="ch-nav">
     <div class="ch-nav-btn" onclick="show(2)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Variables &amp; Types</span></div>
-    <div class="ch-nav-btn next" onclick="show(4)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Collections — List</span></div>
+    <div class="ch-nav-btn next" onclick="show(4)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">SY &amp; str+</span></div>
   </div>
 </div>
 
-<!-- ═══ CH 04 — LIST ═══ -->
+<!-- ═══ CH 04 — SY AND STR+ ═══ -->
 <div class="chapter" id="ch-4">
   <div class="ch-eyebrow">Chapter 04</div>
+  <h1 class="ch-title">Special Strings — SY &amp; str+</h1>
+  <p class="ch-intro">Two string-flavored types with special powers: <code>SY</code> names things in code, and <code>str+</code> spans multiple lines.</p>
+
+  <h2>SY — using a string as a name</h2>
+  <p><code>SY</code> looks like a string but its value can be used as a variable or function name elsewhere in your code. Write the name with a single quote <code>'</code> when you define it, and wrap it in parentheses <code>()</code> everywhere you use it.</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-filename">sy.rub</span><span class="code-block-lang">Rubidium</span></div>
+    <pre><span class="kw">let</span> variable_name<span class="op">:</span> <span class="ty">SY</span> = <span class="str">'New variable'</span>
+<span class="kw">let</span> (variable_name)<span class="op">:</span> <span class="ty">str</span> = <span class="str">"Hello I'm a variable"</span>
+
+<span class="kw">let</span> function_name<span class="op">:</span> <span class="ty">SY</span> = <span class="str">'New function'</span>
+
+<span class="kw">fn</span> (function_name)() {
+    <span class="fn">print</span>(<span class="str">"I'm a new Function"</span>)
+}</pre>
+  </div>
+  <div class="callout callout-note">
+    <span class="callout-icon">💡</span>
+    <p><strong>Quotes matter here.</strong> Use <code>'single quotes'</code> only when defining the <code>SY</code> value itself, and <code>(parentheses)</code> every time you reference that name as a variable or function.</p>
+  </div>
+
+  <h2>str+ — multi-line strings</h2>
+  <p><code>str+</code> behaves exactly like <code>str</code>, except it's wrapped in three double quotes on each side, which lets it span multiple lines.</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-filename">strplus.rub</span><span class="code-block-lang">Rubidium</span></div>
+    <pre><span class="kw">let</span> my_str_plus<span class="op">:</span> <span class="ty">str+</span> = <span class="str">"""
+Hello
+I'm a big string!
+"""</span></pre>
+  </div>
+  <p>A file's full contents from <code>file.read()</code> come back as a <code>str+</code>, since a whole file is typically multiple lines.</p>
+
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> The two quote styles for <code>SY</code> are easy to swap by accident: use <code>'single quotes'</code> only when <em>defining</em> the SY value, and <code>(parentheses)</code> every time you <em>reference</code> that name afterward as a variable or function.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>When do you use <code>'quotes'</code> vs <code>(parens)</code> with an SY value?</summary>
+      <div class="quiz-a"><strong>A:</strong> Single quotes when defining the SY value itself; parentheses every time you use that name as a variable or function elsewhere.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>Does <code>str+</code> require more than one line of content?</summary>
+      <div class="quiz-a"><strong>A:</strong> No — it always needs the triple-quote <code>"""</code> delimiters, but it can technically hold a single line too. Its purpose is just to allow multiple lines when you need them.</div>
+    </details>
+  </div>
+
+  <div class="ch-nav">
+    <div class="ch-nav-btn" onclick="show(3)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Strings</span></div>
+    <div class="ch-nav-btn next" onclick="show(5)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Collections — List</span></div>
+  </div>
+</div>
+
+<!-- ═══ CH 05 — COLLECTIONS — LIST ═══ -->
+<div class="chapter" id="ch-5">
+  <div class="ch-eyebrow">Chapter 05</div>
   <h1 class="ch-title">Collections — List</h1>
   <p class="ch-intro">An ordered, zero-indexed sequence that can hold mixed types.</p>
 
@@ -831,15 +995,41 @@ b(<span class="nb">0</span>)<span class="op">.</span><span class="fn">set</span>
 <span class="cm"># prints 10, 20, 30</span></pre>
   </div>
 
+  <h2>Combining a list into a string</h2>
+  <p><code>.combine()</code> joins every value in a list together into one string.</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-filename">list-combine.rub</span><span class="code-block-lang">Rubidium</span></div>
+    <pre><span class="kw">let</span> words<span class="op">:</span> <span class="ty">list</span> = [<span class="str">"Hello"</span>, <span class="str">" "</span>, <span class="str">"World"</span>]
+
+<span class="fn">print</span>(words<span class="op">.</span><span class="fn">combine</span>())   <span class="cm"># Hello World</span></pre>
+  </div>
+
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> Appending uses <em>empty</em> parentheses on the list itself — <code>items().add(x)</code> — not an index. Writing <code>items(0).add(x)</code> instead targets element 0, not the list, and won't do what you expect.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>How do you append a new item to a list?</summary>
+      <div class="quiz-a"><strong>A:</strong> <code>list().add(value)</code> — empty parentheses on the list itself, not on an index.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>If you assign <code>let mut b = a</code> where <code>a</code> is a list, and then mutate <code>b</code>, does <code>a</code> change too?</summary>
+      <div class="quiz-a"><strong>A:</strong> No — assignment is always a full deep copy in Rubidium. <code>a</code> and <code>b</code> are completely independent afterward.</div>
+    </details>
+  </div>
+
   <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(3)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Strings</span></div>
-    <div class="ch-nav-btn next" onclick="show(5)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Collections — Index</span></div>
+    <div class="ch-nav-btn" onclick="show(4)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">SY &amp; str+</span></div>
+    <div class="ch-nav-btn next" onclick="show(6)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Collections — Index</span></div>
   </div>
 </div>
 
-<!-- ═══ CH 05 — INDEX ═══ -->
-<div class="chapter" id="ch-5">
-  <div class="ch-eyebrow">Chapter 05</div>
+<!-- ═══ CH 06 — COLLECTIONS — INDEX ═══ -->
+<div class="chapter" id="ch-6">
+  <div class="ch-eyebrow">Chapter 06</div>
   <h1 class="ch-title">Collections — Index</h1>
   <p class="ch-intro">A flat key→value map. Keys and values can be any type.</p>
 
@@ -886,15 +1076,32 @@ b(<span class="nb">0</span>)<span class="op">.</span><span class="fn">set</span>
     <p><strong>Note:</strong> Calling <code>.add()</code> with a key that already exists will produce a runtime error. Use <code>.set()</code> if you want to update an existing key.</p>
   </div>
 
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> <code>index().add(key, value)</code> raises a runtime error if <code>key</code> already exists — it's strictly for <em>new</em> keys. Use <code>.set()</code> to update a key that's already there.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>What happens if you <code>.add()</code> a key that already exists in an <code>index</code>?</summary>
+      <div class="quiz-a"><strong>A:</strong> A runtime error. <code>.add()</code> is only for new keys; use <code>.set()</code> to update an existing one.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>Can an <code>index</code> key be something other than a string?</summary>
+      <div class="quiz-a"><strong>A:</strong> Yes — keys can be any type, including numbers, as shown by <code>1: "one"</code> and <code>2.5: "float key"</code>.</div>
+    </details>
+  </div>
+
   <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(4)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Collections — List</span></div>
-    <div class="ch-nav-btn next" onclick="show(6)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Collections — Dict</span></div>
+    <div class="ch-nav-btn" onclick="show(5)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Collections — List</span></div>
+    <div class="ch-nav-btn next" onclick="show(7)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Collections — Dict</span></div>
   </div>
 </div>
 
-<!-- ═══ CH 06 — DICT ═══ -->
-<div class="chapter" id="ch-6">
-  <div class="ch-eyebrow">Chapter 06</div>
+<!-- ═══ CH 07 — COLLECTIONS — DICT ═══ -->
+<div class="chapter" id="ch-7">
+  <div class="ch-eyebrow">Chapter 07</div>
   <h1 class="ch-title">Collections — Dict</h1>
   <p class="ch-intro">A key→collection map. Each key holds multiple values.</p>
 
@@ -954,15 +1161,114 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
     </tbody>
   </table>
 
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> <code>.add()</code> means two different things on a <code>dict</code> depending on what you call it on: <code>my_dict("scores").add(40)</code> appends <code>40</code> to that key's collection, while <code>my_dict().add("new_key")</code> creates an entirely new top-level key (initialized to <code>Null</code>). Same method name, very different effect.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>What's the difference between <code>my_dict("scores").add(40)</code> and <code>my_dict().add("new_key")</code>?</summary>
+      <div class="quiz-a"><strong>A:</strong> The first appends <code>40</code> to the existing <code>"scores"</code> collection. The second creates a brand-new top-level key, starting out as <code>Null</code>.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>True or false: a dict key holds exactly one value, like an index.</summary>
+      <div class="quiz-a"><strong>A:</strong> False — that's the whole distinction. An <code>index</code> key holds one value; a <code>dict</code> key holds a collection of values, accessed with <code>dict(key, position)</code>.</div>
+    </details>
+  </div>
+
   <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(5)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Collections — Index</span></div>
-    <div class="ch-nav-btn next" onclick="show(7)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Control Flow</span></div>
+    <div class="ch-nav-btn" onclick="show(6)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Collections — Index</span></div>
+    <div class="ch-nav-btn next" onclick="show(8)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Collections — Dict+</span></div>
   </div>
 </div>
 
-<!-- ═══ CH 07 — CONTROL FLOW ═══ -->
-<div class="chapter" id="ch-7">
-  <div class="ch-eyebrow">Chapter 07</div>
+<!-- ═══ CH 08 — COLLECTIONS — DICT+ ═══ -->
+<div class="chapter" id="ch-8">
+  <div class="ch-eyebrow">Chapter 08</div>
+  <h1 class="ch-title">Collections — Dict+</h1>
+  <p class="ch-intro"><code>dict+</code> is a <code>dict</code> that can nest inside itself to any depth — a key's value can be a plain list, or another <code>dict+</code>.</p>
+
+  <div class="callout callout-note">
+    <span class="callout-icon">💡</span>
+    <p><strong>dict vs dict+:</strong> a <code>dict</code> key always holds a flat list. A <code>dict+</code> key can hold a list (a "leaf") <em>or</em> another <code>dict+</code> block, nested as deep as you like.</p>
+  </div>
+
+  <h2>Creating a dict+</h2>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-filename">dictplus.rub</span><span class="code-block-lang">Rubidium</span></div>
+    <pre><span class="kw">let mut</span> my_dictplus<span class="op">:</span> <span class="ty">dict+</span> = {
+    <span class="nb">1</span> = {
+        <span class="str">"test"</span> = [<span class="nb">1</span>, <span class="nb">2</span>, <span class="nb">3</span>, <span class="nb">4</span>]
+    }
+}</pre>
+  </div>
+
+  <h2>Accessing nested values</h2>
+  <p>Chain keys down through each level — <code>dictplus(key1, key2, ...)</code> keeps drilling until it reaches a list, then behaves like a normal <code>dict</code> from there.</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-filename">dictplus-access.rub</span><span class="code-block-lang">Rubidium</span></div>
+    <pre><span class="fn">print</span>(my_dictplus(<span class="nb">1</span>, <span class="str">"test"</span>))          <span class="cm"># [1, 2, 3, 4]</span>
+<span class="fn">print</span>(my_dictplus(<span class="nb">1</span>, <span class="str">"test"</span>, <span class="nb">0</span>))       <span class="cm"># 1</span></pre>
+  </div>
+
+  <h2>Adding values and keys</h2>
+  <p>Append to an existing leaf, add a new leaf key, or add a further nested <code>dict+</code> — using a <code>{ }</code> block instead of a list nests one level deeper.</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-filename">dictplus-add.rub</span><span class="code-block-lang">Rubidium</span></div>
+    <pre><span class="cm"># Append to the list at the end of the path</span>
+my_dictplus(<span class="nb">1</span>, <span class="str">"test"</span>)<span class="op">.</span><span class="fn">add</span>(<span class="str">"ten"</span>)
+
+<span class="cm"># Add a new leaf key (a list)</span>
+my_dictplus(<span class="nb">1</span>)<span class="op">.</span><span class="fn">add</span>(<span class="str">"other"</span>, [<span class="nb">5</span>, <span class="nb">6</span>, <span class="nb">7</span>])
+
+<span class="cm"># Add a further nested dict+ instead of a leaf</span>
+my_dictplus(<span class="nb">1</span>)<span class="op">.</span><span class="fn">add</span>(<span class="str">"deeper"</span>, { <span class="str">"layer2"</span> = [<span class="nb">8</span>, <span class="nb">9</span>] })
+
+<span class="cm"># New top-level key — created as an empty dict+</span>
+my_dictplus()<span class="op">.</span><span class="fn">add</span>(<span class="nb">2</span>)</pre>
+  </div>
+
+  <h2>Keys follow the same naming rules</h2>
+  <p>Just like <code>index</code> and <code>dict</code>: string keys need quotes (<code>"test"</code>), numbers and other types don't.</p>
+
+  <table class="compare-table">
+    <thead><tr><th>Type</th><th>Syntax</th><th>Access</th><th>Use when…</th></tr></thead>
+    <tbody>
+      <tr><td class="tag-rb">list</td><td><code>[a, b, c]</code></td><td><code>list(0)</code></td><td>Ordered sequence of items</td></tr>
+      <tr><td class="tag-rb">index</td><td><code>["k": v]</code></td><td><code>index("k")</code></td><td>One key → one value</td></tr>
+      <tr><td class="tag-rb">dict</td><td><code>{"k" = [...]}</code></td><td><code>dict("k", 0)</code></td><td>One key → many values</td></tr>
+      <tr><td class="tag-rb">dict+</td><td><code>{"k" = {...}}</code></td><td><code>dictplus("k","k2")</code></td><td>Unlimited nested depth</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> When you call <code>.add()</code> on a <code>dict+</code> level, the <em>shape</em> of the second argument decides what you get: pass a list <code>[...]</code> to create a leaf, or a <code>{ }</code> block to nest another level deeper. The method name never changes — only what you hand it.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>How do you tell <code>dict+</code> to nest another level instead of creating a leaf?</summary>
+      <div class="quiz-a"><strong>A:</strong> Pass a <code>{ }</code> block as the value instead of a list — e.g. <code>.add("deeper", { "layer2" = [8,9] })</code>.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>What does <code>my_dictplus().add(2)</code> create?</summary>
+      <div class="quiz-a"><strong>A:</strong> A new top-level key <code>2</code>, created as an empty <code>dict+</code> — not <code>Null</code> the way a plain <code>dict</code>'s new key would be.</div>
+    </details>
+  </div>
+
+  <div class="ch-nav">
+    <div class="ch-nav-btn" onclick="show(7)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Collections — Dict</span></div>
+    <div class="ch-nav-btn next" onclick="show(9)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Control Flow</span></div>
+  </div>
+</div>
+
+<!-- ═══ CH 09 — CONTROL FLOW ═══ -->
+<div class="chapter" id="ch-9">
+  <div class="ch-eyebrow">Chapter 09</div>
   <h1 class="ch-title">Control Flow</h1>
   <p class="ch-intro">Branching with if/else, looping with while and for.</p>
 
@@ -1019,15 +1325,54 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
     <p><strong>Loop variables are auto-freed.</strong> The loop variable (like <code>i</code> or <code>item</code>) is automatically dropped at the end of the loop block — you don't need to call <code>.drop()</code> on it.</p>
   </div>
 
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> An <code>else</code> or <code>else if</code> must attach directly to the closing <code>}</code> of the previous branch — it's part of the same statement, not a new one. Putting a comment or blank line in a way that visually separates them doesn't break anything, but conceptually the chain is one continuous construct.</p>
+  </div>
+
+  <div class="worked-example">
+    <div class="worked-example-label">Putting it together</div>
+    <p>A small program combining variables, a <code>for</code> loop, <code>%</code>, and <code>if / else if / else</code> — classic FizzBuzz.</p>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-block-filename">fizzbuzz.rub</span><span class="code-block-lang">Rubidium</span></div>
+      <pre><span class="kw">fn</span> <span class="fn">main</span>() {
+    <span class="kw">for</span> n <span class="kw">in</span> range(<span class="nb">1</span>, <span class="nb">21</span>) {
+        <span class="kw">if</span> n % <span class="nb">15</span> == <span class="nb">0</span> {
+            <span class="fn">print</span>(<span class="str">"FizzBuzz"</span>)
+        } <span class="kw">else if</span> n % <span class="nb">3</span> == <span class="nb">0</span> {
+            <span class="fn">print</span>(<span class="str">"Fizz"</span>)
+        } <span class="kw">else if</span> n % <span class="nb">5</span> == <span class="nb">0</span> {
+            <span class="fn">print</span>(<span class="str">"Buzz"</span>)
+        } <span class="kw">else</span> {
+            <span class="fn">print</span>(n)
+        }
+    }
+}</pre>
+    </div>
+    <p>Note the range: <code>range(1, 21)</code> covers 1 through 20 because the end bound is exclusive.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>Is the loop variable in <code>for i in range(1, 10)</code> still accessible after the loop ends?</summary>
+      <div class="quiz-a"><strong>A:</strong> No — loop variables are automatically dropped the moment the loop ends, in <code>for</code> and <code>while</code> alike.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>What's the value of <code>range(1, 10)</code>'s upper bound — is 10 included?</summary>
+      <div class="quiz-a"><strong>A:</strong> No — <code>range(start, end)</code> excludes <code>end</code>, so <code>range(1, 10)</code> yields 1 through 9.</div>
+    </details>
+  </div>
+
   <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(6)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Collections — Dict</span></div>
-    <div class="ch-nav-btn next" onclick="show(8)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Functions</span></div>
+    <div class="ch-nav-btn" onclick="show(8)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Collections — Dict+</span></div>
+    <div class="ch-nav-btn next" onclick="show(10)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Functions</span></div>
   </div>
 </div>
 
-<!-- ═══ CH 08 — FUNCTIONS ═══ -->
-<div class="chapter" id="ch-8">
-  <div class="ch-eyebrow">Chapter 08</div>
+<!-- ═══ CH 10 — FUNCTIONS ═══ -->
+<div class="chapter" id="ch-10">
+  <div class="ch-eyebrow">Chapter 10</div>
   <h1 class="ch-title">Functions</h1>
   <p class="ch-intro">Defining reusable, isolated pieces of logic.</p>
 
@@ -1072,15 +1417,32 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
     <p><strong>Global pool vs function scope:</strong> Top-level variables and class fields live in the global pool — visible everywhere. Function-local variables are isolated and disappear when the function returns.</p>
   </div>
 
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> Function parameters behave like local variables — they never enter the global pool, even though Rubidium is "global by default" everywhere else. They're dropped the instant the function returns.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>Do function parameters live in the global memory pool?</summary>
+      <div class="quiz-a"><strong>A:</strong> No — parameters are always local to that specific call, regardless of how everything else in Rubidium defaults to global.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>Can you define two functions named <code>add</code> in the same scope with different parameter types?</summary>
+      <div class="quiz-a"><strong>A:</strong> No — Rubidium has no function overloading. Two functions with the same name in the same scope is a duplicate-symbol compile error.</div>
+    </details>
+  </div>
+
   <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(7)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Control Flow</span></div>
-    <div class="ch-nav-btn next" onclick="show(9)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Memory Management</span></div>
+    <div class="ch-nav-btn" onclick="show(9)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Control Flow</span></div>
+    <div class="ch-nav-btn next" onclick="show(11)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Memory Management</span></div>
   </div>
 </div>
 
-<!-- ═══ CH 09 — MEMORY ═══ -->
-<div class="chapter" id="ch-9">
-  <div class="ch-eyebrow">Chapter 09</div>
+<!-- ═══ CH 11 — MEMORY MANAGEMENT ═══ -->
+<div class="chapter" id="ch-11">
+  <div class="ch-eyebrow">Chapter 11</div>
   <h1 class="ch-title">Memory Management</h1>
   <p class="ch-intro">Rubidium has no garbage collector. You manage memory explicitly with <code>.drop()</code>.</p>
 
@@ -1115,15 +1477,72 @@ items<span class="op">.</span><span class="fn">drop</span>()
     <p><strong>No GC — memory won't free itself.</strong> If you create variables in a long-running loop and never drop them, your program's memory usage will grow. Get in the habit of calling <code>.drop()</code> when you're done with a value.</p>
   </div>
 
+  <h2>Local variables</h2>
+  <p>Declare a variable with <code>local</code> to keep it out of the global pool entirely. Local variables exist only for their enclosing block — a function, class, loop, if, or while — and are dropped automatically when that scope ends.</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-filename">local.rub</span><span class="code-block-lang">Rubidium</span></div>
+    <pre><span class="kw">while</span> <span class="nb">True</span> {
+    <span class="kw">let local</span> num = <span class="nb">10</span>
+    <span class="kw">break</span>
+}
+<span class="cm"># num is dropped automatically here — it never touched the global pool</span></pre>
+  </div>
+  <p>The same rule applies inside functions, classes, <code>for</code>/<code>while</code> loops, and <code>if</code> blocks.</p>
+
+  <h2>The Link Rule</h2>
+  <p>Every normal assignment in Rubidium is a deep copy. <code>link</code> is the one exception: it lets two variables share the same underlying data instead of copying it — useful for passing a large value into a function without duplicating it.</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-filename">link-fn.rub</span><span class="code-block-lang">Rubidium</span></div>
+    <pre><span class="kw">fn</span> <span class="fn">stuff</span>(val<span class="op">:</span> <span class="ty">Any</span>) -> <span class="ty">Any</span> {
+    val<span class="op">.</span><span class="fn">add</span>(<span class="nb">7</span>)
+}
+
+<span class="kw">fn</span> <span class="fn">main</span>() {
+    <span class="kw">let local</span> large_list<span class="op">:</span> <span class="ty">list</span> = [<span class="str">"Lots of Data"</span>]
+    <span class="fn">stuff</span>(<span class="kw">link</span> large_list)
+}</pre>
+  </div>
+  <p><code>link</code> also works between two plain variables. Once linked, changing one changes the other — but reassigning either side with a plain <code>=</code> breaks the link and the two become independent again.</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-filename">link-vars.rub</span><span class="code-block-lang">Rubidium</span></div>
+    <pre><span class="kw">let</span> a = <span class="nb">10</span>
+<span class="kw">let</span> b = <span class="kw">link</span> a
+<span class="cm"># a and b now share the same value</span>
+
+<span class="kw">let</span> x<span class="op">:</span> <span class="ty">list</span> = [<span class="nb">1</span>, <span class="nb">2</span>, <span class="nb">3</span>]
+<span class="kw">let</span> y = <span class="kw">link</span> x(<span class="nb">2</span>)   <span class="cm"># link to a single element</span></pre>
+  </div>
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>The only shared-reference mechanism in the language.</strong> Everywhere else, assignment is a full independent copy. Reach for <code>link</code> deliberately, and remember a reassignment (<code>=</code>) severs it.</p>
+  </div>
+
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> Dropping an element inside a collection — <code>items(1).drop()</code> — removes it and shifts everything else down. It does <strong>not</strong> leave a <code>Null</code> in its place, unlike <code>.set()</code>/<code>.add()</code>, which do fill or replace <code>Null</code>s.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>After <code>items(1).drop()</code>, what's left at that position in the list?</summary>
+      <div class="quiz-a"><strong>A:</strong> Nothing — the rest of the list shifts down to fill the gap. No <code>Null</code> placeholder is inserted.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>If you <code>link</code> two variables and then reassign one with a plain <code>=</code>, does the link survive?</summary>
+      <div class="quiz-a"><strong>A:</strong> No — a plain reassignment severs the link immediately; from that point on the two variables are fully independent.</div>
+    </details>
+  </div>
+
   <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(8)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Functions</span></div>
-    <div class="ch-nav-btn next" onclick="show(10)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Classes</span></div>
+    <div class="ch-nav-btn" onclick="show(10)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Functions</span></div>
+    <div class="ch-nav-btn next" onclick="show(12)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Classes</span></div>
   </div>
 </div>
 
-<!-- ═══ CH 10 — CLASSES ═══ -->
-<div class="chapter" id="ch-10">
-  <div class="ch-eyebrow">Chapter 10</div>
+<!-- ═══ CH 12 — CLASSES ═══ -->
+<div class="chapter" id="ch-12">
+  <div class="ch-eyebrow">Chapter 12</div>
   <h1 class="ch-title">Classes</h1>
   <p class="ch-intro">Self-contained object templates. No <code>self</code> keyword — class variables are accessed directly.</p>
 
@@ -1194,15 +1613,66 @@ p<span class="op">.</span><span class="fn">take_damage</span>(<span class="nb">1
 obj<span class="op">.</span>value = <span class="nb">99</span>   <span class="cm"># ERROR: value is not declared mut</span></pre>
   </div>
 
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> Mutating a class field from outside requires <strong>two</strong> permissions at once: the instance itself must be declared <code>mut</code>, <em>and</em> the specific field must be declared <code>mut</code> inside the class. Missing either one is a compile error.</p>
+  </div>
+
+  <div class="worked-example">
+    <div class="worked-example-label">Putting it together</div>
+    <p>A tiny inventory system combining a class, a <code>mut</code> list field, and methods — plus a look at the deep-copy rule in action.</p>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-block-filename">inventory.rub</span><span class="code-block-lang">Rubidium</span></div>
+      <pre><span class="kw">class</span> <span class="ty">inventory</span>() {
+
+    <span class="kw">let mut</span> items<span class="op">:</span> <span class="ty">list</span> = []
+
+    <span class="kw">fn</span> <span class="fn">add_item</span>(name<span class="op">:</span> <span class="ty">str</span>) {
+        items()<span class="op">.</span><span class="fn">add</span>(name)
+    }
+
+    <span class="kw">fn</span> <span class="fn">count</span>() -> <span class="ty">i32</span> {
+        <span class="kw">return</span> items<span class="op">.</span><span class="fn">len</span>()
+    }
+}
+
+<span class="kw">fn</span> <span class="fn">main</span>() {
+    <span class="kw">let mut</span> bag_a = <span class="ty">inventory</span>()
+    bag_a<span class="op">.</span><span class="fn">add_item</span>(<span class="str">"Sword"</span>)
+    bag_a<span class="op">.</span><span class="fn">add_item</span>(<span class="str">"Shield"</span>)
+
+    <span class="cm"># Assigning to bag_b makes a full, independent copy</span>
+    <span class="kw">let mut</span> bag_b = bag_a
+    bag_b<span class="op">.</span><span class="fn">add_item</span>(<span class="str">"Potion"</span>)
+
+    <span class="fn">print</span>(bag_a<span class="op">.</span><span class="fn">count</span>())   <span class="cm"># 2 — unaffected by bag_b</span>
+    <span class="fn">print</span>(bag_b<span class="op">.</span><span class="fn">count</span>())   <span class="cm"># 3</span>
+}</pre>
+    </div>
+    <p>Because class instances follow the same deep-copy rule as everything else, <code>bag_b</code> starts as a full independent copy of <code>bag_a</code> — adding to one never touches the other.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>If an instance is <code>mut</code> but a field inside the class wasn't declared <code>mut</code>, can you change that field from outside?</summary>
+      <div class="quiz-a"><strong>A:</strong> No — both gates have to be open: the instance needs <code>mut</code>, and so does the individual field.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>Do class instances live in the shared global memory pool the way top-level variables do?</summary>
+      <div class="quiz-a"><strong>A:</strong> No — each instance owns its own separate data. Assigning one instance to another still does a full deep copy, same as collections.</div>
+    </details>
+  </div>
+
   <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(9)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Memory Management</span></div>
-    <div class="ch-nav-btn next" onclick="show(11)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Error Handling</span></div>
+    <div class="ch-nav-btn" onclick="show(11)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Memory Management</span></div>
+    <div class="ch-nav-btn next" onclick="show(13)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Error Handling</span></div>
   </div>
 </div>
 
-<!-- ═══ CH 11 — ERROR HANDLING ═══ -->
-<div class="chapter" id="ch-11">
-  <div class="ch-eyebrow">Chapter 11</div>
+<!-- ═══ CH 13 — ERROR HANDLING ═══ -->
+<div class="chapter" id="ch-13">
+  <div class="ch-eyebrow">Chapter 13</div>
   <h1 class="ch-title">Error Handling</h1>
   <p class="ch-intro">Catch runtime errors gracefully with <code>try / error</code>.</p>
 
@@ -1240,15 +1710,49 @@ obj<span class="op">.</span>value = <span class="nb">99</span>   <span class="cm
     <p><strong>Always wrap file I/O in try/error</strong> — files can fail to open for many reasons (missing, wrong permissions, network drives). It's good practice to handle those cases explicitly.</p>
   </div>
 
+  <h2>Compile-time vs. runtime errors</h2>
+  <p>Rubidium catches as much as possible before your program ever runs. <code>try / error</code> only catches the runtime kind.</p>
+  <table class="compare-table">
+    <thead><tr><th>Compile Errors</th><th>Runtime Errors</th></tr></thead>
+    <tbody>
+      <tr><td>Unknown variable, function, class, or namespace</td><td>Divide by zero</td></tr>
+      <tr><td>Type mismatch</td><td>Invalid index / missing collection key</td></tr>
+      <tr><td>Mutability violation (editing a non-<code>mut</code> value)</td><td>Accessing dropped memory</td></tr>
+      <tr><td>Duplicate symbol definition</td><td>Invalid file operations</td></tr>
+      <tr><td>Invalid assignment target</td><td>Invalid FFI calls</td></tr>
+    </tbody>
+  </table>
+  <div class="callout callout-note">
+    <span class="callout-icon">💡</span>
+    <p>Compile errors stop the program from building at all. Runtime errors happen mid-execution and are exactly what <code>try / error</code> is for.</p>
+  </div>
+
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> <code>try / error</code> only catches <em>runtime</em> errors. A type mismatch, a mutability violation, or an unknown symbol is a compile-time error — the program won't even finish building, so <code>try</code> never gets a chance to run.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>Will <code>try { let x: i32 = "hello" } error { ... }</code> catch that mismatch?</summary>
+      <div class="quiz-a"><strong>A:</strong> No — that's a compile error. The program fails to build entirely, before <code>try</code> can do anything.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>What type is the special <code>error</code> variable inside an <code>error</code> block?</summary>
+      <div class="quiz-a"><strong>A:</strong> A string — specifically <code>str+</code>, since error messages can span multiple lines.</div>
+    </details>
+  </div>
+
   <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(10)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Classes</span></div>
-    <div class="ch-nav-btn next" onclick="show(12)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Files</span></div>
+    <div class="ch-nav-btn" onclick="show(12)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Classes</span></div>
+    <div class="ch-nav-btn next" onclick="show(14)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Files</span></div>
   </div>
 </div>
 
-<!-- ═══ CH 12 — FILES ═══ -->
-<div class="chapter" id="ch-12">
-  <div class="ch-eyebrow">Chapter 12</div>
+<!-- ═══ CH 14 — FILES ═══ -->
+<div class="chapter" id="ch-14">
+  <div class="ch-eyebrow">Chapter 14</div>
   <h1 class="ch-title">Files</h1>
   <p class="ch-intro">Reading, writing, and managing files on disk.</p>
 
@@ -1259,7 +1763,7 @@ obj<span class="op">.</span>value = <span class="nb">99</span>   <span class="cm
     <pre><span class="fn">open</span>(<span class="str">"data.txt"</span>) <span class="kw">as</span> file {
 
     file<span class="op">.</span><span class="fn">write</span>(<span class="str">"Hello"</span>)        <span class="cm"># overwrite entire file</span>
-    file<span class="op">.</span><span class="fn">append</span>(<span class="str">" World"</span>)       <span class="cm"># add to end of file</span>
+    file<span class="op">.</span><span class="fn">add</span>(<span class="str">" World"</span>)          <span class="cm"># add to end of file</span>
 
     <span class="kw">let</span> data = file<span class="op">.</span><span class="fn">read</span>()      <span class="cm"># read entire file</span>
     <span class="fn">print</span>(data)
@@ -1287,18 +1791,41 @@ obj<span class="op">.</span>value = <span class="nb">99</span>   <span class="cm
 file<span class="op">.</span><span class="fn">new</span>(<span class="str">"data.txt"</span>)                   <span class="cm"># create new file</span>
 file<span class="op">.</span><span class="fn">delete</span>(<span class="str">"old.txt"</span>)                 <span class="cm"># delete file</span>
 file<span class="op">.</span><span class="fn">rename</span>(<span class="str">"old.txt"</span>, <span class="str">"new.txt"</span>)     <span class="cm"># rename file</span>
-file<span class="op">.</span><span class="fn">copy</span>(<span class="str">"save.txt"</span>, <span class="str">"backup.txt"</span>)   <span class="cm"># copy file</span></pre>
+file<span class="op">.</span><span class="fn">copy</span>(<span class="str">"save.txt"</span>, <span class="str">"backup.txt"</span>)   <span class="cm"># copy file</span>
+file<span class="op">.</span><span class="fn">list</span>(<span class="str">"data/"</span>)                        <span class="cm"># list a directory, like ls</span></pre>
+  </div>
+
+  <div class="callout callout-note">
+    <span class="callout-icon">💡</span>
+    <p><strong>If a file doesn't exist,</strong> <code>open()</code> raises an error, creates the file, then continues — wrap it in <code>try / error</code> if you need to handle that explicitly (see the previous chapter).</p>
+  </div>
+
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> Variables you create inside an <code>open() as file { }</code> block survive after the block ends — but the file handle itself does not. Calling <code>file.read()</code> after the block has closed will fail.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>After an <code>open()</code> block ends, can you still call methods on that <code>file</code> handle?</summary>
+      <div class="quiz-a"><strong>A:</strong> No — the handle is automatically closed and dropped when the block exits. Only variables you assigned inside the block persist.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>What happens if you <code>open()</code> a path that doesn't exist yet?</summary>
+      <div class="quiz-a"><strong>A:</strong> It raises an error, creates the file, and then continues — wrap it in <code>try / error</code> if you need to branch on that explicitly.</div>
+    </details>
   </div>
 
   <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(11)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Error Handling</span></div>
-    <div class="ch-nav-btn next" onclick="show(13)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Threading</span></div>
+    <div class="ch-nav-btn" onclick="show(13)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Error Handling</span></div>
+    <div class="ch-nav-btn next" onclick="show(15)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Threading</span></div>
   </div>
 </div>
 
-<!-- ═══ CH 13 — THREADING ═══ -->
-<div class="chapter" id="ch-13">
-  <div class="ch-eyebrow">Chapter 13</div>
+<!-- ═══ CH 15 — THREADING ═══ -->
+<div class="chapter" id="ch-15">
+  <div class="ch-eyebrow">Chapter 15</div>
   <h1 class="ch-title">Threading</h1>
   <p class="ch-intro">Run code in parallel using real POSIX hardware threads.</p>
 
@@ -1340,15 +1867,75 @@ file<span class="op">.</span><span class="fn">copy</span>(<span class="str">"sav
 <span class="fn">print</span>(<span class="str">i"Thread 1 still running: {still}"</span>)</pre>
   </div>
 
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> Two threads can call the exact same function, but each gets its own private copy of that function's parameters and locals. The <em>only</em> way two threads can actually race each other is through a shared global variable.</p>
+  </div>
+
+  <div class="worked-example">
+    <div class="worked-example-label">Putting it together</div>
+    <p>Two hardware threads each summing their own batch of random numbers, timed with a single timer — combining <code>thread</code>, <code>random</code>, and <code>time</code> in one program.</p>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-block-filename">parallel_sum.rub</span><span class="code-block-lang">Rubidium</span></div>
+      <pre><span class="kw">use</span> thread
+<span class="kw">use</span> random
+<span class="kw">use</span> time
+
+<span class="kw">let mut</span> total_a<span class="op">:</span> <span class="ty">i32</span> = <span class="nb">0</span>
+<span class="kw">let mut</span> total_b<span class="op">:</span> <span class="ty">i32</span> = <span class="nb">0</span>
+
+<span class="kw">fn</span> <span class="fn">worker_a</span>() {
+    <span class="kw">let local mut</span> i<span class="op">:</span> <span class="ty">i32</span> = <span class="nb">0</span>
+    <span class="kw">while</span> i < <span class="nb">1000</span> {
+        total_a = total_a + random(<span class="nb">0</span>, <span class="nb">100</span>, <span class="ty">i32</span>)
+        i = i + <span class="nb">1</span>
+    }
+}
+
+<span class="kw">fn</span> <span class="fn">worker_b</span>() {
+    <span class="kw">let local mut</span> i<span class="op">:</span> <span class="ty">i32</span> = <span class="nb">0</span>
+    <span class="kw">while</span> i < <span class="nb">1000</span> {
+        total_b = total_b + random(<span class="nb">0</span>, <span class="nb">100</span>, <span class="ty">i32</span>)
+        i = i + <span class="nb">1</span>
+    }
+}
+
+<span class="kw">fn</span> <span class="fn">main</span>() {
+    time<span class="op">.</span><span class="fn">timer_start</span>(<span class="nb">1</span>)
+
+    thread(<span class="fn">worker_a</span>(), <span class="nb">1</span>)
+    thread(<span class="fn">worker_b</span>(), <span class="nb">2</span>)
+    thread<span class="op">.</span><span class="fn">wait</span>(<span class="nb">1</span>, <span class="nb">2</span>)
+
+    <span class="kw">let</span> elapsed = time<span class="op">.</span><span class="fn">timer_read</span>(<span class="nb">1</span>)
+    <span class="fn">print</span>(<span class="str">i"Combined total: {total_a + total_b}"</span>)
+    <span class="fn">print</span>(<span class="str">i"Took {elapsed}s"</span>)
+}</pre>
+    </div>
+    <p><code>total_a</code> and <code>total_b</code> are globals, so both threads' writes are visible from <code>main()</code> once <code>thread.wait()</code> returns — each thread only had to keep its own loop counter <code>i</code> private.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>If two threads call the same function, do they share its local variables?</summary>
+      <div class="quiz-a"><strong>A:</strong> No — parameters and locals are always private per-thread. Only global variables are shared.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>Does Rubidium protect against race conditions on a shared global?</summary>
+      <div class="quiz-a"><strong>A:</strong> No — there's no automatic protection. If multiple threads write to the same global simultaneously, the result is undefined.</div>
+    </details>
+  </div>
+
   <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(12)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Files</span></div>
-    <div class="ch-nav-btn next" onclick="show(14)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Random</span></div>
+    <div class="ch-nav-btn" onclick="show(14)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Files</span></div>
+    <div class="ch-nav-btn next" onclick="show(16)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Random</span></div>
   </div>
 </div>
 
-<!-- ═══ CH 14 — RANDOM ═══ -->
-<div class="chapter" id="ch-14">
-  <div class="ch-eyebrow">Chapter 14</div>
+<!-- ═══ CH 16 — RANDOM ═══ -->
+<div class="chapter" id="ch-16">
+  <div class="ch-eyebrow">Chapter 16</div>
   <h1 class="ch-title">Random</h1>
   <p class="ch-intro">Generate random numbers and shuffle collections.</p>
   <div class="code-block">
@@ -1374,15 +1961,32 @@ random<span class="op">.</span><span class="fn">choice</span>(my_dict)
 random<span class="op">.</span><span class="fn">choice</span>(my_dict(<span class="str">"scores"</span>))</pre>
   </div>
 
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> <code>random.seed()</code> sets the starting point for reproducible sequences — treat it as a one-time startup call, not something to sprinkle mid-program, since the spec doesn't define what re-seeding partway through does to an in-flight sequence.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>What are the three arguments to <code>random(min, max, type)</code>?</summary>
+      <div class="quiz-a"><strong>A:</strong> The minimum value, the maximum value, and the numeric type you want back (e.g. <code>i32</code>, <code>f32</code>).</div>
+    </details>
+    <details class="quiz-q">
+      <summary>Can <code>random.choice()</code> be used on a <code>dict</code>, or only a <code>list</code>?</summary>
+      <div class="quiz-a"><strong>A:</strong> Both, plus <code>index</code> — and you can also call it on one specific key's collection, like <code>random.choice(my_dict("scores"))</code>.</div>
+    </details>
+  </div>
+
   <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(13)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Threading</span></div>
-    <div class="ch-nav-btn next" onclick="show(15)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Time</span></div>
+    <div class="ch-nav-btn" onclick="show(15)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Threading</span></div>
+    <div class="ch-nav-btn next" onclick="show(17)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Time</span></div>
   </div>
 </div>
 
-<!-- ═══ CH 15 — TIME ═══ -->
-<div class="chapter" id="ch-15">
-  <div class="ch-eyebrow">Chapter 15</div>
+<!-- ═══ CH 17 — TIME ═══ -->
+<div class="chapter" id="ch-17">
+  <div class="ch-eyebrow">Chapter 17</div>
   <h1 class="ch-title">Time</h1>
   <p class="ch-intro">Pause execution and measure elapsed time with named timers.</p>
   <div class="code-block">
@@ -1405,15 +2009,32 @@ time<span class="op">.</span><span class="fn">timer_stop</span>(<span class="nb"
 <span class="fn">print</span>(<span class="str">i"Elapsed: {elapsed}s"</span>)</pre>
   </div>
 
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> Timer IDs and thread IDs are both "just an integer you choose" — it's easy to accidentally reuse the same ID for both and confuse yourself. Keep separate numbering conventions for the two if you're using both in one program.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>What's the difference between <code>time.timer_pause()</code> and <code>time.timer_stop()</code>?</summary>
+      <div class="quiz-a"><strong>A:</strong> <code>timer_pause()</code> freezes the timer but keeps its elapsed time so it can resume; <code>timer_stop()</code> resets it back to zero.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>What type does <code>time.timer_start(1)</code> return if you don't specify one?</summary>
+      <div class="quiz-a"><strong>A:</strong> <code>f32</code> — pass a type explicitly, e.g. <code>time.timer_start(1, f64)</code>, if you need more precision.</div>
+    </details>
+  </div>
+
   <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(14)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Random</span></div>
-    <div class="ch-nav-btn next" onclick="show(16)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">OS &amp; FFI</span></div>
+    <div class="ch-nav-btn" onclick="show(16)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Random</span></div>
+    <div class="ch-nav-btn next" onclick="show(18)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">OS &amp; FFI</span></div>
   </div>
 </div>
 
-<!-- ═══ CH 16 — OS & FFI ═══ -->
-<div class="chapter" id="ch-16">
-  <div class="ch-eyebrow">Chapter 16</div>
+<!-- ═══ CH 18 — OS AND FFI ═══ -->
+<div class="chapter" id="ch-18">
+  <div class="ch-eyebrow">Chapter 18</div>
   <h1 class="ch-title">OS &amp; FFI</h1>
   <p class="ch-intro">Run shell commands and call into native libraries.</p>
 
@@ -1448,22 +2069,42 @@ os(<span class="nb">1</span>)<span class="op">.</span><span class="fn">drop</spa
 <span class="kw">let</span> c_lib = <span class="fn">FFI</span>(<span class="str">"libs/mylib.so"</span>)
 
 <span class="cm"># Bind a function from the library</span>
-<span class="cm"># fn [handle] [symbol](params) -> return_type</span>
-<span class="kw">fn</span> c_lib <span class="fn">my_c_func</span>(msg<span class="op">:</span> <span class="ty">str</span>) -> <span class="ty">i32</span>
+<span class="cm"># fn [handle] [symbol](params) -> return_type as [rubidium_name]</span>
+<span class="kw">fn</span> c_lib my_c_function(msg<span class="op">:</span> <span class="ty">str</span>) -> <span class="ty">i32</span> <span class="kw">as</span> <span class="fn">my_function</span>
 
-<span class="cm"># Call it like a normal function</span>
-my_c_func(<span class="str">"hello from Rubidium"</span>)</pre>
+<span class="cm"># Call using the Rubidium-side name</span>
+my_function(<span class="str">"hello from Rubidium"</span>)</pre>
+  </div>
+
+  <h2>Renaming foreign symbols</h2>
+  <p>External libraries often expose ugly, mangled, or version-suffixed names. The <code>as</code> clause lets you expose a clean Rubidium-facing name instead — the binding above already does this (<code>my_c_function</code> → <code>my_function</code>). Foreign functions can also be wrapped in an ordinary <code>fn</code> to add validation or compose several calls together.</p>
+
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> The third argument to <code>os.run()</code> is sent the instant the command asks for input — if the command never prompts, it's simply unused; if it prompts more than once, only the first prompt receives it.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>What does the third argument to <code>os.run(id, cmd, input)</code> do?</summary>
+      <div class="quiz-a"><strong>A:</strong> It auto-supplies that text the moment the running command requests input — useful for things like confirmation prompts.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>When you bind <code>fn lib_handle symbol_name(...) -> type as new_name</code>, which name do you call it with?</summary>
+      <div class="quiz-a"><strong>A:</strong> The alias — <code>new_name</code>. That's the whole point of the <code>as</code> clause: exposing a clean name to your Rubidium code regardless of what the library calls it internally.</div>
+    </details>
   </div>
 
   <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(15)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Time</span></div>
-    <div class="ch-nav-btn next" onclick="show(17)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Modules &amp; Imports</span></div>
+    <div class="ch-nav-btn" onclick="show(17)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">Time</span></div>
+    <div class="ch-nav-btn next" onclick="show(19)"><span class="ch-nav-direction">Next →</span><span class="ch-nav-title">Modules &amp; Imports</span></div>
   </div>
 </div>
 
-<!-- ═══ CH 17 — MODULES & IMPORTS ═══ -->
-<div class="chapter" id="ch-17">
-  <div class="ch-eyebrow">Chapter 17</div>
+<!-- ═══ CH 19 — MODULES AND IMPORTS ═══ -->
+<div class="chapter" id="ch-19">
+  <div class="ch-eyebrow">Chapter 19</div>
   <h1 class="ch-title">Modules &amp; Imports</h1>
   <p class="ch-intro">How to enable built-in modules and bring in external files.</p>
 
@@ -1500,11 +2141,43 @@ my_c_func(<span class="str">"hello from Rubidium"</span>)</pre>
 
   <div class="callout callout-note">
     <span class="callout-icon">💡</span>
-    <p><strong>You've reached the end of the book!</strong> You now know everything you need to write real programs in Rubidium. Head to the <a href="https://github.com/TomDexterYoutube/Xeon-Rubidium" style="color:var(--rb)">GitHub repo</a> to contribute, file issues, or explore the source.</p>
+    <p><strong>You've reached the end of the book!</strong> You now know everything you need to write real programs in Rubidium. Try the <a href="quiz.html" style="color:var(--rb)">16-question quiz</a> to see what stuck, or head to the <a href="https://github.com/TomDexterYoutube/Xeon-Rubidium" style="color:var(--rb)">GitHub repo</a> to contribute, file issues, or explore the source.</p>
+  </div>
+
+  <h2>Xeon packages</h2>
+  <p>If Rubidium was installed through Xeon, the official package manager, you can pull in community packages with the <code>xeon</code> keyword. It's used like <code>import</code>, but the package is fetched by Xeon rather than read from your project folder.</p>
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-filename">packages.rub</span><span class="code-block-lang">Rubidium</span></div>
+    <pre><span class="kw">xeon</span> math_tools
+
+<span class="fn">print</span>(math_tools<span class="op">.</span>pi)</pre>
+  </div>
+  <p>Run <code>xeon pkg help</code> in your terminal to browse available packages.</p>
+
+  <div class="callout callout-note">
+    <span class="callout-icon">💡</span>
+    <p><strong>Compiling as a library:</strong> Xeon can also compile Rubidium code with no entry point, for use as a package by other projects. The only difference is that library builds have no top-level execution phase and no <code>fn main()</code>.</p>
+  </div>
+
+  <div class="callout callout-warn">
+    <span class="callout-icon">⚠️</span>
+    <p><strong>Gotcha:</strong> <code>use</code> and <code>import</code> are two completely separate systems. Enabling <code>use thread</code> doesn't give an <code>import</code>ed file access to threading, and importing a file doesn't unlock any built-in module — each one needs its own explicit keyword.</p>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-box-title">Check your understanding</div>
+    <details class="quiz-q">
+      <summary>If you <code>import</code> a file but forget <code>use thread</code>, can that file's code use threading?</summary>
+      <div class="quiz-a"><strong>A:</strong> No — <code>use</code> is required independently for every built-in module, no matter what you've imported.</div>
+    </details>
+    <details class="quiz-q">
+      <summary>Does aliasing an import with <code>as</code> remove access to the original namespace?</summary>
+      <div class="quiz-a"><strong>A:</strong> No — both the alias and the original namespace stay valid at the same time; aliasing only adds a shorter name.</div>
+    </details>
   </div>
 
   <div class="ch-nav">
-    <div class="ch-nav-btn" onclick="show(16)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">OS &amp; FFI</span></div>
+    <div class="ch-nav-btn" onclick="show(18)"><span class="ch-nav-direction">← Previous</span><span class="ch-nav-title">OS &amp; FFI</span></div>
     <div class="ch-nav-btn next" onclick="show(0)"><span class="ch-nav-direction">↩ Back to</span><span class="ch-nav-title">Welcome</span></div>
   </div>
 </div>
@@ -1513,7 +2186,7 @@ my_c_func(<span class="str">"hello from Rubidium"</span>)</pre>
 </div>
 
 <script>
-  const CHAPTERS = 18;
+  const CHAPTERS = 20;
 
   function show(n) {
     document.querySelectorAll('.chapter').forEach((c, i) => {
