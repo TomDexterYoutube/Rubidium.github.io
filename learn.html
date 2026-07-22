@@ -4,6 +4,20 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>The Rubidium Book</title>
+<meta property="og:type" content="website" />
+<meta property="og:title" content="The Rubidium Book — Learn the language" />
+<meta property="og:description" content="20 chapters covering every part of Rubidium: types, memory, collections, classes, threading, and the standard modules — with gotchas, quizzes, and worked examples." />
+<meta property="og:url" content="https://tomdexteryoutube.github.io/Rubidium.github.io/learn.html" />
+<meta property="og:image" content="https://tomdexteryoutube.github.io/Rubidium.github.io/apple-touch-icon.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="The Rubidium Book — Learn the language" />
+<meta name="twitter:description" content="20 chapters covering every part of Rubidium: types, memory, collections, classes, threading, and the standard modules — with gotchas, quizzes, and worked examples." />
+<meta name="twitter:image" content="https://tomdexteryoutube.github.io/Rubidium.github.io/apple-touch-icon.png" />
+<meta name="description" content="20 chapters covering every part of Rubidium: types, memory, collections, classes, threading, and the standard modules — with gotchas, quizzes, and worked examples." />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Azeret+Mono:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
 <style>
@@ -435,6 +449,7 @@ code { border-radius: 2px; }
   <div class="topbar-right">
     <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
     <a class="topbar-link" href="index.html">Home</a>
+    <a class="topbar-link" href="cheatsheet.html">Cheat Sheet</a>
     <a class="topbar-link" href="quiz.html">Quiz</a>
     <a class="topbar-gh" href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">GitHub →</a>
   </div>
@@ -570,7 +585,7 @@ cd Xeon-Rubidium
     <div class="code-block-header"><span class="code-block-filename">Windows</span></div>
     <pre>git clone https://github.com/TomDexterYoutube/Xeon-Rubidium
 cd Xeon-Rubidium
-.\install.ps1</pre>
+install.bat</pre>
   </div>
 
   <h2>Creating a project</h2>
@@ -622,6 +637,16 @@ xeon init</pre>
 <span class="kw">fn</span> <span class="fn">main</span>() {
     <span class="fn">print</span>(<span class="str">"Phase 2 — this runs second"</span>)
 }</pre>
+  </div>
+
+  <h2>print() vs println()</h2>
+  <p><code>print()</code> outputs a line and moves to a new line each time. <code>println()</code> instead <strong>overwrites</strong> the current console line every time it's called — useful for progress indicators or a status that updates in place.</p>
+
+  <div class="code-block">
+    <div class="code-block-header"><span class="code-block-filename">println.rub</span><span class="code-block-lang">Rubidium</span></div>
+    <pre><span class="fn">println</span>(<span class="str">"Loading..."</span>)
+<span class="fn">println</span>(<span class="str">"Done!"</span>)
+<span class="cm"># The console shows only: Done!</span></pre>
   </div>
 
   <div class="callout callout-note">
@@ -912,7 +937,7 @@ I'm a big string!
 
   <div class="callout callout-warn">
     <span class="callout-icon">⚠️</span>
-    <p><strong>Gotcha:</strong> The two quote styles for <code>SY</code> are easy to swap by accident: use <code>'single quotes'</code> only when <em>defining</em> the SY value, and <code>(parentheses)</code> every time you <em>reference</code> that name afterward as a variable or function.</p>
+    <p><strong>Gotcha:</strong> The two quote styles for <code>SY</code> are easy to swap by accident: use <code>'single quotes'</code> only when <em>defining</em> the SY value, and <code>(parentheses)</code> every time you <em>reference</em> that name afterward as a variable or function.</p>
   </div>
 
   <div class="quiz-box">
@@ -1414,7 +1439,7 @@ my_dictplus()<span class="op">.</span><span class="fn">add</span>(<span class="n
 
   <div class="callout callout-note">
     <span class="callout-icon">💡</span>
-    <p><strong>Global pool vs function scope:</strong> Top-level variables and class fields live in the global pool — visible everywhere. Function-local variables are isolated and disappear when the function returns.</p>
+    <p><strong>Global pool vs function scope:</strong> Top-level variables live in the global pool — visible everywhere. Function-local variables are isolated and disappear when the function returns. Class fields are different again: each instance owns its own separate data, outside the global pool entirely (more on this in the Classes chapter).</p>
   </div>
 
   <div class="callout callout-warn">
@@ -2060,7 +2085,7 @@ os(<span class="nb">1</span>)<span class="op">.</span><span class="fn">drop</spa
   </div>
 
   <h2>FFI — Foreign Function Interface</h2>
-  <p>Load compiled shared libraries and call C, C++, C#, or Rust functions directly from Rubidium.</p>
+  <p>Load a compiled shared library and bind its exported functions directly into Rubidium.</p>
   <div class="code-block">
     <div class="code-block-header"><span class="code-block-filename">ffi.rub</span><span class="code-block-lang">Rubidium</span></div>
     <pre><span class="kw">use</span> FFI
@@ -2120,13 +2145,13 @@ my_function(<span class="str">"hello from Rubidium"</span>)</pre>
   </div>
 
   <h2>import — external .rub files</h2>
-  <p><code>import</code> loads another <code>.rub</code> file from the same folder as your source file. The imported file's top-level code runs, and its functions become available.</p>
+  <p><code>import</code> loads another <code>.rub</code> file from the same folder into your code, under a namespace matching the filename. The imported file's top-level code runs, and its functions are reached through that namespace.</p>
   <div class="code-block">
     <div class="code-block-header"><span class="code-block-filename">main.rub</span><span class="code-block-lang">Rubidium</span></div>
     <pre><span class="kw">import</span> math_tools   <span class="cm"># loads math_tools.rub from the same folder</span>
 
 <span class="kw">fn</span> <span class="fn">main</span>() {
-    <span class="kw">let</span> result = <span class="fn">square</span>(<span class="nb">5</span>)   <span class="cm"># function from math_tools.rub</span>
+    <span class="kw">let</span> result = math_tools<span class="op">.</span><span class="fn">square</span>(<span class="nb">5</span>)   <span class="cm"># accessed through the math_tools namespace</span>
     <span class="fn">print</span>(result)
 }</pre>
   </div>
@@ -2198,7 +2223,16 @@ my_function(<span class="str">"hello from Rubidium"</span>)</pre>
     document.getElementById('main').scrollTop = 0;
     window.scrollTo(0, 0);
     closeSidebar();
+    history.replaceState(null, '', '#ch-' + n);
   }
+
+  function initFromHash() {
+    const m = /^#ch-(\d+)$/.exec(window.location.hash);
+    const n = m ? parseInt(m[1], 10) : 0;
+    show(n >= 0 && n < CHAPTERS ? n : 0);
+  }
+  window.addEventListener('hashchange', initFromHash);
+  initFromHash();
 
   function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('open');

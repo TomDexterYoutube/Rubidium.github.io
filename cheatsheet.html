@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rubidium Cheat Sheet</title>
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Rubidium Cheat Sheet" />
+<meta property="og:description" content="Every type, operator, and method signature in one scroll — the fast lookup reference for Rubidium." />
+<meta property="og:url" content="https://tomdexteryoutube.github.io/Rubidium.github.io/cheatsheet.html" />
+<meta property="og:image" content="https://tomdexteryoutube.github.io/Rubidium.github.io/apple-touch-icon.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Rubidium Cheat Sheet" />
+<meta name="twitter:description" content="Every type, operator, and method signature in one scroll — the fast lookup reference for Rubidium." />
+<meta name="twitter:image" content="https://tomdexteryoutube.github.io/Rubidium.github.io/apple-touch-icon.png" />
+<meta name="description" content="Every type, operator, and method signature in one scroll — the fast lookup reference for Rubidium." />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Azeret+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg:#09090b; --bg2:#111114; --bg3:#18181c; --border:#2a2a30;
+  --rb:#E34234; --rb-hi:#F05030;
+  --text:#e0e0e4; --muted:#7a7a88;
+  --mono:'Azeret Mono',monospace; --head:'Unbounded',sans-serif;
+  --py:#3776AB; --py-hi:#4B8BBE;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;line-height:1.6;}
+.topbar{position:sticky;top:0;z-index:200;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;background:rgba(9,9,11,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.topbar-logo{font-family:var(--head);font-weight:800;font-size:1rem;text-decoration:none;display:flex;align-items:center;}
+.topbar-logo .r{color:var(--rb);} .topbar-logo .b{color:var(--text);}
+.topbar-title{font-family:var(--mono);font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-left:0.9rem;padding-left:0.9rem;border-left:1px solid var(--border);}
+.topbar-right{display:flex;align-items:center;gap:1.3rem;}
+.topbar-link{font-family:var(--mono);font-size:0.72rem;color:var(--muted);text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;}
+.topbar-link:hover{color:var(--text);}
+.topbar-gh{font-family:var(--mono);font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:0.35rem 0.8rem;background:var(--py);color:#fff;text-decoration:none;}
+.topbar-gh:hover{background:var(--py-hi);}
+
+.wrap{max-width:920px;margin:0 auto;padding:3rem 1.5rem 5rem;}
+.eyebrow{font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--rb);margin-bottom:0.6rem;}
+h1{font-family:var(--head);font-size:clamp(1.8rem,4vw,2.4rem);font-weight:800;letter-spacing:-0.02em;margin-bottom:0.75rem;}
+.sub{color:var(--muted);font-size:0.9rem;margin-bottom:2.5rem;max-width:60ch;}
+
+.toc{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:3rem;}
+.toc a{font-size:0.72rem;color:var(--muted);text-decoration:none;border:1px solid var(--border);padding:0.3rem 0.7rem;background:var(--bg2);letter-spacing:0.03em;}
+.toc a:hover{color:var(--rb);border-color:var(--rb);}
+
+section{margin-bottom:2.75rem;scroll-margin-top:75px;}
+h2{font-family:var(--head);font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.6rem;}
+h2 .num{color:var(--rb);font-family:var(--mono);font-size:0.8rem;}
+
+table{width:100%;border-collapse:collapse;font-size:0.82rem;margin-bottom:0.5rem;}
+th{text-align:left;padding:0.5rem 0.8rem;background:var(--bg3);color:var(--muted);font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--border);}
+td{padding:0.55rem 0.8rem;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+code{background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.35rem;font-size:0.88em;border-radius:2px;white-space:nowrap;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+@media(max-width:700px){.grid2{grid-template-columns:1fr;}}
+.mini-code{background:var(--bg2);border:1px solid var(--border);padding:0.9rem 1rem;font-size:0.8rem;white-space:pre;overflow-x:auto;color:var(--text);transition:border-color 0.2s;}
+.mini-code:hover{border-color:#3a3a42;}
+.kw{color:#c586c0;} .ty{color:#4EC9B0;} .str{color:#CE9178;} .nb{color:#B5CEA8;} .cm{color:#6a737d;} .fn{color:#DCDCAA;} .op{color:var(--muted);}
+footer{border-top:1px solid var(--border);margin-top:2rem;padding-top:2rem;text-align:center;color:var(--muted);font-size:0.78rem;}
+footer a{color:var(--rb);text-decoration:none;}
+
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025; pointer-events: none; z-index: 1000;
+}
+.page-glow {
+  position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
+  width: 900px; height: 500px; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse, rgba(227,66,52,0.10) 0%, transparent 70%);
+  animation: glowpulse 8s ease-in-out infinite alternate;
+}
+@keyframes glowpulse { from { opacity: 0.7; } to { opacity: 1; } }
+.wrap { position: relative; z-index: 1; }
+html { scroll-behavior: smooth; }
+.topbar-link { position: relative; }
+.topbar-link::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
+  background: var(--rb); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+.topbar-link:hover::after { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) {
+  .page-glow { animation: none; }
+}
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.eyebrow, h1, .sub { animation: fadeUp 0.5s ease both; }
+h1 { animation-delay: 0.05s; }
+.sub { animation-delay: 0.1s; }
+@media (prefers-reduced-motion: reduce) { .eyebrow, h1, .sub { animation: none; } }
+</style>
+</head>
+<body>
+<div class="page-glow"></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="index.html"><span class="r">Rub</span><span class="b">idium</span><span class="topbar-title">Cheat Sheet</span></a>
+  <div class="topbar-right">
+    <a class="topbar-link" href="learn.html">Book</a>
+    <a class="topbar-link" href="quiz.html">Quiz</a>
+    <a class="topbar-gh" href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">GitHub →</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="eyebrow">Quick Reference</div>
+  <h1>Cheat Sheet</h1>
+  <p class="sub">Every type, operator, and method signature in one scroll. For explanations and examples, see <a href="learn.html" style="color:var(--rb)">the book</a>.</p>
+
+  <div class="toc">
+    <a href="#types">Types</a><a href="#vars">Variables</a><a href="#ops">Operators</a><a href="#strings">Strings</a>
+    <a href="#collections">Collections</a><a href="#control">Control Flow</a><a href="#functions">Functions</a>
+    <a href="#memory">Memory</a><a href="#classes">Classes</a><a href="#errors">Errors</a><a href="#files">Files</a>
+    <a href="#modules">Modules</a><a href="#threading">Threading</a><a href="#random-time">Random &amp; Time</a><a href="#os-ffi">OS &amp; FFI</a>
+  </div>
+
+  <section id="types">
+    <h2><span class="num">01</span> Types</h2>
+    <table>
+      <tr><th>Category</th><th>Types</th></tr>
+      <tr><td>Integers</td><td><code>i32</code> <code>i64</code> <code>i128</code> <code>i256</code> <code>i512</code> <code>i1024</code> <code>i2048</code></td></tr>
+      <tr><td>Floats</td><td><code>f32</code> <code>f64</code> <code>f128</code> <code>f256</code> <code>f512</code> <code>f1024</code> <code>f2048</code></td></tr>
+      <tr><td>Text</td><td><code>str</code> (single-line), <code>str+</code> (multi-line, <code>"""</code> delimited)</td></tr>
+      <tr><td>Other</td><td><code>bool</code> (True/False) · <code>Null</code> (valid for every type, acts as −∞) · <code>Any</code> (holds any type) · <code>SY</code> (a string usable as a name)</td></tr>
+      <tr><td>Collections</td><td><code>list</code> (ordered) · <code>index</code> (key → 1 value) · <code>dict</code> (key → many values) · <code>dict+</code> (key → nested dict+ or list)</td></tr>
+    </table>
+  </section>
+
+  <section id="vars">
+    <h2><span class="num">02</span> Variables &amp; Mutability</h2>
+    <div class="mini-code"><span class="kw">let</span> x = <span class="nb">10</span>                    <span class="cm"># global, immutable, type inferred</span>
+<span class="kw">let mut</span> x<span class="op">:</span> <span class="ty">i32</span> = <span class="nb">10</span>       <span class="cm"># global, mutable, explicit type</span>
+<span class="kw">let local</span> x = <span class="nb">10</span>              <span class="cm"># scoped to current block, auto-dropped</span>
+<span class="kw">let local mut</span> x = <span class="nb">10</span>          <span class="cm"># local AND mutable</span>
+x = <span class="nb">99</span>                          <span class="cm"># reassign (requires mut)</span>
+<span class="kw">let</span> x = <span class="str">"new"</span>                 <span class="cm"># let again on existing name = drop + recreate</span>
+<span class="kw">let</span> y<span class="op">:</span> <span class="ty">i64</span> = x <span class="kw">as</span> <span class="ty">i64</span>       <span class="cm"># cast</span></div>
+    <table>
+      <tr><td><code>let</code></td><td>declares a new global variable (or drops+recreates an existing one)</td></tr>
+      <tr><td><code>let mut</code></td><td>declares a global variable that can be reassigned</td></tr>
+      <tr><td><code>let local</code></td><td>declares a variable scoped to the current block (fn/class/loop/if/while)</td></tr>
+      <tr><td><code>as</code></td><td>type cast</td></tr>
+    </table>
+  </section>
+
+  <section id="ops">
+    <h2><span class="num">03</span> Operators</h2>
+    <div class="grid2">
+      <table>
+        <tr><th>Math</th><th></th></tr>
+        <tr><td><code>+ - * /</code></td><td>add / sub / mul / div</td></tr>
+        <tr><td><code>**</code></td><td>power</td></tr>
+        <tr><td><code>*/</code></td><td>root (square root)</td></tr>
+        <tr><td><code>%</code></td><td>remainder</td></tr>
+        <tr><td><code>-x</code></td><td>negate</td></tr>
+      </table>
+      <table>
+        <tr><th>Comparison / Logic</th><th></th></tr>
+        <tr><td><code>== != &gt; &lt; &gt;= &lt;=</code></td><td>comparisons</td></tr>
+        <tr><td><code>and or not</code></td><td>logical</td></tr>
+        <tr><td><code>Null &lt; 0</code></td><td>True — Null acts as −∞</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section id="strings">
+    <h2><span class="num">04</span> Strings</h2>
+    <table>
+      <tr><th>Method</th><th>Effect</th><th>Needs mut?</th></tr>
+      <tr><td><code>.char(i)</code></td><td>character at index</td><td>No</td></tr>
+      <tr><td><code>.len()</code></td><td>number of characters</td><td>No</td></tr>
+      <tr><td><code>.slice()</code></td><td>string → list of characters</td><td>No</td></tr>
+      <tr><td><code>.set(i, v)</code></td><td>replace char at index (v = 1 char)</td><td>Yes</td></tr>
+      <tr><td><code>.insert(i, v)</code></td><td>insert text before index</td><td>Yes</td></tr>
+      <tr><td><code>.replace(old, new)</code></td><td>replace all matches</td><td>Yes</td></tr>
+      <tr><td><code>i"text {var}"</code></td><td>interpolated string</td><td>—</td></tr>
+      <tr><td><code>input("prompt")</code></td><td>read a line from the user</td><td>—</td></tr>
+    </table>
+  </section>
+
+  <section id="collections">
+    <h2><span class="num">05</span> Collections</h2>
+    <table>
+      <tr><th>Type</th><th>Create</th><th>Access</th><th>Append</th><th>Update</th></tr>
+      <tr><td>list</td><td><code>[1, 2, 3]</code></td><td><code>l(0)</code></td><td><code>l().add(v)</code></td><td><code>l(0).set(v)</code></td></tr>
+      <tr><td>index</td><td><code>["k": v]</code></td><td><code>i("k")</code></td><td><code>i().add("k", v)</code> (key must be new)</td><td><code>i("k").set(v)</code></td></tr>
+      <tr><td>dict</td><td><code>{"k" = [v1,v2]}</code></td><td><code>d("k", 0)</code></td><td><code>d("k").add(v)</code> · <code>d().add("k")</code> new key</td><td><code>d("k",0).set(v)</code></td></tr>
+      <tr><td>dict+</td><td><code>{"k" = {...}}</code></td><td><code>dp("k","k2",0)</code></td><td><code>dp("k").add("k2",[v])</code> leaf · <code>...add("k2",{...})</code> nest</td><td><code>dp("k","k2",0).set(v)</code></td></tr>
+    </table>
+    <p style="color:var(--muted);font-size:0.8rem;margin-top:0.5rem;">All collections need <code>mut</code> to be modified. <code>list.combine()</code> joins values into a string. <code>.len()</code> and <code>.has()</code> work across collections. <code>items(1).drop()</code> removes that element and shifts the rest down (no Null left behind).</p>
+  </section>
+
+  <section id="control">
+    <h2><span class="num">06</span> Control Flow</h2>
+    <div class="mini-code"><span class="kw">if</span> x == <span class="nb">7</span> { ... } <span class="kw">else if</span> x &gt; <span class="nb">10</span> { ... } <span class="kw">else</span> { ... }
+
+<span class="kw">while</span> count &lt; <span class="nb">5</span> { ... }
+
+<span class="kw">for</span> i <span class="kw">in</span> range(<span class="nb">1</span>, <span class="nb">10</span>) { ... }   <span class="cm"># end exclusive; loop var auto-dropped</span>
+<span class="kw">for</span> item <span class="kw">in</span> my_list { ... }    <span class="cm"># list → values, index/dict → keys, file → lines</span>
+
+<span class="kw">break</span>      <span class="cm"># exit loop</span>
+<span class="kw">continue</span>   <span class="cm"># skip to next iteration</span></div>
+  </section>
+
+  <section id="functions">
+    <h2><span class="num">07</span> Functions</h2>
+    <div class="mini-code"><span class="kw">fn</span> <span class="fn">add</span>(a<span class="op">:</span> <span class="ty">i32</span>, b<span class="op">:</span> <span class="ty">i32</span>) -&gt; <span class="ty">i32</span> {
+    <span class="kw">return</span> a + b
+}</div>
+    <p style="color:var(--muted);font-size:0.8rem;">Parameters are always local — never enter the global pool. No overloading: duplicate names in the same scope = compile error. Return type is optional (defaults to nothing).</p>
+  </section>
+
+  <section id="memory">
+    <h2><span class="num">08</span> Memory</h2>
+    <table>
+      <tr><td><code>.drop()</code></td><td>frees a variable immediately; collections free recursively; no Null left behind for collection elements</td></tr>
+      <tr><td><code>local</code></td><td>keeps a variable out of the global pool; dropped at scope exit</td></tr>
+      <tr><td><code>link</code></td><td>shares data between two variables instead of deep-copying; a plain <code>=</code> reassignment breaks the link</td></tr>
+      <tr><td>assignment</td><td>always a full deep copy — Rubidium has no references or borrowing</td></tr>
+    </table>
+  </section>
+
+  <section id="classes">
+    <h2><span class="num">09</span> Classes</h2>
+    <div class="mini-code"><span class="kw">class</span> <span class="ty">player</span>() {
+    <span class="kw">let mut</span> health<span class="op">:</span> <span class="ty">i32</span> = <span class="nb">100</span>
+    <span class="kw">fn</span> <span class="fn">take_damage</span>(amount<span class="op">:</span> <span class="ty">i32</span>) { health = health - amount }
+}
+<span class="kw">let mut</span> p = <span class="ty">player</span>()
+p.health = <span class="nb">80</span>              <span class="cm"># needs mut instance + mut field</span>
+p.<span class="fn">take_damage</span>(<span class="nb">10</span>)</div>
+    <p style="color:var(--muted);font-size:0.8rem;">No <code>self</code> — fields are accessed directly inside methods. Instances deep-copy on assignment, same as everything else.</p>
+  </section>
+
+  <section id="errors">
+    <h2><span class="num">10</span> Error Handling</h2>
+    <div class="mini-code"><span class="kw">try</span> {
+    <span class="kw">let</span> bad<span class="op">:</span> <span class="ty">i32</span> = <span class="nb">10</span> / <span class="nb">0</span>
+} <span class="kw">error</span> {
+    <span class="fn">print</span>(<span class="str">"Error: "</span> + error)   <span class="cm"># error is a str+</span>
+}</div>
+    <p style="color:var(--muted);font-size:0.8rem;">Only catches <em>runtime</em> errors (divide by zero, bad index, dropped memory, file/FFI failures). Type mismatches and mutability violations are compile errors — <code>try</code> never sees them.</p>
+  </section>
+
+  <section id="files">
+    <h2><span class="num">11</span> Files</h2>
+    <div class="mini-code"><span class="kw">open</span>(<span class="str">"data.txt"</span>) <span class="kw">as</span> file {
+    file.<span class="fn">write</span>(<span class="str">"Hello"</span>)      file.<span class="fn">add</span>(<span class="str">" World"</span>)
+    <span class="kw">let</span> data = file.<span class="fn">read</span>()      <span class="kw">let</span> line = file.<span class="fn">readln</span>(<span class="nb">3</span>)
+    file.<span class="fn">writeln</span>(<span class="nb">2</span>, <span class="str">"Updated"</span>)
+    <span class="kw">for</span> line <span class="kw">in</span> file { <span class="fn">print</span>(line) }
+}
+file.<span class="fn">exists</span>(<span class="str">"x.txt"</span>) · file.<span class="fn">new</span>(<span class="str">"x.txt"</span>) · file.<span class="fn">delete</span>(<span class="str">"x.txt"</span>)
+file.<span class="fn">rename</span>(<span class="str">"a"</span>,<span class="str">"b"</span>) · file.<span class="fn">copy</span>(<span class="str">"a"</span>,<span class="str">"b"</span>) · file.<span class="fn">list</span>(<span class="str">"dir/"</span>)</div>
+    <p style="color:var(--muted);font-size:0.8rem;">File handle closes automatically at the end of the block; variables created inside persist. Missing file on <code>open()</code> raises an error, creates the file, then continues.</p>
+  </section>
+
+  <section id="threading">
+    <h2><span class="num">12</span> Threading</h2>
+    <div class="mini-code"><span class="kw">use</span> thread
+thread(my_fn(), <span class="nb">1</span>)          <span class="cm"># run async with ID 1</span>
+thread.<span class="fn">wait</span>(<span class="nb">1</span>, <span class="nb">2</span>)         <span class="cm"># block until threads 1 &amp; 2 finish</span>
+thread.<span class="fn">running</span>(<span class="nb">1</span>)         <span class="cm"># bool</span></div>
+    <p style="color:var(--muted);font-size:0.8rem;">Globals are shared across threads (no race protection). Parameters/locals/loop vars are private per-thread.</p>
+  </section>
+
+  <section id="random-time">
+    <h2><span class="num">13</span> Random &amp; Time</h2>
+    <div class="mini-code"><span class="kw">use</span> random
+random(<span class="nb">0</span>, <span class="nb">10</span>, <span class="ty">i32</span>)          random.<span class="fn">shuffle</span>(list)      random.<span class="fn">choice</span>(list)
+random.<span class="fn">seed</span>(<span class="str">"seed"</span>)
+
+<span class="kw">use</span> time
+time.<span class="fn">timer_start</span>(<span class="nb">1</span>)      time.<span class="fn">timer_pause</span>(<span class="nb">1</span>)   time.<span class="fn">timer_stop</span>(<span class="nb">1</span>)
+time.<span class="fn">timer_read</span>(<span class="nb">1</span>)       time.<span class="fn">wait</span>(<span class="nb">5</span>)   <span class="cm"># seconds</span></div>
+  </section>
+
+  <section id="os-ffi">
+    <h2><span class="num">14</span> OS &amp; FFI</h2>
+    <div class="mini-code"><span class="kw">use</span> os
+os.<span class="fn">start</span>(<span class="nb">1</span>)                          <span class="cm"># hidden terminal session</span>
+os.<span class="fn">run</span>(<span class="nb">1</span>, <span class="str">"ls -a"</span>)
+os.<span class="fn">run</span>(<span class="nb">1</span>, <span class="str">"sudo apt update"</span>, <span class="str">"y"</span>)   <span class="cm"># 3rd arg = auto-input on prompt</span>
+
+<span class="kw">use</span> FFI
+<span class="kw">let</span> lib = FFI(<span class="str">"libs/mylib.so"</span>)
+<span class="kw">fn</span> lib real_name(msg<span class="op">:</span> <span class="ty">str</span>) -&gt; <span class="ty">i32</span> <span class="kw">as</span> <span class="fn">clean_name</span>
+<span class="fn">clean_name</span>(<span class="str">"hi"</span>)</div>
+  </section>
+
+  <section id="modules">
+    <h2><span class="num">15</span> Modules &amp; Imports</h2>
+    <div class="mini-code"><span class="kw">use</span> thread            <span class="cm"># enables a built-in module</span>
+<span class="kw">import</span> math_tools     <span class="cm"># loads another .rub file by filename</span>
+<span class="kw">import</span> math_tools <span class="kw">as</span> mt
+mt.sin(<span class="nb">0.5</span>)
+
+xeon math_tools           <span class="cm"># Xeon-managed package, used like import</span></div>
+  </section>
+
+  <footer>Part of the <a href="index.html">Rubidium</a> project · <a href="learn.html">Book</a> · <a href="cheatsheet.html">Cheat Sheet</a> · <a href="glossary.html">Glossary</a> · <a href="cookbook.html">Cookbook</a> · <a href="compare.html">Compare</a> · <a href="faq.html">FAQ</a> · <a href="quiz.html">Quiz</a></footer>
+</div>
+</body>
+</html>

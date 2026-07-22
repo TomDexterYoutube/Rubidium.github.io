@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rubidium vs Python vs Rust vs C</title>
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Rubidium vs Python vs Rust vs C" />
+<meta property="og:description" content="The same five tasks written in all four languages, side by side — plus an honest look at where Rubidium’s memory model actually differs." />
+<meta property="og:url" content="https://tomdexteryoutube.github.io/Rubidium.github.io/compare.html" />
+<meta property="og:image" content="https://tomdexteryoutube.github.io/Rubidium.github.io/apple-touch-icon.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Rubidium vs Python vs Rust vs C" />
+<meta name="twitter:description" content="The same five tasks written in all four languages, side by side — plus an honest look at where Rubidium’s memory model actually differs." />
+<meta name="twitter:image" content="https://tomdexteryoutube.github.io/Rubidium.github.io/apple-touch-icon.png" />
+<meta name="description" content="The same five tasks written in all four languages, side by side — plus an honest look at where Rubidium’s memory model actually differs." />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Azeret+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg:#09090b; --bg2:#111114; --bg3:#18181c; --border:#2a2a30;
+  --rb:#E34234; --rb-hi:#F05030;
+  --text:#e0e0e4; --muted:#7a7a88;
+  --mono:'Azeret Mono',monospace; --head:'Unbounded',sans-serif;
+  --py:#3776AB; --py-hi:#4B8BBE;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;line-height:1.6;}
+.topbar{position:sticky;top:0;z-index:200;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;background:rgba(9,9,11,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.topbar-logo{font-family:var(--head);font-weight:800;font-size:1rem;text-decoration:none;display:flex;align-items:center;}
+.topbar-logo .r{color:var(--rb);} .topbar-logo .b{color:var(--text);}
+.topbar-title{font-family:var(--mono);font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-left:0.9rem;padding-left:0.9rem;border-left:1px solid var(--border);}
+.topbar-right{display:flex;align-items:center;gap:1.3rem;}
+.topbar-link{font-family:var(--mono);font-size:0.72rem;color:var(--muted);text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;}
+.topbar-link:hover{color:var(--text);}
+.topbar-gh{font-family:var(--mono);font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:0.35rem 0.8rem;background:var(--py);color:#fff;text-decoration:none;}
+.topbar-gh:hover{background:var(--py-hi);}
+
+.wrap{max-width:1080px;margin:0 auto;padding:3rem 1.5rem 5rem;}
+.eyebrow{font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--rb);margin-bottom:0.6rem;}
+h1{font-family:var(--head);font-size:clamp(1.8rem,4vw,2.4rem);font-weight:800;letter-spacing:-0.02em;margin-bottom:0.75rem;}
+.sub{color:var(--muted);font-size:0.9rem;margin-bottom:2.5rem;max-width:65ch;}
+
+.task{margin-bottom:3rem;}
+.task-title{font-family:var(--head);font-size:1.1rem;font-weight:800;margin-bottom:1rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border);}
+
+.lang-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.9rem;overflow-x:auto;}
+@media(max-width:900px){.lang-grid{grid-template-columns:repeat(4,220px);}}
+.lang-col{background:var(--bg2);border:1px solid var(--border);min-width:0;transition:border-color 0.2s, transform 0.2s;}
+.lang-col:hover{border-color:#3a3a42;transform:translateY(-2px);}
+.lang-head{padding:0.5rem 0.8rem;font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.4rem;}
+.dot{width:0.5rem;height:0.5rem;border-radius:50%;flex-shrink:0;}
+.dot.rb{background:var(--rb);} .dot.py{background:#3776AB;} .dot.rust{background:#DEA584;} .dot.c{background:#5C6BC0;}
+.lang-col pre{padding:0.85rem 0.9rem;font-size:0.72rem;overflow-x:auto;white-space:pre;line-height:1.55;color:var(--text);}
+.kw{color:#c586c0;} .ty{color:#4EC9B0;} .str{color:#CE9178;} .nb{color:#B5CEA8;} .cm{color:#6a737d;} .fn{color:#DCDCAA;} .op{color:var(--muted);}
+
+.note{color:var(--muted);font-size:0.82rem;margin-top:0.8rem;line-height:1.7;max-width:75ch;}
+.note strong{color:var(--rb);}
+
+table.compare{width:100%;border-collapse:collapse;font-size:0.82rem;margin-top:1rem;}
+table.compare th{text-align:left;padding:0.6rem 0.9rem;background:var(--bg3);color:var(--muted);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--border);}
+table.compare td{padding:0.65rem 0.9rem;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text);}
+table.compare tr:last-child td{border-bottom:none;}
+
+footer{border-top:1px solid var(--border);margin-top:2rem;padding-top:2rem;text-align:center;color:var(--muted);font-size:0.78rem;}
+footer a{color:var(--rb);text-decoration:none;}
+
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025; pointer-events: none; z-index: 1000;
+}
+.page-glow {
+  position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
+  width: 900px; height: 500px; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse, rgba(227,66,52,0.10) 0%, transparent 70%);
+  animation: glowpulse 8s ease-in-out infinite alternate;
+}
+@keyframes glowpulse { from { opacity: 0.7; } to { opacity: 1; } }
+.wrap { position: relative; z-index: 1; }
+html { scroll-behavior: smooth; }
+.topbar-link { position: relative; }
+.topbar-link::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
+  background: var(--rb); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+.topbar-link:hover::after { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) {
+  .page-glow { animation: none; }
+}
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.eyebrow, h1, .sub { animation: fadeUp 0.5s ease both; }
+h1 { animation-delay: 0.05s; }
+.sub { animation-delay: 0.1s; }
+@media (prefers-reduced-motion: reduce) { .eyebrow, h1, .sub { animation: none; } }
+</style>
+</head>
+<body>
+<div class="page-glow"></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="index.html"><span class="r">Rub</span><span class="b">idium</span><span class="topbar-title">Compare</span></a>
+  <div class="topbar-right">
+    <a class="topbar-link" href="learn.html">Book</a>
+    <a class="topbar-link" href="cheatsheet.html">Cheat Sheet</a>
+    <a class="topbar-gh" href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">GitHub →</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="eyebrow">Side by Side</div>
+  <h1>Rubidium vs. Python vs. Rust vs. C</h1>
+  <p class="sub">The same five tasks, written in all four languages, so you can see exactly where Rubidium's syntax sits — and where its memory model actually differs from the other three.</p>
+
+  <div class="task">
+    <div class="task-title">Hello, World</div>
+    <div class="lang-grid">
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot rb"></span>Rubidium</div>
+        <pre><span class="fn">print</span>(<span class="str">"Hello, World!"</span>)</pre>
+      </div>
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot py"></span>Python</div>
+        <pre><span class="fn">print</span>(<span class="str">"Hello, World!"</span>)</pre>
+      </div>
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot rust"></span>Rust</div>
+        <pre><span class="kw">fn</span> main() {
+    println!(<span class="str">"Hello, World!"</span>);
+}</pre>
+      </div>
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot c"></span>C</div>
+        <pre>#include &lt;stdio.h&gt;
+<span class="kw">int</span> main() {
+    printf(<span class="str">"Hello, World!\n"</span>);
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="task-title">Variables &amp; Mutation</div>
+    <div class="lang-grid">
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot rb"></span>Rubidium</div>
+        <pre><span class="kw">let mut</span> x<span class="op">:</span> <span class="ty">i32</span> = <span class="nb">10</span>
+x = <span class="nb">20</span></pre>
+      </div>
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot py"></span>Python</div>
+        <pre>x = <span class="nb">10</span>
+x = <span class="nb">20</span>  <span class="cm"># always reassignable</span></pre>
+      </div>
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot rust"></span>Rust</div>
+        <pre><span class="kw">let mut</span> x<span class="op">:</span> i32 = <span class="nb">10</span>;
+x = <span class="nb">20</span>;</pre>
+      </div>
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot c"></span>C</div>
+        <pre><span class="kw">int</span> x = <span class="nb">10</span>;
+x = <span class="nb">20</span>;</pre>
+      </div>
+    </div>
+    <p class="note">Rubidium and Rust both require an explicit <code>mut</code> to allow reassignment. Python has no concept of immutable variables at all. C allows reassignment unless the variable is <code>const</code>.</p>
+  </div>
+
+  <div class="task">
+    <div class="task-title">Loop 1 to 10</div>
+    <div class="lang-grid">
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot rb"></span>Rubidium</div>
+        <pre><span class="kw">for</span> i <span class="kw">in</span> range(<span class="nb">1</span>, <span class="nb">11</span>) {
+    <span class="fn">print</span>(i)
+}</pre>
+      </div>
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot py"></span>Python</div>
+        <pre><span class="kw">for</span> i <span class="kw">in</span> range(<span class="nb">1</span>, <span class="nb">11</span>):
+    print(i)</pre>
+      </div>
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot rust"></span>Rust</div>
+        <pre><span class="kw">for</span> i <span class="kw">in</span> 1..11 {
+    println!(<span class="str">"{}"</span>, i);
+}</pre>
+      </div>
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot c"></span>C</div>
+        <pre><span class="kw">for</span> (<span class="kw">int</span> i=1; i&lt;11; i++) {
+    printf(<span class="str">"%d\n"</span>, i);
+}</pre>
+      </div>
+    </div>
+    <p class="note">Rubidium's <code>range(start, end)</code> is exclusive of <code>end</code>, same as Python's and Rust's <code>..</code> range — all three need <code>11</code> to cover 1 through 10.</p>
+  </div>
+
+  <div class="task">
+    <div class="task-title">Function</div>
+    <div class="lang-grid">
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot rb"></span>Rubidium</div>
+        <pre><span class="kw">fn</span> <span class="fn">add</span>(a<span class="op">:</span> <span class="ty">i32</span>, b<span class="op">:</span> <span class="ty">i32</span>) -&gt; <span class="ty">i32</span> {
+    <span class="kw">return</span> a + b
+}</pre>
+      </div>
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot py"></span>Python</div>
+        <pre><span class="kw">def</span> add(a, b):
+    <span class="kw">return</span> a + b</pre>
+      </div>
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot rust"></span>Rust</div>
+        <pre><span class="kw">fn</span> add(a: i32, b: i32) -&gt; i32 {
+    a + b
+}</pre>
+      </div>
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot c"></span>C</div>
+        <pre><span class="kw">int</span> add(<span class="kw">int</span> a, <span class="kw">int</span> b) {
+    <span class="kw">return</span> a + b;
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="task">
+    <div class="task-title">Class</div>
+    <div class="lang-grid">
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot rb"></span>Rubidium</div>
+        <pre><span class="kw">class</span> <span class="ty">player</span>() {
+    <span class="kw">let mut</span> hp<span class="op">:</span> <span class="ty">i32</span> = <span class="nb">100</span>
+    <span class="kw">fn</span> <span class="fn">hit</span>(n<span class="op">:</span> <span class="ty">i32</span>) {
+        hp = hp - n
+    }
+}</pre>
+      </div>
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot py"></span>Python</div>
+        <pre><span class="kw">class</span> Player:
+    <span class="kw">def</span> __init__(self):
+        self.hp = <span class="nb">100</span>
+    <span class="kw">def</span> hit(self, n):
+        self.hp -= n</pre>
+      </div>
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot rust"></span>Rust</div>
+        <pre><span class="kw">struct</span> Player { hp: i32 }
+<span class="kw">impl</span> Player {
+    <span class="kw">fn</span> hit(&amp;mut self, n: i32) {
+        self.hp -= n;
+    }
+}</pre>
+      </div>
+      <div class="lang-col">
+        <div class="lang-head"><span class="dot c"></span>C</div>
+        <pre><span class="kw">typedef struct</span> {
+    <span class="kw">int</span> hp;
+} Player;
+
+<span class="kw">void</span> hit(Player *p, <span class="kw">int</span> n) {
+    p-&gt;hp -= n;
+}</pre>
+      </div>
+    </div>
+    <p class="note">Rubidium has no <code>self</code> — fields are accessed directly by name inside a method, closer to how Python reads once you drop the explicit <code>self.</code> prefix.</p>
+  </div>
+
+  <div class="task">
+    <div class="task-title">Memory model — the real difference</div>
+    <table class="compare">
+      <tr><th>Language</th><th>How memory is managed</th></tr>
+      <tr><td><strong style="color:var(--rb)">Rubidium</strong></td><td>No GC, no ownership/borrow checker. Every assignment is a full deep copy. Freed manually with <code>.drop()</code>. The one exception is <code>link</code>, which shares data until a plain reassignment breaks it.</td></tr>
+      <tr><td>Python</td><td>Automatic garbage collection (reference counting + cycle detector). Assignment shares references by default — mutating one name can affect another pointing at the same object.</td></tr>
+      <tr><td>Rust</td><td>No garbage collector. The compiler enforces ownership and borrowing rules at compile time — one owner at a time, borrows checked for validity, memory freed deterministically when the owner goes out of scope.</td></tr>
+      <tr><td>C</td><td>Fully manual — you call <code>malloc()</code>/<code>free()</code> yourself. No compiler-enforced safety net; forgetting to free or freeing twice is on you.</td></tr>
+    </table>
+    <p class="note"><strong>Where Rubidium sits:</strong> it avoids Python's hidden reference-sharing (deep copy makes aliasing bugs impossible by default) and avoids Rust's learning curve (no borrow checker to satisfy) — at the cost of copying data more often than a reference-based language would, and requiring the same manual discipline as C for actually freeing memory.</p>
+  </div>
+
+  <footer>Part of the <a href="index.html">Rubidium</a> project · <a href="learn.html">Book</a> · <a href="cheatsheet.html">Cheat Sheet</a> · <a href="glossary.html">Glossary</a> · <a href="cookbook.html">Cookbook</a> · <a href="compare.html">Compare</a> · <a href="faq.html">FAQ</a> · <a href="quiz.html">Quiz</a></footer>
+</div>
+</body>
+</html>

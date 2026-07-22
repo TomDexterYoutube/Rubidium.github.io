@@ -4,6 +4,20 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Rubidium — High-Performance Compiled Language</title>
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Rubidium — A statically-typed compiled language" />
+<meta property="og:description" content="Python-readable syntax, explicit memory with no GC or borrow checker, real hardware threads, and a build tool that just works. See the language, the book, and real benchmarks." />
+<meta property="og:url" content="https://tomdexteryoutube.github.io/Rubidium.github.io/" />
+<meta property="og:image" content="https://tomdexteryoutube.github.io/Rubidium.github.io/apple-touch-icon.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Rubidium — A statically-typed compiled language" />
+<meta name="twitter:description" content="Python-readable syntax, explicit memory with no GC or borrow checker, real hardware threads, and a build tool that just works. See the language, the book, and real benchmarks." />
+<meta name="twitter:image" content="https://tomdexteryoutube.github.io/Rubidium.github.io/apple-touch-icon.png" />
+<meta name="description" content="Python-readable syntax, explicit memory with no GC or borrow checker, real hardware threads, and a build tool that just works. See the language, the book, and real benchmarks." />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;800&family=Azeret+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
@@ -437,6 +451,35 @@
 
   /* ── REVEAL ── */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1), transform 0.6s cubic-bezier(0.4,0,0.2,1); }
+
+  /* ── BENCHMARK BAR CHARTS ── */
+  .bench-chart-title { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .bench-chart { display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 2.5rem; }
+  .bench-row { display: flex; align-items: center; gap: 1rem; }
+  .bench-label { width: 130px; flex-shrink: 0; font-size: 0.8rem; color: var(--text); display: flex; align-items: center; gap: 0.5rem; }
+  .bench-dot { width: 0.55rem; height: 0.55rem; border-radius: 50%; flex-shrink: 0; }
+  .bench-track { flex: 1; height: 26px; background: var(--bg3); border: 1px solid var(--border); position: relative; overflow: hidden; }
+  .bench-fill {
+    height: 100%; border-radius: 0 2px 2px 0;
+    transform: scaleX(0); transform-origin: left;
+    animation: benchGrow 1s cubic-bezier(0.16,1,0.3,1) forwards;
+  }
+  .bench-row:nth-child(1) .bench-fill { animation-delay: 0.05s; }
+  .bench-row:nth-child(2) .bench-fill { animation-delay: 0.15s; }
+  .bench-row:nth-child(3) .bench-fill { animation-delay: 0.25s; }
+  .bench-row:nth-child(4) .bench-fill { animation-delay: 0.35s; }
+  .bench-row:nth-child(5) .bench-fill { animation-delay: 0.45s; }
+  @keyframes benchGrow { to { transform: scaleX(1); } }
+  .bench-value { width: 165px; flex-shrink: 0; font-size: 0.76rem; color: var(--muted); text-align: right; white-space: nowrap; }
+  .bench-value strong { color: var(--text); font-weight: 600; }
+  .bench-scale-note { font-size: 0.72rem; color: var(--dim, #4a4a55); margin-top: -1.5rem; margin-bottom: 2.5rem; }
+  @media (max-width: 640px) {
+    .bench-label { width: 84px; font-size: 0.72rem; }
+    .bench-value { width: 110px; font-size: 0.68rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bench-fill { animation: none; transform: scaleX(1); }
+  }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
   /* ── SCROLLBAR ── */
@@ -585,7 +628,7 @@
     <div class="feat-card">
       <div class="feat-icon">◈</div>
       <div class="feat-name">Manual Memory</div>
-      <div class="feat-desc">Use <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">.drop()</code> to explicitly reclaim heap memory. Collections recursively free all nested data. No GC pauses.</div>
+      <div class="feat-desc">Use <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">.drop()</code> to explicitly reclaim memory. Collections recursively free all nested data. No GC pauses.</div>
     </div>
     <div class="feat-card">
       <div class="feat-icon">⋈</div>
@@ -656,7 +699,7 @@ count = count + <span class="nb">1</span>
 <span class="fn">print</span>(<span class="str">i"Hello from {name}, count is {count}"</span>)
 
 <span class="cm"># Explicit memory reclamation</span>
-name<span class="op">.</span><span class="fn">drop</span>()     <span class="cm"># frees heap allocation immediately</span></pre>
+name<span class="op">.</span><span class="fn">drop</span>()     <span class="cm"># frees its memory immediately</span></pre>
     </div>
   </div>
 
@@ -809,50 +852,88 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
   <p class="section-desc">
     A single informal run on one Linux machine — not a rigorous benchmark suite yet.
     Two workloads: a recursive <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">fib(35)</code>
-    (function-call heavy) and a 10-million-iteration loop sum (memory/loop heavy).
+    (function-call heavy) and a 10-million-iteration loop sum (memory/loop heavy), across five languages.
     Compiled with <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">gcc -O2</code>,
-    <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">rustc -O</code>, and
-    <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">xeon build --release</code>, timed with
+    <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">rustc -O</code>,
+    <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">xeon build</code>, and
+    <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">javac</code>,
+    run as-is for <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">python3</code> and
+    <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">java</code> (JVM startup included), all timed with
     <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">hyperfine</code>.
   </p>
 
-  <div class="reveal" style="overflow-x:auto;">
-    <table style="width:100%; border-collapse:collapse; font-family:var(--mono); font-size:0.85rem; margin-bottom:2rem;">
-      <thead>
-        <tr style="border-bottom:1px solid var(--border);">
-          <th style="text-align:left; padding:0.7rem 1rem; color:var(--muted); font-weight:600; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em;">fib(35) — recursive calls</th>
-          <th style="text-align:left; padding:0.7rem 1rem; color:var(--muted); font-weight:600; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em;">Mean time</th>
-          <th style="text-align:left; padding:0.7rem 1rem; color:var(--muted); font-weight:600; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em;">Relative to fastest</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.7rem 1rem;">C (<code>gcc -O2</code>)</td><td style="padding:0.7rem 1rem; color:var(--rb);">49.6 ms ± 2.8 ms</td><td style="padding:0.7rem 1rem;">1.00×</td></tr>
-        <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.7rem 1rem;">Rust (<code>rustc -O</code>)</td><td style="padding:0.7rem 1rem;">75.0 ms ± 1.4 ms</td><td style="padding:0.7rem 1rem;">1.51×</td></tr>
-        <tr><td style="padding:0.7rem 1rem;">Rubidium (<code>xeon build --release</code>)</td><td style="padding:0.7rem 1rem;">81.9 ms ± 3.0 ms</td><td style="padding:0.7rem 1rem;">1.65×</td></tr>
-      </tbody>
-    </table>
+  <div class="reveal">
+    <div class="bench-chart-title">fib(35) — recursive calls · relative speed · longer bar = faster</div>
+    <div class="bench-chart">
+      <div class="bench-row">
+        <div class="bench-label"><span class="bench-dot" style="background:#5C6BC0;"></span>C</div>
+        <div class="bench-track"><div class="bench-fill" style="width:100%; background:linear-gradient(90deg,#5C6BC0,#7986CB);"></div></div>
+        <div class="bench-value"><strong>27.2 ms</strong> · 1.00×</div>
+      </div>
+      <div class="bench-row">
+        <div class="bench-label"><span class="bench-dot" style="background:#DEA584;"></span>Rust</div>
+        <div class="bench-track"><div class="bench-fill" style="width:66.0%; background:linear-gradient(90deg,#DEA584,#E8BC9E);"></div></div>
+        <div class="bench-value"><strong>41.2 ms</strong> · 1.52× slower</div>
+      </div>
+      <div class="bench-row">
+        <div class="bench-label"><span class="bench-dot" style="background:var(--rb);"></span>Rubidium</div>
+        <div class="bench-track"><div class="bench-fill" style="width:60.3%; background:linear-gradient(90deg,var(--rb),var(--rb-hi,#F05030));"></div></div>
+        <div class="bench-value"><strong>45.1 ms</strong> · 1.66× slower</div>
+      </div>
+      <div class="bench-row">
+        <div class="bench-label"><span class="bench-dot" style="background:#ED8B00;"></span>Java</div>
+        <div class="bench-track"><div class="bench-fill" style="width:22.3%; background:linear-gradient(90deg,#ED8B00,#F5A623);"></div></div>
+        <div class="bench-value"><strong>122.2 ms</strong> · 4.50× slower</div>
+      </div>
+      <div class="bench-row">
+        <div class="bench-label"><span class="bench-dot" style="background:var(--py);"></span>Python</div>
+        <div class="bench-track"><div class="bench-fill" style="width:3%; background:linear-gradient(90deg,var(--py),var(--py-hi));"></div></div>
+        <div class="bench-value"><strong>1.922 s</strong> · 70.72× slower</div>
+      </div>
+    </div>
+    <div class="bench-scale-note">Bar length = relative speed, so the fastest (C) gets the full bar and everything else shows how far behind it is. Python's bar is floored at a sliver just so it's visible — it's actually 70× slower, not "almost as fast." Read the exact numbers on the right, not the bar alone.</div>
+  </div>
 
-    <table style="width:100%; border-collapse:collapse; font-family:var(--mono); font-size:0.85rem;">
-      <thead>
-        <tr style="border-bottom:1px solid var(--border);">
-          <th style="text-align:left; padding:0.7rem 1rem; color:var(--muted); font-weight:600; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em;">Sum of 10M — loop throughput</th>
-          <th style="text-align:left; padding:0.7rem 1rem; color:var(--muted); font-weight:600; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em;">Mean time</th>
-          <th style="text-align:left; padding:0.7rem 1rem; color:var(--muted); font-weight:600; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.05em;">Relative to fastest</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.7rem 1rem;">C (<code>gcc -O2</code>)</td><td style="padding:0.7rem 1rem; color:var(--rb);">1.5 ms ± 0.4 ms</td><td style="padding:0.7rem 1rem;">1.00×</td></tr>
-        <tr style="border-bottom:1px solid var(--border);"><td style="padding:0.7rem 1rem;">Rubidium (<code>xeon build --release</code>)</td><td style="padding:0.7rem 1rem;">2.0 ms ± 0.2 ms</td><td style="padding:0.7rem 1rem;">1.27×</td></tr>
-        <tr><td style="padding:0.7rem 1rem;">Rust (<code>rustc -O</code>)</td><td style="padding:0.7rem 1rem;">2.2 ms ± 0.2 ms</td><td style="padding:0.7rem 1rem;">1.43×</td></tr>
-      </tbody>
-    </table>
+  <div class="reveal">
+    <div class="bench-chart-title">Sum of 10M — loop throughput · relative speed · longer bar = faster</div>
+    <div class="bench-chart">
+      <div class="bench-row">
+        <div class="bench-label"><span class="bench-dot" style="background:#5C6BC0;"></span>C</div>
+        <div class="bench-track"><div class="bench-fill" style="width:100%; background:linear-gradient(90deg,#5C6BC0,#7986CB);"></div></div>
+        <div class="bench-value"><strong>894.9 µs</strong> · 1.00×</div>
+      </div>
+      <div class="bench-row">
+        <div class="bench-label"><span class="bench-dot" style="background:var(--rb);"></span>Rubidium</div>
+        <div class="bench-track"><div class="bench-fill" style="width:74.6%; background:linear-gradient(90deg,var(--rb),var(--rb-hi,#F05030));"></div></div>
+        <div class="bench-value"><strong>1.2 ms</strong> · 1.32× slower</div>
+      </div>
+      <div class="bench-row">
+        <div class="bench-label"><span class="bench-dot" style="background:#DEA584;"></span>Rust</div>
+        <div class="bench-track"><div class="bench-fill" style="width:68.8%; background:linear-gradient(90deg,#DEA584,#E8BC9E);"></div></div>
+        <div class="bench-value"><strong>1.3 ms</strong> · 1.49× slower</div>
+      </div>
+      <div class="bench-row">
+        <div class="bench-label"><span class="bench-dot" style="background:#ED8B00;"></span>Java</div>
+        <div class="bench-track"><div class="bench-fill" style="width:3%; background:linear-gradient(90deg,#ED8B00,#F5A623);"></div></div>
+        <div class="bench-value"><strong>42.6 ms</strong> · 47.57× slower</div>
+      </div>
+      <div class="bench-row">
+        <div class="bench-label"><span class="bench-dot" style="background:var(--py);"></span>Python</div>
+        <div class="bench-track"><div class="bench-fill" style="width:3%; background:linear-gradient(90deg,var(--py),var(--py-hi));"></div></div>
+        <div class="bench-value"><strong>1.039 s</strong> · 1160.76× slower</div>
+      </div>
+    </div>
+    <div class="bench-scale-note">C, Rubidium, and Rust are close enough (74–100%) that their order is noise, not a real ranking (see caveat below). Java and Python are both floored at a sliver for visibility — actually 48× and 1161× slower respectively.</div>
   </div>
 
   <div style="background:rgba(232,164,74,0.06); border:1px solid rgba(232,164,74,0.25); padding:1rem 1.25rem; display:flex; gap:0.75rem; align-items:flex-start; margin-top:1.5rem;">
     <span style="flex-shrink:0;">⚠️</span>
     <p style="color:var(--muted); font-size:0.85rem; line-height:1.7; margin:0;">
-      Take this with a grain of salt: single machine, single session, no <code style="color:var(--rb)">--warmup</code> pass, and the sum benchmark ran in under 5&nbsp;ms —
-      hyperfine itself flags results that fast as noisy. The fib(35) numbers are more trustworthy since they ran 35–55 times in the multi-tens-of-milliseconds range.
+      Take this with a grain of salt: single machine, single session, no <code style="color:var(--rb)">--warmup</code> pass.
+      The C/Rust/Rubidium rows in the sum chart ran under 5&nbsp;ms with error bars that overlap each other (e.g. C's own ±376.7&nbsp;µs is nearly half its mean) —
+      hyperfine flags results that fast as noisy, so don't read too much into the exact ordering of those three there.
+      The fib(35) numbers, and the Java/Python sum numbers, are far more trustworthy since they ran well clear of that noise floor.
+      Java's numbers include JVM startup and JIT warmup each run, which isn't fully representative of steady-state performance but is the fairest simple comparison for a single-shot benchmark like this.
       We'll update this section as more rigorous, multi-machine benchmarks come in.
     </p>
   </div>
@@ -874,7 +955,7 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
       <div class="cmd-row"><span class="cmd-name">xeon build</span><span class="cmd-desc">Compiles your project to native machine code via the LLVM backend</span></div>
       <div class="cmd-row"><span class="cmd-name">xeon run</span><span class="cmd-desc">Compiles and immediately executes your program in one step</span></div>
       <div class="cmd-row"><span class="cmd-name">install.sh</span><span class="cmd-desc">Bash install script for Linux / macOS to set up the Xeon toolchain</span></div>
-      <div class="cmd-row"><span class="cmd-name">install.ps1</span><span class="cmd-desc">PowerShell install script for Windows to set up the Xeon toolchain</span></div>
+      <div class="cmd-row"><span class="cmd-name">install.bat</span><span class="cmd-desc">Windows install script to set up the Xeon toolchain</span></div>
     </div>
     <div class="xeon-terminal">
       <div class="term-bar">
@@ -916,7 +997,7 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
     <div class="step">
       <div class="step-num">01</div>
       <div class="step-title">Install Xeon</div>
-      <div class="step-desc">Clone the repo and run <span class="inline-code">install.sh</span> (Linux/macOS) or <span class="inline-code">install.ps1</span> (Windows) to put the Xeon build manager on your system.</div>
+      <div class="step-desc">Clone the repo and run <span class="inline-code">install.sh</span> (Linux/macOS) or <span class="inline-code">install.bat</span> (Windows) to put the Xeon build manager on your system.</div>
     </div>
     <div class="step">
       <div class="step-num">02</div>
@@ -949,12 +1030,17 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
 <div class="footer-outer">
   <footer>
     <span class="footer-brand"><span class="logo-Rub">Rub</span><span class="logo-idium">idium</span></span>
-    <ul class="footer-links">
+    <ul class="footer-links" style="flex-wrap:wrap; row-gap:0.6rem;">
       <li><a href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">GitHub</a></li>
       <li><a href="docs.pdf">Docs</a></li>
       <li><a href="#xeon">Xeon</a></li>
       <li><a href="learn.html">Learn</a></li>
       <li><a href="quiz.html">Quiz</a></li>
+      <li><a href="cheatsheet.html">Cheat Sheet</a></li>
+      <li><a href="glossary.html">Glossary</a></li>
+      <li><a href="cookbook.html">Cookbook</a></li>
+      <li><a href="compare.html">Compare</a></li>
+      <li><a href="faq.html">FAQ</a></li>
     </ul>
     <span class="footer-copy">Built with LLVM · Open Source</span>
   </footer>

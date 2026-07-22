@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rubidium Cookbook</title>
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Rubidium Cookbook" />
+<meta property="og:description" content="8 practical recipes — safe file reads, safe divide, vote counters, nested config, parallel threads, and more." />
+<meta property="og:url" content="https://tomdexteryoutube.github.io/Rubidium.github.io/cookbook.html" />
+<meta property="og:image" content="https://tomdexteryoutube.github.io/Rubidium.github.io/apple-touch-icon.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Rubidium Cookbook" />
+<meta name="twitter:description" content="8 practical recipes — safe file reads, safe divide, vote counters, nested config, parallel threads, and more." />
+<meta name="twitter:image" content="https://tomdexteryoutube.github.io/Rubidium.github.io/apple-touch-icon.png" />
+<meta name="description" content="8 practical recipes — safe file reads, safe divide, vote counters, nested config, parallel threads, and more." />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Azeret+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg:#09090b; --bg2:#111114; --bg3:#18181c; --border:#2a2a30;
+  --rb:#E34234; --rb-hi:#F05030;
+  --text:#e0e0e4; --muted:#7a7a88;
+  --mono:'Azeret Mono',monospace; --head:'Unbounded',sans-serif;
+  --py:#3776AB; --py-hi:#4B8BBE;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;line-height:1.6;}
+.topbar{position:sticky;top:0;z-index:200;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;background:rgba(9,9,11,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.topbar-logo{font-family:var(--head);font-weight:800;font-size:1rem;text-decoration:none;display:flex;align-items:center;}
+.topbar-logo .r{color:var(--rb);} .topbar-logo .b{color:var(--text);}
+.topbar-title{font-family:var(--mono);font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-left:0.9rem;padding-left:0.9rem;border-left:1px solid var(--border);}
+.topbar-right{display:flex;align-items:center;gap:1.3rem;}
+.topbar-link{font-family:var(--mono);font-size:0.72rem;color:var(--muted);text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;}
+.topbar-link:hover{color:var(--text);}
+.topbar-gh{font-family:var(--mono);font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:0.35rem 0.8rem;background:var(--py);color:#fff;text-decoration:none;}
+.topbar-gh:hover{background:var(--py-hi);}
+
+.wrap{max-width:820px;margin:0 auto;padding:3rem 1.5rem 5rem;}
+.eyebrow{font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--rb);margin-bottom:0.6rem;}
+h1{font-family:var(--head);font-size:clamp(1.8rem,4vw,2.4rem);font-weight:800;letter-spacing:-0.02em;margin-bottom:0.75rem;}
+.sub{color:var(--muted);font-size:0.9rem;margin-bottom:2.5rem;max-width:60ch;}
+
+.toc{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:3rem;}
+.toc a{font-size:0.72rem;color:var(--muted);text-decoration:none;border:1px solid var(--border);padding:0.3rem 0.7rem;background:var(--bg2);}
+.toc a:hover{color:var(--rb);border-color:var(--rb);}
+
+.recipe{margin-bottom:2.5rem;scroll-margin-top:75px;}
+.recipe-num{color:var(--rb);font-family:var(--mono);font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.4rem;}
+.recipe-title{font-family:var(--head);font-size:1.15rem;font-weight:800;margin-bottom:0.5rem;}
+.recipe-desc{color:var(--muted);font-size:0.86rem;margin-bottom:1rem;max-width:65ch;}
+.code-block{background:var(--bg2);border:1px solid var(--border);overflow:hidden;transition:border-color 0.2s, transform 0.2s;}
+.code-block:hover{border-color:#3a3a42;}
+.code-block-header{display:flex;justify-content:space-between;padding:0.5rem 1rem;background:var(--bg3);border-bottom:1px solid var(--border);font-size:0.7rem;color:var(--muted);letter-spacing:0.05em;}
+.code-block pre{padding:1rem 1.2rem;overflow-x:auto;font-size:0.82rem;white-space:pre;}
+.kw{color:#c586c0;} .ty{color:#4EC9B0;} .str{color:#CE9178;} .nb{color:#B5CEA8;} .cm{color:#6a737d;} .fn{color:#DCDCAA;} .op{color:var(--muted);}
+.recipe-note{background:rgba(232,164,74,0.06);border:1px solid rgba(232,164,74,0.25);padding:0.8rem 1.1rem;font-size:0.8rem;color:var(--muted);margin-top:1rem;line-height:1.7;}
+.recipe-note strong{color:var(--rb);}
+code.inline{background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.35rem;font-size:0.88em;border-radius:2px;}
+
+footer{border-top:1px solid var(--border);margin-top:2rem;padding-top:2rem;text-align:center;color:var(--muted);font-size:0.78rem;}
+footer a{color:var(--rb);text-decoration:none;}
+
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025; pointer-events: none; z-index: 1000;
+}
+.page-glow {
+  position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
+  width: 900px; height: 500px; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse, rgba(227,66,52,0.10) 0%, transparent 70%);
+  animation: glowpulse 8s ease-in-out infinite alternate;
+}
+@keyframes glowpulse { from { opacity: 0.7; } to { opacity: 1; } }
+.wrap { position: relative; z-index: 1; }
+html { scroll-behavior: smooth; }
+.topbar-link { position: relative; }
+.topbar-link::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
+  background: var(--rb); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+.topbar-link:hover::after { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) {
+  .page-glow { animation: none; }
+}
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.eyebrow, h1, .sub { animation: fadeUp 0.5s ease both; }
+h1 { animation-delay: 0.05s; }
+.sub { animation-delay: 0.1s; }
+@media (prefers-reduced-motion: reduce) { .eyebrow, h1, .sub { animation: none; } }
+</style>
+</head>
+<body>
+<div class="page-glow"></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="index.html"><span class="r">Rub</span><span class="b">idium</span><span class="topbar-title">Cookbook</span></a>
+  <div class="topbar-right">
+    <a class="topbar-link" href="learn.html">Book</a>
+    <a class="topbar-link" href="cheatsheet.html">Cheat Sheet</a>
+    <a class="topbar-gh" href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">GitHub →</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="eyebrow">Practical Recipes</div>
+  <h1>Cookbook</h1>
+  <p class="sub">Small, complete programs for things you'll actually reach for. Each one leans on a real spec rule worth remembering.</p>
+
+  <div class="toc">
+    <a href="#safe-file">Safe file read</a><a href="#sum-avg">Sum &amp; average</a><a href="#shuffle-pick">Shuffle &amp; pick</a>
+    <a href="#safe-divide">Safe divide</a><a href="#counter">Vote counter</a><a href="#nested-config">Nested config</a>
+    <a href="#timing">Time a task</a><a href="#parallel">Parallel workers</a>
+  </div>
+
+  <div class="recipe" id="safe-file">
+    <div class="recipe-num">01</div>
+    <div class="recipe-title">Read a file that might not exist</div>
+    <p class="recipe-desc"><code class="inline">open()</code> already creates a missing file and continues, but if you want to branch on that instead of just proceeding, wrap it in <code class="inline">try / error</code>.</p>
+    <div class="code-block">
+      <div class="code-block-header"><span>safe_read.rub</span><span>Rubidium</span></div>
+      <pre><span class="kw">try</span> {
+    <span class="kw">open</span>(<span class="str">"settings.txt"</span>) <span class="kw">as</span> file {
+        <span class="kw">let</span> contents = file.<span class="fn">read</span>()
+        <span class="fn">print</span>(contents)
+    }
+} <span class="kw">error</span> {
+    <span class="fn">print</span>(<span class="str">"Couldn't read settings.txt: "</span> + error)
+}</pre>
+    </div>
+  </div>
+
+  <div class="recipe" id="sum-avg">
+    <div class="recipe-num">02</div>
+    <div class="recipe-title">Sum and average a list</div>
+    <p class="recipe-desc">A plain <code class="inline">for</code> loop over the list's values, accumulated into a mutable total.</p>
+    <div class="code-block">
+      <div class="code-block-header"><span>average.rub</span><span>Rubidium</span></div>
+      <pre><span class="kw">fn</span> <span class="fn">average</span>(nums<span class="op">:</span> <span class="ty">list</span>) -&gt; <span class="ty">f64</span> {
+    <span class="kw">let mut</span> total<span class="op">:</span> <span class="ty">f64</span> = <span class="nb">0</span>
+
+    <span class="kw">for</span> n <span class="kw">in</span> nums {
+        total = total + n
+    }
+
+    <span class="kw">return</span> total / nums.<span class="fn">len</span>()
+}
+
+<span class="kw">let</span> scores<span class="op">:</span> <span class="ty">list</span> = [<span class="nb">10</span>, <span class="nb">20</span>, <span class="nb">30</span>, <span class="nb">40</span>]
+<span class="fn">print</span>(<span class="fn">average</span>(scores))   <span class="cm"># 25</span></pre>
+    </div>
+  </div>
+
+  <div class="recipe" id="shuffle-pick">
+    <div class="recipe-num">03</div>
+    <div class="recipe-title">Shuffle a list and pick a winner</div>
+    <p class="recipe-desc">Seed once for reproducible results, shuffle in place, then grab the first entry — or just use <code class="inline">random.choice()</code> directly without shuffling at all.</p>
+    <div class="code-block">
+      <div class="code-block-header"><span>raffle.rub</span><span>Rubidium</span></div>
+      <pre><span class="kw">use</span> random
+
+<span class="kw">let mut</span> entries<span class="op">:</span> <span class="ty">list</span> = [<span class="str">"Alice"</span>, <span class="str">"Bob"</span>, <span class="str">"Casey"</span>, <span class="str">"Drew"</span>]
+
+random.<span class="fn">seed</span>(<span class="str">"raffle-2026"</span>)
+random.<span class="fn">shuffle</span>(entries)
+
+<span class="fn">print</span>(<span class="str">i"Winner: {entries(0)}"</span>)
+
+<span class="cm"># Or skip the shuffle entirely:</span>
+<span class="fn">print</span>(<span class="str">i"Winner: {random.choice(entries)}"</span>)</pre>
+    </div>
+  </div>
+
+  <div class="recipe" id="safe-divide">
+    <div class="recipe-num">04</div>
+    <div class="recipe-title">Divide safely</div>
+    <p class="recipe-desc">Divide-by-zero is a <em>runtime</em> error, not a compile error — so <code class="inline">try / error</code> catches it cleanly.</p>
+    <div class="code-block">
+      <div class="code-block-header"><span>safe_divide.rub</span><span>Rubidium</span></div>
+      <pre><span class="kw">fn</span> <span class="fn">safe_divide</span>(a<span class="op">:</span> <span class="ty">f64</span>, b<span class="op">:</span> <span class="ty">f64</span>) -&gt; <span class="ty">f64</span> {
+    <span class="kw">try</span> {
+        <span class="kw">return</span> a / b
+    } <span class="kw">error</span> {
+        <span class="fn">print</span>(<span class="str">"Division failed: "</span> + error)
+        <span class="kw">return</span> <span class="nb">0</span>
+    }
+}
+
+<span class="fn">print</span>(<span class="fn">safe_divide</span>(<span class="nb">10</span>, <span class="nb">0</span>))   <span class="cm"># prints the error message, returns 0</span></pre>
+    </div>
+  </div>
+
+  <div class="recipe" id="counter">
+    <div class="recipe-num">05</div>
+    <div class="recipe-title">Count votes with an index</div>
+    <p class="recipe-desc">Since <code class="inline">index().add()</code> errors on an existing key, check with <code class="inline">.has()</code> first and branch between <code class="inline">.add()</code> for a first vote and <code class="inline">.set()</code> for every one after.</p>
+    <div class="code-block">
+      <div class="code-block-header"><span>vote_count.rub</span><span>Rubidium</span></div>
+      <pre><span class="kw">let mut</span> votes<span class="op">:</span> <span class="ty">index</span> = []
+
+<span class="kw">fn</span> <span class="fn">cast_vote</span>(candidate<span class="op">:</span> <span class="ty">str</span>) {
+    <span class="kw">if</span> votes.<span class="fn">has</span>(candidate) {
+        votes(candidate).<span class="fn">set</span>(votes(candidate) + <span class="nb">1</span>)
+    } <span class="kw">else</span> {
+        votes().<span class="fn">add</span>(candidate, <span class="nb">1</span>)
+    }
+}
+
+<span class="fn">cast_vote</span>(<span class="str">"Rubidium"</span>)
+<span class="fn">cast_vote</span>(<span class="str">"Rubidium"</span>)
+<span class="fn">cast_vote</span>(<span class="str">"Xeon"</span>)
+
+<span class="fn">print</span>(votes(<span class="str">"Rubidium"</span>))   <span class="cm"># 2</span></pre>
+    </div>
+  </div>
+
+  <div class="recipe" id="nested-config">
+    <div class="recipe-num">06</div>
+    <div class="recipe-title">Nested settings with dict+</div>
+    <p class="recipe-desc">Group related settings under top-level keys, drilling down as deep as the data actually needs — no fixed schema required.</p>
+    <div class="code-block">
+      <div class="code-block-header"><span>config.rub</span><span>Rubidium</span></div>
+      <pre><span class="kw">let mut</span> config<span class="op">:</span> <span class="ty">dict+</span> = {
+    <span class="str">"display"</span> = {
+        <span class="str">"resolution"</span> = [<span class="nb">1920</span>, <span class="nb">1080</span>],
+        <span class="str">"fullscreen"</span> = [<span class="nb">True</span>]
+    },
+    <span class="str">"audio"</span> = {
+        <span class="str">"volume"</span> = [<span class="nb">80</span>]
+    }
+}
+
+<span class="fn">print</span>(config(<span class="str">"display"</span>, <span class="str">"resolution"</span>, <span class="nb">0</span>))   <span class="cm"># 1920</span>
+config(<span class="str">"audio"</span>, <span class="str">"volume"</span>).<span class="fn">add</span>(<span class="nb">2</span>)                <span class="cm"># append a second volume value</span></pre>
+    </div>
+  </div>
+
+  <div class="recipe" id="timing">
+    <div class="recipe-num">07</div>
+    <div class="recipe-title">Time how long something takes</div>
+    <p class="recipe-desc">Start a timer, do the work, read the elapsed time — same integer-ID pattern as threads.</p>
+    <div class="code-block">
+      <div class="code-block-header"><span>timing.rub</span><span>Rubidium</span></div>
+      <pre><span class="kw">use</span> time
+
+<span class="kw">fn</span> <span class="fn">main</span>() {
+    time.<span class="fn">timer_start</span>(<span class="nb">1</span>)
+
+    <span class="kw">let mut</span> total<span class="op">:</span> <span class="ty">i64</span> = <span class="nb">0</span>
+    <span class="kw">for</span> i <span class="kw">in</span> range(<span class="nb">0</span>, <span class="nb">1000000</span>) {
+        total = total + i
+    }
+
+    <span class="kw">let</span> elapsed = time.<span class="fn">timer_read</span>(<span class="nb">1</span>)
+    <span class="fn">print</span>(<span class="str">i"Took {elapsed}s, total = {total}"</span>)
+}</pre>
+    </div>
+  </div>
+
+  <div class="recipe" id="parallel">
+    <div class="recipe-num">08</div>
+    <div class="recipe-title">Run two independent tasks in parallel</div>
+    <p class="recipe-desc">Fire both threads, then block until both finish. Each keeps its own private locals — only globals need coordinating.</p>
+    <div class="code-block">
+      <div class="code-block-header"><span>parallel.rub</span><span>Rubidium</span></div>
+      <pre><span class="kw">use</span> thread
+
+<span class="kw">fn</span> <span class="fn">download_task</span>() { <span class="fn">print</span>(<span class="str">"Download finished"</span>) }
+<span class="kw">fn</span> <span class="fn">process_task</span>()  { <span class="fn">print</span>(<span class="str">"Processing finished"</span>) }
+
+<span class="kw">fn</span> <span class="fn">main</span>() {
+    thread(<span class="fn">download_task</span>(), <span class="nb">1</span>)
+    thread(<span class="fn">process_task</span>(), <span class="nb">2</span>)
+
+    thread.<span class="fn">wait</span>(<span class="nb">1</span>, <span class="nb">2</span>)
+    <span class="fn">print</span>(<span class="str">"Both tasks done"</span>)
+}</pre>
+    </div>
+    <div class="recipe-note"><strong>Reminder:</strong> there's no automatic protection against two threads writing the same global at once — this recipe works because the two tasks don't share any state.</div>
+  </div>
+
+  <footer>Part of the <a href="index.html">Rubidium</a> project · <a href="learn.html">Book</a> · <a href="cheatsheet.html">Cheat Sheet</a> · <a href="glossary.html">Glossary</a> · <a href="cookbook.html">Cookbook</a> · <a href="compare.html">Compare</a> · <a href="faq.html">FAQ</a> · <a href="quiz.html">Quiz</a></footer>
+</div>
+</body>
+</html>

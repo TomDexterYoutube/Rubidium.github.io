@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rubidium Glossary</title>
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Rubidium Glossary" />
+<meta property="og:description" content="Every Rubidium keyword and core concept defined in one line, with links back to the full chapter." />
+<meta property="og:url" content="https://tomdexteryoutube.github.io/Rubidium.github.io/glossary.html" />
+<meta property="og:image" content="https://tomdexteryoutube.github.io/Rubidium.github.io/apple-touch-icon.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Rubidium Glossary" />
+<meta name="twitter:description" content="Every Rubidium keyword and core concept defined in one line, with links back to the full chapter." />
+<meta name="twitter:image" content="https://tomdexteryoutube.github.io/Rubidium.github.io/apple-touch-icon.png" />
+<meta name="description" content="Every Rubidium keyword and core concept defined in one line, with links back to the full chapter." />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Azeret+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg:#09090b; --bg2:#111114; --bg3:#18181c; --border:#2a2a30;
+  --rb:#E34234; --rb-hi:#F05030;
+  --text:#e0e0e4; --muted:#7a7a88;
+  --mono:'Azeret Mono',monospace; --head:'Unbounded',sans-serif;
+  --py:#3776AB; --py-hi:#4B8BBE;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;line-height:1.6;}
+.topbar{position:sticky;top:0;z-index:200;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;background:rgba(9,9,11,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.topbar-logo{font-family:var(--head);font-weight:800;font-size:1rem;text-decoration:none;display:flex;align-items:center;}
+.topbar-logo .r{color:var(--rb);} .topbar-logo .b{color:var(--text);}
+.topbar-title{font-family:var(--mono);font-size:0.72rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-left:0.9rem;padding-left:0.9rem;border-left:1px solid var(--border);}
+.topbar-right{display:flex;align-items:center;gap:1.3rem;}
+.topbar-link{font-family:var(--mono);font-size:0.72rem;color:var(--muted);text-decoration:none;letter-spacing:0.06em;text-transform:uppercase;}
+.topbar-link:hover{color:var(--text);}
+.topbar-gh{font-family:var(--mono);font-size:0.72rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:0.35rem 0.8rem;background:var(--py);color:#fff;text-decoration:none;}
+.topbar-gh:hover{background:var(--py-hi);}
+
+.wrap{max-width:760px;margin:0 auto;padding:3rem 1.5rem 5rem;}
+.eyebrow{font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--rb);margin-bottom:0.6rem;}
+h1{font-family:var(--head);font-size:clamp(1.8rem,4vw,2.4rem);font-weight:800;letter-spacing:-0.02em;margin-bottom:0.75rem;}
+.sub{color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem;max-width:60ch;}
+
+#search {
+  width:100%; background:var(--bg2); border:1px solid var(--border); color:var(--text);
+  font-family:var(--mono); font-size:0.88rem; padding:0.75rem 1rem; margin-bottom:2.5rem;
+}
+#search:focus { outline:none; border-color:var(--rb); }
+#search::placeholder { color:var(--muted); }
+
+.jump{display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:2.5rem;}
+.jump a{font-size:0.72rem;color:var(--muted);text-decoration:none;border:1px solid var(--border);width:1.8rem;height:1.8rem;display:flex;align-items:center;justify-content:center;background:var(--bg2);}
+.jump a:hover{color:var(--rb);border-color:var(--rb);}
+
+.letter-group{margin-bottom:2rem;}
+.letter-head{font-family:var(--head);font-size:1.3rem;font-weight:800;color:var(--rb);margin-bottom:0.75rem;scroll-margin-top:75px;}
+.term{border-bottom:1px solid var(--border);padding:1rem 0;transition:padding-left 0.15s, border-color 0.15s;}
+.term:hover{padding-left:0.5rem;border-color:var(--rb);}
+.term:last-child{border-bottom:none;}
+.term-name{font-weight:600;color:var(--text);font-size:0.92rem;margin-bottom:0.35rem;display:flex;align-items:baseline;gap:0.6rem;flex-wrap:wrap;}
+.term-name code{background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.1rem 0.4rem;font-size:0.95em;border-radius:2px;}
+.term-def{color:var(--muted);font-size:0.85rem;line-height:1.7;}
+.term-link{font-size:0.7rem;color:var(--rb);text-decoration:none;letter-spacing:0.04em;white-space:nowrap;}
+.term-link:hover{text-decoration:underline;}
+.term.hidden{display:none;}
+.letter-group.hidden{display:none;}
+
+footer{border-top:1px solid var(--border);margin-top:2rem;padding-top:2rem;text-align:center;color:var(--muted);font-size:0.78rem;}
+footer a{color:var(--rb);text-decoration:none;}
+#no-results{display:none;color:var(--muted);font-size:0.85rem;text-align:center;padding:2rem 0;}
+
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025; pointer-events: none; z-index: 1000;
+}
+.page-glow {
+  position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
+  width: 900px; height: 500px; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse, rgba(227,66,52,0.10) 0%, transparent 70%);
+  animation: glowpulse 8s ease-in-out infinite alternate;
+}
+@keyframes glowpulse { from { opacity: 0.7; } to { opacity: 1; } }
+.wrap { position: relative; z-index: 1; }
+html { scroll-behavior: smooth; }
+.topbar-link { position: relative; }
+.topbar-link::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
+  background: var(--rb); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+.topbar-link:hover::after { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) {
+  .page-glow { animation: none; }
+}
+
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.eyebrow, h1, .sub { animation: fadeUp 0.5s ease both; }
+h1 { animation-delay: 0.05s; }
+.sub { animation-delay: 0.1s; }
+@media (prefers-reduced-motion: reduce) { .eyebrow, h1, .sub { animation: none; } }
+</style>
+</head>
+<body>
+<div class="page-glow"></div>
+
+<div class="topbar">
+  <a class="topbar-logo" href="index.html"><span class="r">Rub</span><span class="b">idium</span><span class="topbar-title">Glossary</span></a>
+  <div class="topbar-right">
+    <a class="topbar-link" href="learn.html">Book</a>
+    <a class="topbar-link" href="cheatsheet.html">Cheat Sheet</a>
+    <a class="topbar-gh" href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">GitHub →</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="eyebrow">A–Z Reference</div>
+  <h1>Glossary</h1>
+  <p class="sub">Every keyword and core concept, one line each. Click a term's chapter link to read the full explanation.</p>
+
+  <input type="text" id="search" placeholder="Filter terms… (e.g. mut, dict+, link)" oninput="filterTerms(this.value)" />
+
+  <div class="jump" id="jump"></div>
+
+  <div id="terms-container"></div>
+  <div id="no-results">No terms match that filter.</div>
+
+  <footer>Part of the <a href="index.html">Rubidium</a> project · <a href="learn.html">Book</a> · <a href="cheatsheet.html">Cheat Sheet</a> · <a href="glossary.html">Glossary</a> · <a href="cookbook.html">Cookbook</a> · <a href="compare.html">Compare</a> · <a href="faq.html">FAQ</a> · <a href="quiz.html">Quiz</a></footer>
+</div>
+
+<script>
+const TERMS = [
+  { name: "Any", def: "A type that can hold a value of any other type — useful for functions or return types when you don't know the type ahead of time.", ch: 2 },
+  { name: "bool", def: "Boolean type; the only two values are True and False.", ch: 2 },
+  { name: "class", def: "A self-contained object template. No self keyword — fields are accessed directly from inside the class's own methods.", ch: 12 },
+  { name: "deep copy", def: "Rubidium's only assignment behavior: every assignment (variables, collections, class instances) creates a fully independent copy. There are no references or shared ownership, except via link.", ch: 11 },
+  { name: "dict", def: "A key → collection map. Each key holds a list of values, accessed as dict(key, index).", ch: 7 },
+  { name: "dict+", def: "Like dict, but a key's value can be a list (a leaf) or another dict+ block, nested to unlimited depth.", ch: 8 },
+  { name: ".drop()", def: "Frees a variable's memory immediately. Collections free recursively. Dropping an element inside a collection removes and shifts it — no Null is left behind.", ch: 11 },
+  { name: "error", def: "The variable available inside an error { } block, holding the runtime error message as a str+. Only catches runtime errors, never compile errors.", ch: 13 },
+  { name: "FFI", def: "Foreign Function Interface — binds a function from a compiled shared library (.so) so it can be called from Rubidium, optionally under a cleaner renamed alias.", ch: 18 },
+  { name: "global pool", def: "The single shared memory space every non-local variable lives in by default. Anything not declared local is visible everywhere once created.", ch: 11 },
+  { name: "i32 / i64 / …", def: "Signed integer types, from i32 up through i2048. Overflow clamps to the type's min/max and raises a recoverable runtime error rather than crashing.", ch: 2 },
+  { name: "index", def: "A flat key → single-value map. Each key stores exactly one value; adding an existing key is a runtime error (use .set() to update).", ch: 6 },
+  { name: "input()", def: "Reads a line of text from the user and returns it as a str.", ch: 3 },
+  { name: "link", def: "The one exception to deep-copy: shares data between two variables (or a function parameter) instead of copying it. A plain = reassignment on either side severs the link.", ch: 11 },
+  { name: "list", def: "An ordered, zero-indexed sequence of values. Append with list().add(v) — note the empty parentheses on the list itself.", ch: 5 },
+  { name: "local", def: "A variable declared with let local exists only for its enclosing block (function, class, loop, if, or while) and is dropped automatically at scope exit. Never enters the global pool.", ch: 11 },
+  { name: "mut", def: "Marks a variable, collection, or class field as reassignable/modifiable. Immutable by default everywhere in Rubidium.", ch: 2 },
+  { name: "Null", def: "A valid value for every type, meaning \"exists but empty.\" Behaves like negative infinity — smaller than every non-null value — and Null == Null is True.", ch: 2 },
+  { name: "os", def: "Built-in module for running hidden terminal sessions and shell commands, including auto-supplying input when a command prompts for it.", ch: 18 },
+  { name: "print() / println()", def: "print() outputs and moves to a new line. println() overwrites the current console line each time it's called — useful for progress indicators.", ch: 1 },
+  { name: "random", def: "Built-in module for random numbers, shuffling, and picking values from a collection. random.seed() sets a reproducible starting point.", ch: 16 },
+  { name: "range(start, end)", def: "Generates values for a for loop. The end value is always exclusive.", ch: 9 },
+  { name: "SY", def: "A string-like type whose value can be used as a variable or function name elsewhere in the code. Defined with 'single quotes', referenced with (parentheses).", ch: 4 },
+  { name: "str / str+", def: "str is a normal double-quoted single-line string. str+ is the same but wrapped in triple quotes and able to span multiple lines.", ch: 4 },
+  { name: "thread", def: "Built-in module for real POSIX hardware threads. Globals are shared across threads with no automatic race protection; locals and parameters are always private per-thread.", ch: 15 },
+  { name: "time", def: "Built-in module for pausing execution and running named timers, identified by integer IDs the same way thread IDs work.", ch: 17 },
+  { name: "try / error", def: "Catches runtime errors only — divide by zero, bad index, dropped memory, file/FFI failures. Compile errors (type mismatches, mutability violations) happen before try ever runs.", ch: 13 },
+  { name: "use / import", def: "use enables a built-in compiler module (thread, random, time, os, FFI). import loads another .rub file from the same folder as its own namespace. The two systems never overlap.", ch: 19 },
+  { name: "xeon", def: "The official Rubidium package manager and build tool. xeon pkg pulls community packages; xeon build compiles a project; it can also compile library builds with no entry point.", ch: 19 },
+];
+
+const container = document.getElementById('terms-container');
+const jump = document.getElementById('jump');
+const noResults = document.getElementById('no-results');
+
+function groupByLetter(terms) {
+  const groups = {};
+  terms.forEach(t => {
+    const letter = t.name.replace(/[^a-zA-Z]/, '').charAt(0).toUpperCase() || '#';
+    if (!groups[letter]) groups[letter] = [];
+    groups[letter].push(t);
+  });
+  return groups;
+}
+
+function render() {
+  const sorted = [...TERMS].sort((a, b) => a.name.localeCompare(b.name));
+  const groups = groupByLetter(sorted);
+  const letters = Object.keys(groups).sort();
+
+  jump.innerHTML = letters.map(l => `<a href="#letter-${l}">${l}</a>`).join('');
+
+  container.innerHTML = letters.map(letter => `
+    <div class="letter-group" data-letter="${letter}">
+      <h2 class="letter-head" id="letter-${letter}">${letter}</h2>
+      ${groups[letter].map(t => `
+        <div class="term" data-name="${t.name.toLowerCase()}" data-def="${t.def.toLowerCase()}">
+          <div class="term-name">
+            <code>${t.name}</code>
+            <a class="term-link" href="learn.html#ch-${t.ch}">Read chapter →</a>
+          </div>
+          <div class="term-def">${t.def}</div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+function filterTerms(query) {
+  const q = query.trim().toLowerCase();
+  let anyVisible = false;
+  document.querySelectorAll('.letter-group').forEach(group => {
+    let groupHasVisible = false;
+    group.querySelectorAll('.term').forEach(term => {
+      const match = !q || term.dataset.name.includes(q) || term.dataset.def.includes(q);
+      term.classList.toggle('hidden', !match);
+      if (match) groupHasVisible = true;
+    });
+    group.classList.toggle('hidden', !groupHasVisible);
+    if (groupHasVisible) anyVisible = true;
+  });
+  noResults.style.display = anyVisible ? 'none' : 'block';
+}
+
+render();
+</script>
+</body>
+</html>

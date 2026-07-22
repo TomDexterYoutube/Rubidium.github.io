@@ -4,6 +4,20 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Rubidium Quiz — Test Your Knowledge</title>
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Rubidium Quiz — Test Your Knowledge" />
+<meta property="og:description" content="16 multiple-choice questions pulled straight from the language spec. Instant feedback, running score, no signup." />
+<meta property="og:url" content="https://tomdexteryoutube.github.io/Rubidium.github.io/quiz.html" />
+<meta property="og:image" content="https://tomdexteryoutube.github.io/Rubidium.github.io/apple-touch-icon.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Rubidium Quiz — Test Your Knowledge" />
+<meta name="twitter:description" content="16 multiple-choice questions pulled straight from the language spec. Instant feedback, running score, no signup." />
+<meta name="twitter:image" content="https://tomdexteryoutube.github.io/Rubidium.github.io/apple-touch-icon.png" />
+<meta name="description" content="16 multiple-choice questions pulled straight from the language spec. Instant feedback, running score, no signup." />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Azeret+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
@@ -167,9 +181,40 @@ body { background: var(--bg); color: var(--text); font-family: var(--mono); font
   .wrap { padding: 2rem 1.1rem 4rem; }
   .card { padding: 1.25rem; }
 }
+
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.025; pointer-events: none; z-index: 1000;
+}
+.page-glow {
+  position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
+  width: 900px; height: 500px; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse, rgba(227,66,52,0.10) 0%, transparent 70%);
+  animation: glowpulse 8s ease-in-out infinite alternate;
+}
+@keyframes glowpulse { from { opacity: 0.7; } to { opacity: 1; } }
+.wrap { position: relative; z-index: 1; }
+html { scroll-behavior: smooth; }
+.topbar-link { position: relative; }
+.topbar-link::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px;
+  background: var(--rb); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+.topbar-link:hover::after { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) {
+  .page-glow { animation: none; }
+}
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.quiz-eyebrow, .quiz-h1, .quiz-sub { animation: fadeUp 0.5s ease both; }
+.quiz-h1 { animation-delay: 0.05s; }
+.quiz-sub { animation-delay: 0.1s; }
+@media (prefers-reduced-motion: reduce) { .quiz-eyebrow, .quiz-h1, .quiz-sub { animation: none; } }
 </style>
 </head>
 <body>
+<div class="page-glow"></div>
 
 <div class="topbar">
   <a class="topbar-logo" href="index.html" style="display:flex;align-items:center;">
