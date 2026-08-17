@@ -37,6 +37,9 @@
     --py:      #3776AB;
     --py-hi:   #4B8BBE;
     --py-dim:  rgba(55,118,171,0.10);
+    --vi:      #9d7bea;
+    --vi-hi:   #b399f0;
+    --vi-dim:  rgba(157,123,234,0.10);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -75,9 +78,11 @@
   .nav-logo {
     font-family: var(--head); font-weight: 800; font-size: 1.1rem;
     letter-spacing: -0.02em; text-decoration: none;
+    background: linear-gradient(90deg, var(--rb) 0%, var(--rb) 30%, var(--vi) 45%, var(--vi) 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
   }
-  .nav-logo .logo-Rub   { color: var(--rb); }
-  .nav-logo .logo-idium { color: var(--text); }
+  .nav-logo .logo-Rub, .nav-logo .logo-idium { color: inherit; -webkit-text-fill-color: inherit; }
   .nav-links { display: flex; gap: 2.5rem; list-style: none; }
   .nav-links a {
     color: var(--muted); text-decoration: none; font-size: 0.78rem;
@@ -517,12 +522,13 @@
   </a>
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
+    <li><a href="#memory">Memory</a></li>
     <li><a href="#syntax">Syntax</a></li>
     <li><a href="#benchmarks">Benchmarks</a></li>
     <li><a href="#xeon">Xeon</a></li>
+    <li><a href="#vire">Vire</a></li>
     <li><a href="#start">Get Started</a></li>
     <li><a href="learn.html" style="color:var(--rb);">Learn</a></li>
-    <li><a href="quiz.html">Quiz</a></li>
   </ul>
   <a class="nav-cta" href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">GitHub →</a>
 </nav>
@@ -648,7 +654,69 @@
     <div class="feat-card">
       <div class="feat-icon">⊞</div>
       <div class="feat-name">Modular Design</div>
-      <div class="feat-desc">Built-in modules via <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">use</code> (thread, random, time, os, FFI). External files via <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">import</code>. Clean, explicit boundaries.</div>
+      <div class="feat-desc">Built-in modules via <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">use</code> (thread, random, time, os, keyboard, net, FFI). External files via <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">import</code>, shared or <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">local</code>. Clean, explicit boundaries.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">⊙</div>
+      <div class="feat-name">Deep Copy by Default</div>
+      <div class="feat-desc">Every assignment — variables, collections, class instances — is a full, independent copy. No hidden aliasing to reason about. Need to share instead? Opt in explicitly with <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">link</code>.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">⚠</div>
+      <div class="feat-name">try / error / raise</div>
+      <div class="feat-desc">Runtime errors are catchable, not fatal by default. Wrap risky code in <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">try { } error { }</code>, or trigger your own with <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">raise</code>.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">⚙</div>
+      <div class="feat-name">Real C Interop</div>
+      <div class="feat-desc"><a href="#vire" style="color:var(--rb)">Vire</a>, Rubidium's FFI layer, binds directly against foreign C libraries — raw C types, C-layout <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">struct</code>s, and runtime-resolved function pointers included.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- MEMORY MODEL -->
+<section id="memory">
+  <div class="section-label">Memory, Explained</div>
+  <h2 class="section-title">One shared pool.<br>Nothing hidden.</h2>
+  <p class="section-desc">
+    No garbage collector. No ownership graph. No borrow checker fighting you over
+    lifetimes. Rubidium's memory model is small enough to hold in your head completely.
+  </p>
+  <div class="features-grid reveal">
+    <div class="feat-card">
+      <div class="feat-icon">①</div>
+      <div class="feat-name">The Global Pool</div>
+      <div class="feat-desc">Every variable you create lives in one shared global pool by default — visible from anywhere, in any function or thread, the instant it's created. Think of it as a whiteboard everyone can read and write.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">②</div>
+      <div class="feat-name">Manual, Explicit Frees</div>
+      <div class="feat-desc">Memory is never reclaimed for you. Call <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">.drop()</code> when you're done with a value — collections free every nested item recursively in one call.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">③</div>
+      <div class="feat-name">local — Opting Out</div>
+      <div class="feat-desc"><code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">let local</code> keeps a variable off the global pool entirely. It lives only for its function, loop, or block, and is dropped automatically the instant that scope ends.</div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">④</div>
+      <div class="feat-name">link — Opting Into Sharing</div>
+      <div class="feat-desc">The one exception to deep-copy-by-default. <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">link</code> shares a variable across a function call, a thread, or even a module boundary — no copy, both sides can edit it.</div>
+    </div>
+  </div>
+  <div style="margin-top:2.5rem;">
+    <p style="font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;">Automatic cleanup — the two exceptions</p>
+    <div class="features-grid reveal" style="grid-template-columns:1fr 1fr;">
+      <div class="feat-card">
+        <div class="feat-name">Loop Variables</div>
+        <div class="feat-desc">The item in a <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">for</code> loop is freed automatically at the end of every iteration — no <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">.drop()</code> needed.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-name">open() File Blocks</div>
+        <div class="feat-desc">A file handle closes and frees itself the moment its <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.8em">open() as file { }</code> block ends — variables created inside persist, the handle does not.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -671,6 +739,8 @@
     <button class="tab" onclick="switchTab(this,'tab-index')">Index</button>
     <button class="tab" onclick="switchTab(this,'tab-dict')">Dict</button>
     <button class="tab" onclick="switchTab(this,'tab-threads')">Threading</button>
+    <button class="tab" onclick="switchTab(this,'tab-classes')">Classes</button>
+    <button class="tab" onclick="switchTab(this,'tab-errors')">Error Handling</button>
   </div>
 
   <!-- Variables -->
@@ -841,6 +911,71 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
 }</pre>
     </div>
   </div>
+
+  <!-- Classes -->
+  <div id="tab-classes" class="code-panel reveal">
+    <div class="code-panel-header">
+      <span class="code-filename">classes.rub</span>
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <span class="code-lang">Rubidium</span>
+        <button class="copy-btn" onclick="copyCode(this)">⎘ Copy</button>
+      </div>
+    </div>
+    <div class="code-body">
+<pre><span class="cm"># No 'self' — fields are accessed directly from inside the class</span>
+<span class="kw">class</span> <span class="fn">player</span>() {
+    <span class="kw">let mut</span> health<span class="op">:</span> <span class="ty">i32</span> = <span class="nb">100</span>
+    <span class="kw">let mut</span> name<span class="op">:</span>   <span class="ty">str</span> = <span class="str">"unnamed"</span>
+
+    <span class="kw">fn</span> <span class="fn">take_damage</span>(amount<span class="op">:</span> <span class="ty">i32</span>) {
+        health = health - amount   <span class="cm"># direct field access</span>
+    }
+}
+
+<span class="kw">let mut</span> p = <span class="fn">player</span>()
+p<span class="op">.</span>name = <span class="str">"Alice"</span>
+p<span class="op">.</span><span class="fn">take_damage</span>(<span class="nb">10</span>)
+<span class="fn">print</span>(p<span class="op">.</span>health)   <span class="cm"># 90</span>
+
+<span class="cm"># Instances deep-copy like everything else</span>
+<span class="kw">let mut</span> a = <span class="fn">player</span>()
+<span class="kw">let mut</span> b = a
+b<span class="op">.</span>health = <span class="nb">10</span>
+<span class="fn">print</span>(a<span class="op">.</span>health)   <span class="cm"># 100 — untouched</span></pre>
+    </div>
+  </div>
+
+  <!-- Error Handling -->
+  <div id="tab-errors" class="code-panel reveal">
+    <div class="code-panel-header">
+      <span class="code-filename">errors.rub</span>
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <span class="code-lang">Rubidium</span>
+        <button class="copy-btn" onclick="copyCode(this)">⎘ Copy</button>
+      </div>
+    </div>
+    <div class="code-body">
+<pre><span class="kw">try</span> {
+    <span class="kw">let</span> bad<span class="op">:</span> <span class="ty">i32</span> = <span class="nb">10</span> / <span class="nb">0</span>
+} <span class="kw">error</span> {
+    <span class="fn">print</span>(<span class="str">"Error: "</span> + error)   <span class="cm"># error is a str+</span>
+}
+
+<span class="cm"># Trigger your own error with raise — caught by the nearest</span>
+<span class="cm"># enclosing try, or halts the program if there isn't one</span>
+<span class="kw">fn</span> <span class="fn">check</span>(n<span class="op">:</span> <span class="ty">i32</span>) {
+    <span class="kw">if</span> n < <span class="nb">0</span> {
+        <span class="kw">raise</span> <span class="str">"n must not be negative"</span>
+    }
+}
+
+<span class="kw">try</span> {
+    <span class="fn">check</span>(-<span class="nb">1</span>)
+} <span class="kw">error</span> {
+    <span class="fn">print</span>(<span class="str">"Error: "</span> + error)   <span class="cm"># Error: n must not be negative</span>
+}</pre>
+    </div>
+  </div>
 </div>
 
 <hr class="divider" />
@@ -946,16 +1081,21 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
   <div class="section-label">Xeon Build Manager</div>
   <h2 class="section-title">One tool.<br>Build, run, ship.</h2>
   <p class="section-desc">
-    Xeon is the official build manager for Rubidium projects.
-    Initialize, compile, and run your programs with a single command.
+    Xeon is the official project, build, and package manager for Rubidium —
+    project scaffolding, static analysis, debugging, compilation, and packages,
+    all from one command.
   </p>
   <div class="xeon-wrap reveal">
     <div class="xeon-commands">
       <div class="cmd-row"><span class="cmd-name">xeon init</span><span class="cmd-desc">Scaffolds a <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">src/</code> directory and a <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">main.rub</code> entry point</span></div>
-      <div class="cmd-row"><span class="cmd-name">xeon build</span><span class="cmd-desc">Compiles your project to native machine code via the LLVM backend</span></div>
-      <div class="cmd-row"><span class="cmd-name">xeon run</span><span class="cmd-desc">Compiles and immediately executes your program in one step</span></div>
+      <div class="cmd-row"><span class="cmd-name">xeon check</span><span class="cmd-desc">Runs the static analyzer only — no compile, good for CI or a quick sanity check</span></div>
+      <div class="cmd-row"><span class="cmd-name">xeon build</span><span class="cmd-desc">Static checks, then the debugger, then compiles to native code — add <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">-s</code> for a shared library or <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">--no-debug</code> to skip the debugger pass</span></div>
+      <div class="cmd-row"><span class="cmd-name">xeon run</span><span class="cmd-desc">Builds the project and immediately executes the resulting binary</span></div>
+      <div class="cmd-row"><span class="cmd-name">xeon pkg</span><span class="cmd-desc"><code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">pull</code> / <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">purge</code> / <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">upgrade</code> packages from the <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">xeon-pkgs</code> registry, installed into <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">~/.xeon/packages/</code></span></div>
+      <div class="cmd-row"><span class="cmd-name">xeon update</span><span class="cmd-desc">Pulls the latest compiler, debugger, and CLI script itself from GitHub</span></div>
+      <div class="cmd-row"><span class="cmd-name">xeon auth</span><span class="cmd-desc">Stores a GitHub token so <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">xeon pkg</code> gets 5000 req/hour instead of 60</span></div>
       <div class="cmd-row"><span class="cmd-name">install.sh</span><span class="cmd-desc">Bash install script for Linux / macOS to set up the Xeon toolchain</span></div>
-      <div class="cmd-row"><span class="cmd-name">install.bat</span><span class="cmd-desc">Windows install script to set up the Xeon toolchain</span></div>
+      <div class="cmd-row"><span class="cmd-name">install.ps1</span><span class="cmd-desc">Windows PowerShell install script to set up the Xeon toolchain</span></div>
     </div>
     <div class="xeon-terminal">
       <div class="term-bar">
@@ -964,26 +1104,92 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
       </div>
       <div class="xeon-term-body">
 <pre><span class="prompt">$</span> <span class="cmd-text">./install.sh</span>
-<span class="success">✓</span> <span class="out-text">Xeon installed to /usr/local/bin/xeon</span>
+<span class="out-text">Installation complete! Run 'xeon' to get started.</span>
 
 <span class="prompt">$</span> <span class="cmd-text">mkdir my-project && cd my-project</span>
 
 <span class="prompt">$</span> <span class="cmd-text">xeon init</span>
-<span class="success">✓</span> <span class="out-text">Created src/main.rub</span>
-<span class="success">✓</span> <span class="out-text">Project initialized.</span>
+<span class="success">✔</span> <span class="out-text">Initialized new Rubidium project in ./src</span>
 
 <span class="prompt">$</span> <span class="cmd-text">xeon build</span>
-<span class="out-text">  Compiling my-project [LLVM optimized]</span>
-<span class="success">✓</span> <span class="out-text">Build complete → ./build/my-project</span>
+<span class="out-text">  Compiling my-project (executable)...</span>
+<span class="success">✔</span> <span class="out-text">Build complete</span>
 
 <span class="prompt">$</span> <span class="cmd-text">xeon run</span>
-<span class="out-text">  Compiling + running...</span>
-<span class="out-text">This runs first — top level</span>
-<span class="out-text">This runs second — main</span>
-<span class="success">✓</span> <span class="out-text">Process exited [0]</span></pre>
+<span class="out-text">▶ RUNNING build/my-project — this is the real compiled program.</span>
+<span class="out-text">I'm working fine!</span>
+<span class="out-text">Ready to start coding?</span></pre>
       </div>
     </div>
   </div>
+</div>
+
+<hr class="divider" />
+
+<!-- VIRE -->
+<div class="xeon-section" id="vire">
+  <div class="section-label">FFI Compatibility Layer</div>
+  <h2 class="section-title">Vire.<br>Talk to real C libraries.</h2>
+  <p class="section-desc">
+    Vire is a companion language (<code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">.vire</code> files) for FFI compatibility with
+    Rubidium. It shares Rubidium's core syntax — variables, collections,
+    functions, classes, threading — but adds the extra machinery needed to bind
+    against genuine foreign C libraries: raw C types, fixed-layout structs, and
+    explicit conversion between the two type systems. A <code style="background:var(--bg3);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem;font-size:0.85em">.vire</code> file
+    always compiles to a shared library — it has no entry point of its own.
+  </p>
+  <div class="xeon-wrap reveal">
+    <div class="xeon-commands">
+      <div class="cmd-row"><span class="cmd-name">struct</span><span class="cmd-desc">Fixed, C-layout memory blocks — named fields, nested structs, and fixed-size array fields like <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">float[16]</code></span></div>
+      <div class="cmd-row"><span class="cmd-name">LIB types</span><span class="cmd-desc">The full C type set — <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">int</code>, <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">void*</code>, <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">size_t</code>, <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">char*</code>, and every stdint width</span></div>
+      <div class="cmd-row"><span class="cmd-name">cast / retrieve</span><span class="cmd-desc">Explicit, checked conversion between Rubidium and LIB types — including flattening a <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">list</code> into a raw C buffer</span></div>
+      <div class="cmd-row"><span class="cmd-name">fn ptr / callback</span><span class="cmd-desc">Bind against a resolved function address (for runtime-fetched APIs like OpenGL) or hand a Vire function to C as an event callback</span></div>
+      <div class="cmd-row"><span class="cmd-name">variadic (...)</span><span class="cmd-desc">Bind printf-style C functions that take a flexible number of arguments</span></div>
+      <div class="cmd-row"><span class="cmd-name">no-op casts rejected</span><span class="cmd-desc">LIB types that are already bit-for-bit a Rubidium type (e.g. <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">int</code> ↔ <code style="background:var(--bg);border:1px solid var(--border);color:var(--rb);padding:0.05rem 0.3rem">i32</code>) cross with zero conversion — casting one is a compile error</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1.5rem;">
+      <div class="xeon-terminal">
+        <div class="term-bar">
+          <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+          <span class="term-title">math_bind.vire</span>
+        </div>
+        <div class="xeon-term-body">
+<pre><span class="prompt">#</span> <span class="out-text">genuine foreign C library — LIB types on both sides</span>
+<span class="cmd-text">let glfw = FFI("libglfw.so")</span>
+
+<span class="cmd-text">fn glfw glfwInit() -> int as glfw_init</span>
+<span class="cmd-text">fn glfw glfwGetTime() -> double as get_time</span>
+
+<span class="cmd-text">fn main() {</span>
+<span class="cmd-text">    glfw_init()</span>
+<span class="cmd-text">    let t = get_time()</span>
+<span class="cmd-text">}</span></pre>
+        </div>
+      </div>
+      <div class="xeon-terminal">
+        <div class="term-bar">
+          <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+          <span class="term-title">struct.vire</span>
+        </div>
+        <div class="xeon-term-body">
+<pre><span class="prompt">#</span> <span class="out-text">fixed C-layout memory — no methods, no mut, always read/write</span>
+<span class="cmd-text">struct GLFWvidmode {</span>
+<span class="cmd-text">    width: int</span>
+<span class="cmd-text">    height: int</span>
+<span class="cmd-text">    refreshRate: int</span>
+<span class="cmd-text">}</span>
+
+<span class="prompt">#</span> <span class="out-text">zero-copy VIEW straight over a pointer C already gave you</span>
+<span class="cmd-text">let ptr = get_video_mode(monitor)</span>
+<span class="cmd-text">let mode: GLFWvidmode = ptr</span>
+<span class="cmd-text">print(mode.width)   </span><span class="out-text"># reads GLFW's own memory</span></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p style="margin-top:2rem;">
+    <a class="btn-ghost" href="learn.html#vire">Full Vire Syntax Reference →</a>
+  </p>
 </div>
 
 <hr class="divider" />
@@ -997,7 +1203,7 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
     <div class="step">
       <div class="step-num">01</div>
       <div class="step-title">Install Xeon</div>
-      <div class="step-desc">Clone the repo and run <span class="inline-code">install.sh</span> (Linux/macOS) or <span class="inline-code">install.bat</span> (Windows) to put the Xeon build manager on your system.</div>
+      <div class="step-desc">Clone the repo and run <span class="inline-code">install.sh</span> (Linux/macOS) or <span class="inline-code">install.ps1</span> (Windows) to put the Xeon build manager on your system.</div>
     </div>
     <div class="step">
       <div class="step-num">02</div>
@@ -1034,13 +1240,8 @@ my_dict()<span class="op">.</span><span class="fn">add</span>(<span class="str">
       <li><a href="https://github.com/TomDexterYoutube/Xeon-Rubidium" target="_blank">GitHub</a></li>
       <li><a href="docs.pdf">Docs</a></li>
       <li><a href="#xeon">Xeon</a></li>
+      <li><a href="#vire">Vire</a></li>
       <li><a href="learn.html">Learn</a></li>
-      <li><a href="quiz.html">Quiz</a></li>
-      <li><a href="cheatsheet.html">Cheat Sheet</a></li>
-      <li><a href="glossary.html">Glossary</a></li>
-      <li><a href="cookbook.html">Cookbook</a></li>
-      <li><a href="compare.html">Compare</a></li>
-      <li><a href="faq.html">FAQ</a></li>
     </ul>
     <span class="footer-copy">Built with LLVM · Open Source</span>
   </footer>
